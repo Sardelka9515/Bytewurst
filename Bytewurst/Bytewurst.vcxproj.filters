@@ -14,4 +14,29 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="main.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\include\box2d.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\include\csfml.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\include\stdtypes.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="draw.asm">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="window.asm">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="world.asm">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
