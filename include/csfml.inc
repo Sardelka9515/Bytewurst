@@ -1,0 +1,3575 @@
+b2ptr EQU <QWORD>
+func EQU <QWORD>
+
+; Typedefs
+sfBool EQU <int32_t>
+
+sfInt8 EQU <char>
+
+sfUint8 EQU <uint8_t>
+
+sfInt16 EQU <int16_t>
+
+sfUint16 EQU <uint16_t>
+
+sfInt32 EQU <int32_t>
+
+sfUint32 EQU <uint32_t>
+
+sfInt64 EQU <int64_t>
+
+sfUint64 EQU <uint64_t>
+
+; sfInt64 (*)(void * data, sfInt64 size, void * userData) *
+sfInputStreamReadFunc EQU <b2ptr>
+
+; sfInt64 (*)(sfInt64 position, void * userData) *
+sfInputStreamSeekFunc EQU <b2ptr>
+
+; sfInt64 (*)(void * userData) *
+sfInputStreamTellFunc EQU <b2ptr>
+
+; sfInt64 (*)(void * userData) *
+sfInputStreamGetSizeFunc EQU <b2ptr>
+
+; sfBool (*)(void *) *
+sfSoundRecorderStartCallback EQU <b2ptr>
+
+; sfBool (*)(sfInt16 const *, size_t, void *) *
+sfSoundRecorderProcessCallback EQU <b2ptr>
+
+; void (*)(void *) *
+sfSoundRecorderStopCallback EQU <b2ptr>
+
+; sfBool (*)(sfSoundStreamChunk *, void *) *
+sfSoundStreamGetDataCallback EQU <b2ptr>
+
+; void (*)(sfTime, void *) *
+sfSoundStreamSeekCallback EQU <b2ptr>
+
+; HWND__ *
+sfWindowHandle EQU <b2ptr>
+
+; VkInstance_T *
+VkInstance EQU <b2ptr>
+
+; VkSurfaceKHR_T *
+VkSurfaceKHR EQU <b2ptr>
+
+; void (*)() *
+sfVulkanFunctionPointer EQU <b2ptr>
+
+; void (*)() *
+GlFunctionPointer EQU <b2ptr>
+
+sfGlslVec2 EQU <sfVector2f>
+
+sfGlslIvec2 EQU <sfVector2i>
+
+sfGlslVec3 EQU <sfVector3f>
+
+; size_t (*)(void *) *
+sfShapeGetPointCountCallback EQU <b2ptr>
+
+; sfVector2f (*)(size_t, void *) *
+sfShapeGetPointCallback EQU <b2ptr>
+
+
+; Enums
+; sfSoundStatus ENUM 
+	sfStopped EQU 0
+	sfPaused EQU 1
+	sfPlaying EQU 2
+; sfSoundStatus ENDE 
+
+;  ENUM 
+	sfJoystickCount EQU 8
+	sfJoystickButtonCount EQU 32
+	sfJoystickAxisCount EQU 8
+;  ENDE 
+
+; sfJoystickAxis ENUM 
+	sfJoystickX EQU 0
+	sfJoystickY EQU 1
+	sfJoystickZ EQU 2
+	sfJoystickR EQU 3
+	sfJoystickU EQU 4
+	sfJoystickV EQU 5
+	sfJoystickPovX EQU 6
+	sfJoystickPovY EQU 7
+; sfJoystickAxis ENDE 
+
+; sfKeyCode ENUM 
+	sfKeyUnknown EQU -1
+	sfKeyA EQU 0
+	sfKeyB EQU 1
+	sfKeyC EQU 2
+	sfKeyD EQU 3
+	sfKeyE EQU 4
+	sfKeyF EQU 5
+	sfKeyG EQU 6
+	sfKeyH EQU 7
+	sfKeyI EQU 8
+	sfKeyJ EQU 9
+	sfKeyK EQU 10
+	sfKeyL EQU 11
+	sfKeyM EQU 12
+	sfKeyN EQU 13
+	sfKeyO EQU 14
+	sfKeyP EQU 15
+	sfKeyQ EQU 16
+	sfKeyR EQU 17
+	sfKeyS EQU 18
+	sfKeyT EQU 19
+	sfKeyU EQU 20
+	sfKeyV EQU 21
+	sfKeyW EQU 22
+	sfKeyX EQU 23
+	sfKeyY EQU 24
+	sfKeyZ EQU 25
+	sfKeyNum0 EQU 26
+	sfKeyNum1 EQU 27
+	sfKeyNum2 EQU 28
+	sfKeyNum3 EQU 29
+	sfKeyNum4 EQU 30
+	sfKeyNum5 EQU 31
+	sfKeyNum6 EQU 32
+	sfKeyNum7 EQU 33
+	sfKeyNum8 EQU 34
+	sfKeyNum9 EQU 35
+	sfKeyEscape EQU 36
+	sfKeyLControl EQU 37
+	sfKeyLShift EQU 38
+	sfKeyLAlt EQU 39
+	sfKeyLSystem EQU 40
+	sfKeyRControl EQU 41
+	sfKeyRShift EQU 42
+	sfKeyRAlt EQU 43
+	sfKeyRSystem EQU 44
+	sfKeyMenu EQU 45
+	sfKeyLBracket EQU 46
+	sfKeyRBracket EQU 47
+	sfKeySemicolon EQU 48
+	sfKeyComma EQU 49
+	sfKeyPeriod EQU 50
+	sfKeyApostrophe EQU 51
+	sfKeySlash EQU 52
+	sfKeyBackslash EQU 53
+	sfKeyGrave EQU 54
+	sfKeyEqual EQU 55
+	sfKeyHyphen EQU 56
+	sfKeySpace EQU 57
+	sfKeyEnter EQU 58
+	sfKeyBackspace EQU 59
+	sfKeyTab EQU 60
+	sfKeyPageUp EQU 61
+	sfKeyPageDown EQU 62
+	sfKeyEnd EQU 63
+	sfKeyHome EQU 64
+	sfKeyInsert EQU 65
+	sfKeyDelete EQU 66
+	sfKeyAdd EQU 67
+	sfKeySubtract EQU 68
+	sfKeyMultiply EQU 69
+	sfKeyDivide EQU 70
+	sfKeyLeft EQU 71
+	sfKeyRight EQU 72
+	sfKeyUp EQU 73
+	sfKeyDown EQU 74
+	sfKeyNumpad0 EQU 75
+	sfKeyNumpad1 EQU 76
+	sfKeyNumpad2 EQU 77
+	sfKeyNumpad3 EQU 78
+	sfKeyNumpad4 EQU 79
+	sfKeyNumpad5 EQU 80
+	sfKeyNumpad6 EQU 81
+	sfKeyNumpad7 EQU 82
+	sfKeyNumpad8 EQU 83
+	sfKeyNumpad9 EQU 84
+	sfKeyF1 EQU 85
+	sfKeyF2 EQU 86
+	sfKeyF3 EQU 87
+	sfKeyF4 EQU 88
+	sfKeyF5 EQU 89
+	sfKeyF6 EQU 90
+	sfKeyF7 EQU 91
+	sfKeyF8 EQU 92
+	sfKeyF9 EQU 93
+	sfKeyF10 EQU 94
+	sfKeyF11 EQU 95
+	sfKeyF12 EQU 96
+	sfKeyF13 EQU 97
+	sfKeyF14 EQU 98
+	sfKeyF15 EQU 99
+	sfKeyPause EQU 100
+	sfKeyCount EQU 101
+	sfKeyTilde EQU 54
+	sfKeyDash EQU 56
+	sfKeyBack EQU 59
+	sfKeyBackSlash EQU 53
+	sfKeySemiColon EQU 48
+	sfKeyReturn EQU 58
+	sfKeyQuote EQU 51
+; sfKeyCode ENDE 
+
+; sfScancode ENUM 
+	sfScanUnknown EQU -1
+	sfScanA EQU 0
+	sfScanB EQU 1
+	sfScanC EQU 2
+	sfScanD EQU 3
+	sfScanE EQU 4
+	sfScanF EQU 5
+	sfScanG EQU 6
+	sfScanH EQU 7
+	sfScanI EQU 8
+	sfScanJ EQU 9
+	sfScanK EQU 10
+	sfScanL EQU 11
+	sfScanM EQU 12
+	sfScanN EQU 13
+	sfScanO EQU 14
+	sfScanP EQU 15
+	sfScanQ EQU 16
+	sfScanR EQU 17
+	sfScanS EQU 18
+	sfScanT EQU 19
+	sfScanU EQU 20
+	sfScanV EQU 21
+	sfScanW EQU 22
+	sfScanX EQU 23
+	sfScanY EQU 24
+	sfScanZ EQU 25
+	sfScanNum1 EQU 26
+	sfScanNum2 EQU 27
+	sfScanNum3 EQU 28
+	sfScanNum4 EQU 29
+	sfScanNum5 EQU 30
+	sfScanNum6 EQU 31
+	sfScanNum7 EQU 32
+	sfScanNum8 EQU 33
+	sfScanNum9 EQU 34
+	sfScanNum0 EQU 35
+	sfScanEnter EQU 36
+	sfScanEscape EQU 37
+	sfScanBackspace EQU 38
+	sfScanTab EQU 39
+	sfScanSpace EQU 40
+	sfScanHyphen EQU 41
+	sfScanEqual EQU 42
+	sfScanLBracket EQU 43
+	sfScanRBracket EQU 44
+	sfScanBackslash EQU 45
+	sfScanSemicolon EQU 46
+	sfScanApostrophe EQU 47
+	sfScanGrave EQU 48
+	sfScanComma EQU 49
+	sfScanPeriod EQU 50
+	sfScanSlash EQU 51
+	sfScanF1 EQU 52
+	sfScanF2 EQU 53
+	sfScanF3 EQU 54
+	sfScanF4 EQU 55
+	sfScanF5 EQU 56
+	sfScanF6 EQU 57
+	sfScanF7 EQU 58
+	sfScanF8 EQU 59
+	sfScanF9 EQU 60
+	sfScanF10 EQU 61
+	sfScanF11 EQU 62
+	sfScanF12 EQU 63
+	sfScanF13 EQU 64
+	sfScanF14 EQU 65
+	sfScanF15 EQU 66
+	sfScanF16 EQU 67
+	sfScanF17 EQU 68
+	sfScanF18 EQU 69
+	sfScanF19 EQU 70
+	sfScanF20 EQU 71
+	sfScanF21 EQU 72
+	sfScanF22 EQU 73
+	sfScanF23 EQU 74
+	sfScanF24 EQU 75
+	sfScanCapsLock EQU 76
+	sfScanPrintScreen EQU 77
+	sfScanScrollLock EQU 78
+	sfScanPause EQU 79
+	sfScanInsert EQU 80
+	sfScanHome EQU 81
+	sfScanPageUp EQU 82
+	sfScanDelete EQU 83
+	sfScanEnd EQU 84
+	sfScanPageDown EQU 85
+	sfScanRight EQU 86
+	sfScanLeft EQU 87
+	sfScanDown EQU 88
+	sfScanUp EQU 89
+	sfScanNumLock EQU 90
+	sfScanNumpadDivide EQU 91
+	sfScanNumpadMultiply EQU 92
+	sfScanNumpadMinus EQU 93
+	sfScanNumpadPlus EQU 94
+	sfScanNumpadEqual EQU 95
+	sfScanNumpadEnter EQU 96
+	sfScanNumpadDecimal EQU 97
+	sfScanNumpad1 EQU 98
+	sfScanNumpad2 EQU 99
+	sfScanNumpad3 EQU 100
+	sfScanNumpad4 EQU 101
+	sfScanNumpad5 EQU 102
+	sfScanNumpad6 EQU 103
+	sfScanNumpad7 EQU 104
+	sfScanNumpad8 EQU 105
+	sfScanNumpad9 EQU 106
+	sfScanNumpad0 EQU 107
+	sfScanNonUsBackslash EQU 108
+	sfScanApplication EQU 109
+	sfScanExecute EQU 110
+	sfScanModeChange EQU 111
+	sfScanHelp EQU 112
+	sfScanMenu EQU 113
+	sfScanSelect EQU 114
+	sfScanRedo EQU 115
+	sfScanUndo EQU 116
+	sfScanCut EQU 117
+	sfScanCopy EQU 118
+	sfScanPaste EQU 119
+	sfScanVolumeMute EQU 120
+	sfScanVolumeUp EQU 121
+	sfScanVolumeDown EQU 122
+	sfScanMediaPlayPause EQU 123
+	sfScanMediaStop EQU 124
+	sfScanMediaNextTrack EQU 125
+	sfScanMediaPreviousTrack EQU 126
+	sfScanLControl EQU 127
+	sfScanLShift EQU 128
+	sfScanLAlt EQU 129
+	sfScanLSystem EQU 130
+	sfScanRControl EQU 131
+	sfScanRShift EQU 132
+	sfScanRAlt EQU 133
+	sfScanRSystem EQU 134
+	sfScanBack EQU 135
+	sfScanForward EQU 136
+	sfScanRefresh EQU 137
+	sfScanStop EQU 138
+	sfScanSearch EQU 139
+	sfScanFavorites EQU 140
+	sfScanHomePage EQU 141
+	sfScanLaunchApplication1 EQU 142
+	sfScanLaunchApplication2 EQU 143
+	sfScanLaunchMail EQU 144
+	sfScanLaunchMediaSelect EQU 145
+	sfScancodeCount EQU 146
+; sfScancode ENDE 
+
+; sfMouseButton ENUM 
+	sfMouseLeft EQU 0
+	sfMouseRight EQU 1
+	sfMouseMiddle EQU 2
+	sfMouseXButton1 EQU 3
+	sfMouseXButton2 EQU 4
+	sfMouseButtonCount EQU 5
+; sfMouseButton ENDE 
+
+; sfMouseWheel ENUM 
+	sfMouseVerticalWheel EQU 0
+	sfMouseHorizontalWheel EQU 1
+; sfMouseWheel ENDE 
+
+; sfSensorType ENUM 
+	sfSensorAccelerometer EQU 0
+	sfSensorGyroscope EQU 1
+	sfSensorMagnetometer EQU 2
+	sfSensorGravity EQU 3
+	sfSensorUserAcceleration EQU 4
+	sfSensorOrientation EQU 5
+	sfSensorCount EQU 6
+; sfSensorType ENDE 
+
+; sfEventType ENUM 
+	sfEvtClosed EQU 0
+	sfEvtResized EQU 1
+	sfEvtLostFocus EQU 2
+	sfEvtGainedFocus EQU 3
+	sfEvtTextEntered EQU 4
+	sfEvtKeyPressed EQU 5
+	sfEvtKeyReleased EQU 6
+	sfEvtMouseWheelMoved EQU 7
+	sfEvtMouseWheelScrolled EQU 8
+	sfEvtMouseButtonPressed EQU 9
+	sfEvtMouseButtonReleased EQU 10
+	sfEvtMouseMoved EQU 11
+	sfEvtMouseEntered EQU 12
+	sfEvtMouseLeft EQU 13
+	sfEvtJoystickButtonPressed EQU 14
+	sfEvtJoystickButtonReleased EQU 15
+	sfEvtJoystickMoved EQU 16
+	sfEvtJoystickConnected EQU 17
+	sfEvtJoystickDisconnected EQU 18
+	sfEvtTouchBegan EQU 19
+	sfEvtTouchMoved EQU 20
+	sfEvtTouchEnded EQU 21
+	sfEvtSensorChanged EQU 22
+	sfEvtCount EQU 23
+; sfEventType ENDE 
+
+; sfWindowStyle ENUM 
+	sfNone EQU 0
+	sfTitlebar EQU 1
+	sfResize EQU 2
+	sfClose EQU 4
+	sfFullscreen EQU 8
+	sfDefaultStyle EQU 7
+; sfWindowStyle ENDE 
+
+; sfContextAttribute ENUM 
+	sfContextDefault EQU 0
+	sfContextCore EQU 1
+	sfContextDebug EQU 4
+; sfContextAttribute ENDE 
+
+; sfCursorType ENUM 
+	sfCursorArrow EQU 0
+	sfCursorArrowWait EQU 1
+	sfCursorWait EQU 2
+	sfCursorText EQU 3
+	sfCursorHand EQU 4
+	sfCursorSizeHorizontal EQU 5
+	sfCursorSizeVertical EQU 6
+	sfCursorSizeTopLeftBottomRight EQU 7
+	sfCursorSizeBottomLeftTopRight EQU 8
+	sfCursorSizeLeft EQU 9
+	sfCursorSizeRight EQU 10
+	sfCursorSizeTop EQU 11
+	sfCursorSizeBottom EQU 12
+	sfCursorSizeTopLeft EQU 13
+	sfCursorSizeBottomRight EQU 14
+	sfCursorSizeBottomLeft EQU 15
+	sfCursorSizeTopRight EQU 16
+	sfCursorSizeAll EQU 17
+	sfCursorCross EQU 18
+	sfCursorHelp EQU 19
+	sfCursorNotAllowed EQU 20
+; sfCursorType ENDE 
+
+; sfBlendFactor ENUM 
+	sfBlendFactorZero EQU 0
+	sfBlendFactorOne EQU 1
+	sfBlendFactorSrcColor EQU 2
+	sfBlendFactorOneMinusSrcColor EQU 3
+	sfBlendFactorDstColor EQU 4
+	sfBlendFactorOneMinusDstColor EQU 5
+	sfBlendFactorSrcAlpha EQU 6
+	sfBlendFactorOneMinusSrcAlpha EQU 7
+	sfBlendFactorDstAlpha EQU 8
+	sfBlendFactorOneMinusDstAlpha EQU 9
+; sfBlendFactor ENDE 
+
+; sfBlendEquation ENUM 
+	sfBlendEquationAdd EQU 0
+	sfBlendEquationSubtract EQU 1
+	sfBlendEquationReverseSubtract EQU 2
+	sfBlendEquationMin EQU 3
+	sfBlendEquationMax EQU 4
+; sfBlendEquation ENDE 
+
+; sfPrimitiveType ENUM 
+	sfPoints EQU 0
+	sfLines EQU 1
+	sfLineStrip EQU 2
+	sfTriangles EQU 3
+	sfTriangleStrip EQU 4
+	sfTriangleFan EQU 5
+	sfQuads EQU 6
+	sfLinesStrip EQU 2
+	sfTrianglesStrip EQU 4
+	sfTrianglesFan EQU 5
+; sfPrimitiveType ENDE 
+
+; sfTextStyle ENUM 
+	sfTextRegular EQU 0
+	sfTextBold EQU 1
+	sfTextItalic EQU 2
+	sfTextUnderlined EQU 4
+	sfTextStrikeThrough EQU 8
+; sfTextStyle ENDE 
+
+; sfTextureCoordinateType ENUM 
+	sfTextureNormalized EQU 0
+	sfTexturePixels EQU 1
+; sfTextureCoordinateType ENDE 
+
+; sfVertexBufferUsage ENUM 
+	sfVertexBufferStream EQU 0
+	sfVertexBufferDynamic EQU 1
+	sfVertexBufferStatic EQU 2
+; sfVertexBufferUsage ENDE 
+
+; sfFtpTransferMode ENUM 
+	sfFtpBinary EQU 0
+	sfFtpAscii EQU 1
+	sfFtpEbcdic EQU 2
+; sfFtpTransferMode ENDE 
+
+; sfFtpStatus ENUM 
+	sfFtpRestartMarkerReply EQU 110
+	sfFtpServiceReadySoon EQU 120
+	sfFtpDataConnectionAlreadyOpened EQU 125
+	sfFtpOpeningDataConnection EQU 150
+	sfFtpOk EQU 200
+	sfFtpPointlessCommand EQU 202
+	sfFtpSystemStatus EQU 211
+	sfFtpDirectoryStatus EQU 212
+	sfFtpFileStatus EQU 213
+	sfFtpHelpMessage EQU 214
+	sfFtpSystemType EQU 215
+	sfFtpServiceReady EQU 220
+	sfFtpClosingConnection EQU 221
+	sfFtpDataConnectionOpened EQU 225
+	sfFtpClosingDataConnection EQU 226
+	sfFtpEnteringPassiveMode EQU 227
+	sfFtpLoggedIn EQU 230
+	sfFtpFileActionOk EQU 250
+	sfFtpDirectoryOk EQU 257
+	sfFtpNeedPassword EQU 331
+	sfFtpNeedAccountToLogIn EQU 332
+	sfFtpNeedInformation EQU 350
+	sfFtpServiceUnavailable EQU 421
+	sfFtpDataConnectionUnavailable EQU 425
+	sfFtpTransferAborted EQU 426
+	sfFtpFileActionAborted EQU 450
+	sfFtpLocalError EQU 451
+	sfFtpInsufficientStorageSpace EQU 452
+	sfFtpCommandUnknown EQU 500
+	sfFtpParametersUnknown EQU 501
+	sfFtpCommandNotImplemented EQU 502
+	sfFtpBadCommandSequence EQU 503
+	sfFtpParameterNotImplemented EQU 504
+	sfFtpNotLoggedIn EQU 530
+	sfFtpNeedAccountToStore EQU 532
+	sfFtpFileUnavailable EQU 550
+	sfFtpPageTypeUnknown EQU 551
+	sfFtpNotEnoughMemory EQU 552
+	sfFtpFilenameNotAllowed EQU 553
+	sfFtpInvalidResponse EQU 1000
+	sfFtpConnectionFailed EQU 1001
+	sfFtpConnectionClosed EQU 1002
+	sfFtpInvalidFile EQU 1003
+; sfFtpStatus ENDE 
+
+; sfHttpMethod ENUM 
+	sfHttpGet EQU 0
+	sfHttpPost EQU 1
+	sfHttpHead EQU 2
+	sfHttpPut EQU 3
+	sfHttpDelete EQU 4
+; sfHttpMethod ENDE 
+
+; sfHttpStatus ENUM 
+	sfHttpOk EQU 200
+	sfHttpCreated EQU 201
+	sfHttpAccepted EQU 202
+	sfHttpNoContent EQU 204
+	sfHttpResetContent EQU 205
+	sfHttpPartialContent EQU 206
+	sfHttpMultipleChoices EQU 300
+	sfHttpMovedPermanently EQU 301
+	sfHttpMovedTemporarily EQU 302
+	sfHttpNotModified EQU 304
+	sfHttpBadRequest EQU 400
+	sfHttpUnauthorized EQU 401
+	sfHttpForbidden EQU 403
+	sfHttpNotFound EQU 404
+	sfHttpRangeNotSatisfiable EQU 407
+	sfHttpInternalServerError EQU 500
+	sfHttpNotImplemented EQU 501
+	sfHttpBadGateway EQU 502
+	sfHttpServiceNotAvailable EQU 503
+	sfHttpGatewayTimeout EQU 504
+	sfHttpVersionNotSupported EQU 505
+	sfHttpInvalidResponse EQU 1000
+	sfHttpConnectionFailed EQU 1001
+; sfHttpStatus ENDE 
+
+; sfSocketStatus ENUM 
+	sfSocketDone EQU 0
+	sfSocketNotReady EQU 1
+	sfSocketPartial EQU 2
+	sfSocketDisconnected EQU 3
+	sfSocketError EQU 4
+; sfSocketStatus ENDE 
+
+
+; Functions
+; 
+sfBuffer_create PROTO
+
+; buffer:sfBuffer *
+sfBuffer_destroy PROTO
+
+; buffer:sfBuffer const *
+sfBuffer_getSize PROTO
+
+; buffer:sfBuffer const *
+sfBuffer_getData PROTO
+
+; time:sfTime
+sfTime_asSeconds PROTO
+
+; time:sfTime
+sfTime_asMilliseconds PROTO
+
+; time:sfTime
+sfTime_asMicroseconds PROTO
+
+; amount:float
+sfSeconds PROTO
+
+; amount:sfInt32
+sfMilliseconds PROTO
+
+; amount:sfInt64
+sfMicroseconds PROTO
+
+; 
+sfClock_create PROTO
+
+; clock:sfClock const *
+sfClock_copy PROTO
+
+; clock:sfClock *
+sfClock_destroy PROTO
+
+; clock:sfClock const *
+sfClock_getElapsedTime PROTO
+
+; clock:sfClock *
+sfClock_restart PROTO
+
+; 
+sfMutex_create PROTO
+
+; mutex:sfMutex *
+sfMutex_destroy PROTO
+
+; mutex:sfMutex *
+sfMutex_lock PROTO
+
+; mutex:sfMutex *
+sfMutex_unlock PROTO
+
+; duration:sfTime
+sfSleep PROTO
+
+; function:void (*)(void *) *, userData:void *
+sfThread_create PROTO
+
+; thread:sfThread *
+sfThread_destroy PROTO
+
+; thread:sfThread *
+sfThread_launch PROTO
+
+; thread:sfThread *
+sfThread_wait PROTO
+
+; thread:sfThread *
+sfThread_terminate PROTO
+
+; volume:float
+sfListener_setGlobalVolume PROTO
+
+; 
+sfListener_getGlobalVolume PROTO
+
+; position:sfVector3f
+sfListener_setPosition PROTO
+
+; 
+sfListener_getPosition PROTO
+
+; direction:sfVector3f
+sfListener_setDirection PROTO
+
+; 
+sfListener_getDirection PROTO
+
+; upVector:sfVector3f
+sfListener_setUpVector PROTO
+
+; 
+sfListener_getUpVector PROTO
+
+; filename:char const *
+sfMusic_createFromFile PROTO
+
+; data:void const *, sizeInBytes:size_t
+sfMusic_createFromMemory PROTO
+
+; stream:sfInputStream *
+sfMusic_createFromStream PROTO
+
+; music:sfMusic *
+sfMusic_destroy PROTO
+
+; music:sfMusic *, loop:sfBool
+sfMusic_setLoop PROTO
+
+; music:sfMusic const *
+sfMusic_getLoop PROTO
+
+; music:sfMusic const *
+sfMusic_getDuration PROTO
+
+; music:sfMusic const *
+sfMusic_getLoopPoints PROTO
+
+; music:sfMusic *, timePoints:sfTimeSpan
+sfMusic_setLoopPoints PROTO
+
+; music:sfMusic *
+sfMusic_play PROTO
+
+; music:sfMusic *
+sfMusic_pause PROTO
+
+; music:sfMusic *
+sfMusic_stop PROTO
+
+; music:sfMusic const *
+sfMusic_getChannelCount PROTO
+
+; music:sfMusic const *
+sfMusic_getSampleRate PROTO
+
+; music:sfMusic const *
+sfMusic_getStatus PROTO
+
+; music:sfMusic const *
+sfMusic_getPlayingOffset PROTO
+
+; music:sfMusic *, pitch:float
+sfMusic_setPitch PROTO
+
+; music:sfMusic *, volume:float
+sfMusic_setVolume PROTO
+
+; music:sfMusic *, position:sfVector3f
+sfMusic_setPosition PROTO
+
+; music:sfMusic *, relative:sfBool
+sfMusic_setRelativeToListener PROTO
+
+; music:sfMusic *, distance:float
+sfMusic_setMinDistance PROTO
+
+; music:sfMusic *, attenuation:float
+sfMusic_setAttenuation PROTO
+
+; music:sfMusic *, timeOffset:sfTime
+sfMusic_setPlayingOffset PROTO
+
+; music:sfMusic const *
+sfMusic_getPitch PROTO
+
+; music:sfMusic const *
+sfMusic_getVolume PROTO
+
+; music:sfMusic const *
+sfMusic_getPosition PROTO
+
+; music:sfMusic const *
+sfMusic_isRelativeToListener PROTO
+
+; music:sfMusic const *
+sfMusic_getMinDistance PROTO
+
+; music:sfMusic const *
+sfMusic_getAttenuation PROTO
+
+; 
+sfSound_create PROTO
+
+; sound:sfSound const *
+sfSound_copy PROTO
+
+; sound:sfSound *
+sfSound_destroy PROTO
+
+; sound:sfSound *
+sfSound_play PROTO
+
+; sound:sfSound *
+sfSound_pause PROTO
+
+; sound:sfSound *
+sfSound_stop PROTO
+
+; sound:sfSound *, buffer:sfSoundBuffer const *
+sfSound_setBuffer PROTO
+
+; sound:sfSound const *
+sfSound_getBuffer PROTO
+
+; sound:sfSound *, loop:sfBool
+sfSound_setLoop PROTO
+
+; sound:sfSound const *
+sfSound_getLoop PROTO
+
+; sound:sfSound const *
+sfSound_getStatus PROTO
+
+; sound:sfSound *, pitch:float
+sfSound_setPitch PROTO
+
+; sound:sfSound *, volume:float
+sfSound_setVolume PROTO
+
+; sound:sfSound *, position:sfVector3f
+sfSound_setPosition PROTO
+
+; sound:sfSound *, relative:sfBool
+sfSound_setRelativeToListener PROTO
+
+; sound:sfSound *, distance:float
+sfSound_setMinDistance PROTO
+
+; sound:sfSound *, attenuation:float
+sfSound_setAttenuation PROTO
+
+; sound:sfSound *, timeOffset:sfTime
+sfSound_setPlayingOffset PROTO
+
+; sound:sfSound const *
+sfSound_getPitch PROTO
+
+; sound:sfSound const *
+sfSound_getVolume PROTO
+
+; sound:sfSound const *
+sfSound_getPosition PROTO
+
+; sound:sfSound const *
+sfSound_isRelativeToListener PROTO
+
+; sound:sfSound const *
+sfSound_getMinDistance PROTO
+
+; sound:sfSound const *
+sfSound_getAttenuation PROTO
+
+; sound:sfSound const *
+sfSound_getPlayingOffset PROTO
+
+; filename:char const *
+sfSoundBuffer_createFromFile PROTO
+
+; data:void const *, sizeInBytes:size_t
+sfSoundBuffer_createFromMemory PROTO
+
+; stream:sfInputStream *
+sfSoundBuffer_createFromStream PROTO
+
+; samples:sfInt16 const *, sampleCount:sfUint64, channelCount:unsigned int, sampleRate:unsigned int
+sfSoundBuffer_createFromSamples PROTO
+
+; soundBuffer:sfSoundBuffer const *
+sfSoundBuffer_copy PROTO
+
+; soundBuffer:sfSoundBuffer *
+sfSoundBuffer_destroy PROTO
+
+; soundBuffer:sfSoundBuffer const *, filename:char const *
+sfSoundBuffer_saveToFile PROTO
+
+; soundBuffer:sfSoundBuffer const *
+sfSoundBuffer_getSamples PROTO
+
+; soundBuffer:sfSoundBuffer const *
+sfSoundBuffer_getSampleCount PROTO
+
+; soundBuffer:sfSoundBuffer const *
+sfSoundBuffer_getSampleRate PROTO
+
+; soundBuffer:sfSoundBuffer const *
+sfSoundBuffer_getChannelCount PROTO
+
+; soundBuffer:sfSoundBuffer const *
+sfSoundBuffer_getDuration PROTO
+
+; 
+sfSoundBufferRecorder_create PROTO
+
+; soundBufferRecorder:sfSoundBufferRecorder *
+sfSoundBufferRecorder_destroy PROTO
+
+; soundBufferRecorder:sfSoundBufferRecorder *, sampleRate:unsigned int
+sfSoundBufferRecorder_start PROTO
+
+; soundBufferRecorder:sfSoundBufferRecorder *
+sfSoundBufferRecorder_stop PROTO
+
+; soundBufferRecorder:sfSoundBufferRecorder const *
+sfSoundBufferRecorder_getSampleRate PROTO
+
+; soundBufferRecorder:sfSoundBufferRecorder const *
+sfSoundBufferRecorder_getBuffer PROTO
+
+; soundBufferRecorder:sfSoundBufferRecorder *, name:char const *
+sfSoundBufferRecorder_setDevice PROTO
+
+; soundBufferRecorder:sfSoundBufferRecorder *
+sfSoundBufferRecorder_getDevice PROTO
+
+; onStart:sfSoundRecorderStartCallback, onProcess:sfSoundRecorderProcessCallback, onStop:sfSoundRecorderStopCallback, userData:void *
+sfSoundRecorder_create PROTO
+
+; soundRecorder:sfSoundRecorder *
+sfSoundRecorder_destroy PROTO
+
+; soundRecorder:sfSoundRecorder *, sampleRate:unsigned int
+sfSoundRecorder_start PROTO
+
+; soundRecorder:sfSoundRecorder *
+sfSoundRecorder_stop PROTO
+
+; soundRecorder:sfSoundRecorder const *
+sfSoundRecorder_getSampleRate PROTO
+
+; 
+sfSoundRecorder_isAvailable PROTO
+
+; soundRecorder:sfSoundRecorder *, interval:sfTime
+sfSoundRecorder_setProcessingInterval PROTO
+
+; count:size_t *
+sfSoundRecorder_getAvailableDevices PROTO
+
+; 
+sfSoundRecorder_getDefaultDevice PROTO
+
+; soundRecorder:sfSoundRecorder *, name:char const *
+sfSoundRecorder_setDevice PROTO
+
+; soundRecorder:sfSoundRecorder *
+sfSoundRecorder_getDevice PROTO
+
+; soundRecorder:sfSoundRecorder *, channelCount:unsigned int
+sfSoundRecorder_setChannelCount PROTO
+
+; soundRecorder:sfSoundRecorder const *
+sfSoundRecorder_getChannelCount PROTO
+
+; onGetData:sfSoundStreamGetDataCallback, onSeek:sfSoundStreamSeekCallback, channelCount:unsigned int, sampleRate:unsigned int, userData:void *
+sfSoundStream_create PROTO
+
+; soundStream:sfSoundStream *
+sfSoundStream_destroy PROTO
+
+; soundStream:sfSoundStream *
+sfSoundStream_play PROTO
+
+; soundStream:sfSoundStream *
+sfSoundStream_pause PROTO
+
+; soundStream:sfSoundStream *
+sfSoundStream_stop PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getStatus PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getChannelCount PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getSampleRate PROTO
+
+; soundStream:sfSoundStream *, pitch:float
+sfSoundStream_setPitch PROTO
+
+; soundStream:sfSoundStream *, volume:float
+sfSoundStream_setVolume PROTO
+
+; soundStream:sfSoundStream *, position:sfVector3f
+sfSoundStream_setPosition PROTO
+
+; soundStream:sfSoundStream *, relative:sfBool
+sfSoundStream_setRelativeToListener PROTO
+
+; soundStream:sfSoundStream *, distance:float
+sfSoundStream_setMinDistance PROTO
+
+; soundStream:sfSoundStream *, attenuation:float
+sfSoundStream_setAttenuation PROTO
+
+; soundStream:sfSoundStream *, timeOffset:sfTime
+sfSoundStream_setPlayingOffset PROTO
+
+; soundStream:sfSoundStream *, loop:sfBool
+sfSoundStream_setLoop PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getPitch PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getVolume PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getPosition PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_isRelativeToListener PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getMinDistance PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getAttenuation PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getLoop PROTO
+
+; soundStream:sfSoundStream const *
+sfSoundStream_getPlayingOffset PROTO
+
+; 
+sfClipboard_getString PROTO
+
+; 
+sfClipboard_getUnicodeString PROTO
+
+; text:char const *
+sfClipboard_setString PROTO
+
+; text:sfUint32 const *
+sfClipboard_setUnicodeString PROTO
+
+; joystick:unsigned int
+sfJoystick_isConnected PROTO
+
+; joystick:unsigned int
+sfJoystick_getButtonCount PROTO
+
+; joystick:unsigned int, axis:sfJoystickAxis
+sfJoystick_hasAxis PROTO
+
+; joystick:unsigned int, button:unsigned int
+sfJoystick_isButtonPressed PROTO
+
+; joystick:unsigned int, axis:sfJoystickAxis
+sfJoystick_getAxisPosition PROTO
+
+; joystick:unsigned int
+sfJoystick_getIdentification PROTO
+
+; 
+sfJoystick_update PROTO
+
+; key:sfKeyCode
+sfKeyboard_isKeyPressed PROTO
+
+; code:sfScancode
+sfKeyboard_isScancodePressed PROTO
+
+; code:sfScancode
+sfKeyboard_localize PROTO
+
+; key:sfKeyCode
+sfKeyboard_delocalize PROTO
+
+; code:sfScancode
+sfKeyboard_getDescription PROTO
+
+; visible:sfBool
+sfKeyboard_setVirtualKeyboardVisible PROTO
+
+; button:sfMouseButton
+sfMouse_isButtonPressed PROTO
+
+; relativeTo:sfWindow const *
+sfMouse_getPosition PROTO
+
+; position:sfVector2i, relativeTo:sfWindow const *
+sfMouse_setPosition PROTO
+
+; relativeTo:sfWindowBase const *
+sfMouse_getPositionWindowBase PROTO
+
+; position:sfVector2i, relativeTo:sfWindowBase const *
+sfMouse_setPositionWindowBase PROTO
+
+; sensor:sfSensorType
+sfSensor_isAvailable PROTO
+
+; sensor:sfSensorType, enabled:sfBool
+sfSensor_setEnabled PROTO
+
+; sensor:sfSensorType
+sfSensor_getValue PROTO
+
+; 
+sfVideoMode_getDesktopMode PROTO
+
+; count:size_t *
+sfVideoMode_getFullscreenModes PROTO
+
+; mode:sfVideoMode
+sfVideoMode_isValid PROTO
+
+; requireGraphics:sfBool
+sfVulkan_isAvailable PROTO
+
+; name:char const *
+sfVulkan_getFunction PROTO
+
+; count:size_t *
+sfVulkan_getGraphicsRequiredInstanceExtensions PROTO
+
+; mode:sfVideoMode, title:char const *, style:sfUint32
+sfWindowBase_create PROTO
+
+; mode:sfVideoMode, title:sfUint32 const *, style:sfUint32
+sfWindowBase_createUnicode PROTO
+
+; handle:sfWindowHandle
+sfWindowBase_createFromHandle PROTO
+
+; windowBase:sfWindowBase *
+sfWindowBase_destroy PROTO
+
+; windowBase:sfWindowBase *
+sfWindowBase_close PROTO
+
+; windowBase:sfWindowBase const *
+sfWindowBase_isOpen PROTO
+
+; windowBase:sfWindowBase *, event:sfEvent *
+sfWindowBase_pollEvent PROTO
+
+; windowBase:sfWindowBase *, event:sfEvent *
+sfWindowBase_waitEvent PROTO
+
+; windowBase:sfWindowBase const *
+sfWindowBase_getPosition PROTO
+
+; windowBase:sfWindowBase *, position:sfVector2i
+sfWindowBase_setPosition PROTO
+
+; windowBase:sfWindowBase const *
+sfWindowBase_getSize PROTO
+
+; windowBase:sfWindowBase *, size:sfVector2u
+sfWindowBase_setSize PROTO
+
+; windowBase:sfWindowBase *, title:char const *
+sfWindowBase_setTitle PROTO
+
+; windowBase:sfWindowBase *, title:sfUint32 const *
+sfWindowBase_setUnicodeTitle PROTO
+
+; windowBase:sfWindowBase *, width:unsigned int, height:unsigned int, pixels:sfUint8 const *
+sfWindowBase_setIcon PROTO
+
+; windowBase:sfWindowBase *, visible:sfBool
+sfWindowBase_setVisible PROTO
+
+; windowBase:sfWindowBase *, visible:sfBool
+sfWindowBase_setMouseCursorVisible PROTO
+
+; windowBase:sfWindowBase *, grabbed:sfBool
+sfWindowBase_setMouseCursorGrabbed PROTO
+
+; windowBase:sfWindowBase *, cursor:sfCursor const *
+sfWindowBase_setMouseCursor PROTO
+
+; windowBase:sfWindowBase *, enabled:sfBool
+sfWindowBase_setKeyRepeatEnabled PROTO
+
+; windowBase:sfWindowBase *, threshold:float
+sfWindowBase_setJoystickThreshold PROTO
+
+; windowBase:sfWindowBase *
+sfWindowBase_requestFocus PROTO
+
+; windowBase:sfWindowBase const *
+sfWindowBase_hasFocus PROTO
+
+; windowBase:sfWindowBase const *
+sfWindowBase_getSystemHandle PROTO
+
+; windowBase:sfWindowBase *, instance:VkInstance const *, surface:VkSurfaceKHR *, allocator:VkAllocationCallbacks const *
+sfWindowBase_createVulkanSurface PROTO
+
+; mode:sfVideoMode, title:char const *, style:sfUint32, settings:sfContextSettings const *
+sfWindow_create PROTO
+
+; mode:sfVideoMode, title:sfUint32 const *, style:sfUint32, settings:sfContextSettings const *
+sfWindow_createUnicode PROTO
+
+; handle:sfWindowHandle, settings:sfContextSettings const *
+sfWindow_createFromHandle PROTO
+
+; window:sfWindow *
+sfWindow_destroy PROTO
+
+; window:sfWindow *
+sfWindow_close PROTO
+
+; window:sfWindow const *
+sfWindow_isOpen PROTO
+
+; window:sfWindow const *
+sfWindow_getSettings PROTO
+
+; window:sfWindow *, event:sfEvent *
+sfWindow_pollEvent PROTO
+
+; window:sfWindow *, event:sfEvent *
+sfWindow_waitEvent PROTO
+
+; window:sfWindow const *
+sfWindow_getPosition PROTO
+
+; window:sfWindow *, position:sfVector2i
+sfWindow_setPosition PROTO
+
+; window:sfWindow const *
+sfWindow_getSize PROTO
+
+; window:sfWindow *, size:sfVector2u
+sfWindow_setSize PROTO
+
+; window:sfWindow *, title:char const *
+sfWindow_setTitle PROTO
+
+; window:sfWindow *, title:sfUint32 const *
+sfWindow_setUnicodeTitle PROTO
+
+; window:sfWindow *, width:unsigned int, height:unsigned int, pixels:sfUint8 const *
+sfWindow_setIcon PROTO
+
+; window:sfWindow *, visible:sfBool
+sfWindow_setVisible PROTO
+
+; window:sfWindow *, enabled:sfBool
+sfWindow_setVerticalSyncEnabled PROTO
+
+; window:sfWindow *, visible:sfBool
+sfWindow_setMouseCursorVisible PROTO
+
+; window:sfWindow *, grabbed:sfBool
+sfWindow_setMouseCursorGrabbed PROTO
+
+; window:sfWindow *, cursor:sfCursor const *
+sfWindow_setMouseCursor PROTO
+
+; window:sfWindow *, enabled:sfBool
+sfWindow_setKeyRepeatEnabled PROTO
+
+; window:sfWindow *, limit:unsigned int
+sfWindow_setFramerateLimit PROTO
+
+; window:sfWindow *, threshold:float
+sfWindow_setJoystickThreshold PROTO
+
+; window:sfWindow *, active:sfBool
+sfWindow_setActive PROTO
+
+; window:sfWindow *
+sfWindow_requestFocus PROTO
+
+; window:sfWindow const *
+sfWindow_hasFocus PROTO
+
+; window:sfWindow *
+sfWindow_display PROTO
+
+; window:sfWindow const *
+sfWindow_getSystemHandle PROTO
+
+; window:sfWindow *, instance:VkInstance const *, surface:VkSurfaceKHR *, allocator:VkAllocationCallbacks const *
+sfWindow_createVulkanSurface PROTO
+
+; 
+sfContext_create PROTO
+
+; context:sfContext *
+sfContext_destroy PROTO
+
+; name:char const *
+sfContext_isExtensionAvailable PROTO
+
+; context:sfContext *, active:sfBool
+sfContext_setActive PROTO
+
+; name:char const *
+sfContext_getFunction PROTO
+
+; context:sfContext const *
+sfContext_getSettings PROTO
+
+; 
+sfContext_getActiveContextId PROTO
+
+; pixels:sfUint8 const *, size:sfVector2u, hotspot:sfVector2u
+sfCursor_createFromPixels PROTO
+
+; type:sfCursorType
+sfCursor_createFromSystem PROTO
+
+; cursor:sfCursor *
+sfCursor_destroy PROTO
+
+; finger:unsigned int
+sfTouch_isDown PROTO
+
+; finger:unsigned int, relativeTo:sfWindow const *
+sfTouch_getPosition PROTO
+
+; finger:unsigned int, relativeTo:sfWindowBase const *
+sfTouch_getPositionWindowBase PROTO
+
+; red:sfUint8, green:sfUint8, blue:sfUint8
+sfColor_fromRGB PROTO
+
+; red:sfUint8, green:sfUint8, blue:sfUint8, alpha:sfUint8
+sfColor_fromRGBA PROTO
+
+; color:sfUint32
+sfColor_fromInteger PROTO
+
+; color:sfColor
+sfColor_toInteger PROTO
+
+; color1:sfColor, color2:sfColor
+sfColor_add PROTO
+
+; color1:sfColor, color2:sfColor
+sfColor_subtract PROTO
+
+; color1:sfColor, color2:sfColor
+sfColor_modulate PROTO
+
+; rect:sfFloatRect const *, x:float, y:float
+sfFloatRect_contains PROTO
+
+; rect:sfIntRect const *, x:int, y:int
+sfIntRect_contains PROTO
+
+; rect1:sfFloatRect const *, rect2:sfFloatRect const *, intersection:sfFloatRect *
+sfFloatRect_intersects PROTO
+
+; rect1:sfIntRect const *, rect2:sfIntRect const *, intersection:sfIntRect *
+sfIntRect_intersects PROTO
+
+; rect:sfFloatRect const *
+sfFloatRect_getPosition PROTO
+
+; rect:sfIntRect const *
+sfIntRect_getPosition PROTO
+
+; rect:sfFloatRect const *
+sfFloatRect_getSize PROTO
+
+; rect:sfIntRect const *
+sfIntRect_getSize PROTO
+
+; a00:float, a01:float, a02:float, a10:float, a11:float, a12:float, a20:float, a21:float, a22:float
+sfTransform_fromMatrix PROTO
+
+; transform:sfTransform const *, matrix:float *
+sfTransform_getMatrix PROTO
+
+; transform:sfTransform const *
+sfTransform_getInverse PROTO
+
+; transform:sfTransform const *, point:sfVector2f
+sfTransform_transformPoint PROTO
+
+; transform:sfTransform const *, rectangle:sfFloatRect
+sfTransform_transformRect PROTO
+
+; transform:sfTransform *, other:sfTransform const *
+sfTransform_combine PROTO
+
+; transform:sfTransform *, x:float, y:float
+sfTransform_translate PROTO
+
+; transform:sfTransform *, angle:float
+sfTransform_rotate PROTO
+
+; transform:sfTransform *, angle:float, centerX:float, centerY:float
+sfTransform_rotateWithCenter PROTO
+
+; transform:sfTransform *, scaleX:float, scaleY:float
+sfTransform_scale PROTO
+
+; transform:sfTransform *, scaleX:float, scaleY:float, centerX:float, centerY:float
+sfTransform_scaleWithCenter PROTO
+
+; left:sfTransform *, right:sfTransform *
+sfTransform_equal PROTO
+
+; 
+sfCircleShape_create PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_copy PROTO
+
+; shape:sfCircleShape *
+sfCircleShape_destroy PROTO
+
+; shape:sfCircleShape *, position:sfVector2f
+sfCircleShape_setPosition PROTO
+
+; shape:sfCircleShape *, angle:float
+sfCircleShape_setRotation PROTO
+
+; shape:sfCircleShape *, scale:sfVector2f
+sfCircleShape_setScale PROTO
+
+; shape:sfCircleShape *, origin:sfVector2f
+sfCircleShape_setOrigin PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getPosition PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getRotation PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getScale PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getOrigin PROTO
+
+; shape:sfCircleShape *, offset:sfVector2f
+sfCircleShape_move PROTO
+
+; shape:sfCircleShape *, angle:float
+sfCircleShape_rotate PROTO
+
+; shape:sfCircleShape *, factors:sfVector2f
+sfCircleShape_scale PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getTransform PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getInverseTransform PROTO
+
+; shape:sfCircleShape *, texture:sfTexture const *, resetRect:sfBool
+sfCircleShape_setTexture PROTO
+
+; shape:sfCircleShape *, rect:sfIntRect
+sfCircleShape_setTextureRect PROTO
+
+; shape:sfCircleShape *, color:sfColor
+sfCircleShape_setFillColor PROTO
+
+; shape:sfCircleShape *, color:sfColor
+sfCircleShape_setOutlineColor PROTO
+
+; shape:sfCircleShape *, thickness:float
+sfCircleShape_setOutlineThickness PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getTexture PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getTextureRect PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getFillColor PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getOutlineColor PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getOutlineThickness PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getPointCount PROTO
+
+; shape:sfCircleShape const *, index:size_t
+sfCircleShape_getPoint PROTO
+
+; shape:sfCircleShape *, radius:float
+sfCircleShape_setRadius PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getRadius PROTO
+
+; shape:sfCircleShape *, count:size_t
+sfCircleShape_setPointCount PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getLocalBounds PROTO
+
+; shape:sfCircleShape const *
+sfCircleShape_getGlobalBounds PROTO
+
+; 
+sfConvexShape_create PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_copy PROTO
+
+; shape:sfConvexShape *
+sfConvexShape_destroy PROTO
+
+; shape:sfConvexShape *, position:sfVector2f
+sfConvexShape_setPosition PROTO
+
+; shape:sfConvexShape *, angle:float
+sfConvexShape_setRotation PROTO
+
+; shape:sfConvexShape *, scale:sfVector2f
+sfConvexShape_setScale PROTO
+
+; shape:sfConvexShape *, origin:sfVector2f
+sfConvexShape_setOrigin PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getPosition PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getRotation PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getScale PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getOrigin PROTO
+
+; shape:sfConvexShape *, offset:sfVector2f
+sfConvexShape_move PROTO
+
+; shape:sfConvexShape *, angle:float
+sfConvexShape_rotate PROTO
+
+; shape:sfConvexShape *, factors:sfVector2f
+sfConvexShape_scale PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getTransform PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getInverseTransform PROTO
+
+; shape:sfConvexShape *, texture:sfTexture const *, resetRect:sfBool
+sfConvexShape_setTexture PROTO
+
+; shape:sfConvexShape *, rect:sfIntRect
+sfConvexShape_setTextureRect PROTO
+
+; shape:sfConvexShape *, color:sfColor
+sfConvexShape_setFillColor PROTO
+
+; shape:sfConvexShape *, color:sfColor
+sfConvexShape_setOutlineColor PROTO
+
+; shape:sfConvexShape *, thickness:float
+sfConvexShape_setOutlineThickness PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getTexture PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getTextureRect PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getFillColor PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getOutlineColor PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getOutlineThickness PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getPointCount PROTO
+
+; shape:sfConvexShape const *, index:size_t
+sfConvexShape_getPoint PROTO
+
+; shape:sfConvexShape *, count:size_t
+sfConvexShape_setPointCount PROTO
+
+; shape:sfConvexShape *, index:size_t, point:sfVector2f
+sfConvexShape_setPoint PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getLocalBounds PROTO
+
+; shape:sfConvexShape const *
+sfConvexShape_getGlobalBounds PROTO
+
+; filename:char const *
+sfFont_createFromFile PROTO
+
+; data:void const *, sizeInBytes:size_t
+sfFont_createFromMemory PROTO
+
+; stream:sfInputStream *
+sfFont_createFromStream PROTO
+
+; font:sfFont const *
+sfFont_copy PROTO
+
+; font:sfFont *
+sfFont_destroy PROTO
+
+; font:sfFont const *, codePoint:sfUint32, characterSize:unsigned int, bold:sfBool, outlineThickness:float
+sfFont_getGlyph PROTO
+
+; font:sfFont const *, codePoint:sfUint32
+sfFont_hasGlyph PROTO
+
+; font:sfFont const *, first:sfUint32, second:sfUint32, characterSize:unsigned int
+sfFont_getKerning PROTO
+
+; font:sfFont const *, first:sfUint32, second:sfUint32, characterSize:unsigned int
+sfFont_getBoldKerning PROTO
+
+; font:sfFont const *, characterSize:unsigned int
+sfFont_getLineSpacing PROTO
+
+; font:sfFont const *, characterSize:unsigned int
+sfFont_getUnderlinePosition PROTO
+
+; font:sfFont const *, characterSize:unsigned int
+sfFont_getUnderlineThickness PROTO
+
+; font:sfFont *, characterSize:unsigned int
+sfFont_getTexture PROTO
+
+; font:sfFont *, smooth:sfBool
+sfFont_setSmooth PROTO
+
+; font:sfFont const *
+sfFont_isSmooth PROTO
+
+; font:sfFont const *
+sfFont_getInfo PROTO
+
+; width:unsigned int, height:unsigned int
+sfImage_create PROTO
+
+; width:unsigned int, height:unsigned int, color:sfColor
+sfImage_createFromColor PROTO
+
+; width:unsigned int, height:unsigned int, pixels:sfUint8 const *
+sfImage_createFromPixels PROTO
+
+; filename:char const *
+sfImage_createFromFile PROTO
+
+; data:void const *, size:size_t
+sfImage_createFromMemory PROTO
+
+; stream:sfInputStream *
+sfImage_createFromStream PROTO
+
+; image:sfImage const *
+sfImage_copy PROTO
+
+; image:sfImage *
+sfImage_destroy PROTO
+
+; image:sfImage const *, filename:char const *
+sfImage_saveToFile PROTO
+
+; image:sfImage const *, output:sfBuffer *, format:char const *
+sfImage_saveToMemory PROTO
+
+; image:sfImage const *
+sfImage_getSize PROTO
+
+; image:sfImage *, color:sfColor, alpha:sfUint8
+sfImage_createMaskFromColor PROTO
+
+; image:sfImage *, source:sfImage const *, destX:unsigned int, destY:unsigned int, sourceRect:sfIntRect, applyAlpha:sfBool
+sfImage_copyImage PROTO
+
+; image:sfImage *, x:unsigned int, y:unsigned int, color:sfColor
+sfImage_setPixel PROTO
+
+; image:sfImage const *, x:unsigned int, y:unsigned int
+sfImage_getPixel PROTO
+
+; image:sfImage const *
+sfImage_getPixelsPtr PROTO
+
+; image:sfImage *
+sfImage_flipHorizontally PROTO
+
+; image:sfImage *
+sfImage_flipVertically PROTO
+
+; 
+sfRectangleShape_create PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_copy PROTO
+
+; shape:sfRectangleShape *
+sfRectangleShape_destroy PROTO
+
+; shape:sfRectangleShape *, position:sfVector2f
+sfRectangleShape_setPosition PROTO
+
+; shape:sfRectangleShape *, angle:float
+sfRectangleShape_setRotation PROTO
+
+; shape:sfRectangleShape *, scale:sfVector2f
+sfRectangleShape_setScale PROTO
+
+; shape:sfRectangleShape *, origin:sfVector2f
+sfRectangleShape_setOrigin PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getPosition PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getRotation PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getScale PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getOrigin PROTO
+
+; shape:sfRectangleShape *, offset:sfVector2f
+sfRectangleShape_move PROTO
+
+; shape:sfRectangleShape *, angle:float
+sfRectangleShape_rotate PROTO
+
+; shape:sfRectangleShape *, factors:sfVector2f
+sfRectangleShape_scale PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getTransform PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getInverseTransform PROTO
+
+; shape:sfRectangleShape *, texture:sfTexture const *, resetRect:sfBool
+sfRectangleShape_setTexture PROTO
+
+; shape:sfRectangleShape *, rect:sfIntRect
+sfRectangleShape_setTextureRect PROTO
+
+; shape:sfRectangleShape *, color:sfColor
+sfRectangleShape_setFillColor PROTO
+
+; shape:sfRectangleShape *, color:sfColor
+sfRectangleShape_setOutlineColor PROTO
+
+; shape:sfRectangleShape *, thickness:float
+sfRectangleShape_setOutlineThickness PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getTexture PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getTextureRect PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getFillColor PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getOutlineColor PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getOutlineThickness PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getPointCount PROTO
+
+; shape:sfRectangleShape const *, index:size_t
+sfRectangleShape_getPoint PROTO
+
+; shape:sfRectangleShape *, size:sfVector2f
+sfRectangleShape_setSize PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getSize PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getLocalBounds PROTO
+
+; shape:sfRectangleShape const *
+sfRectangleShape_getGlobalBounds PROTO
+
+; 
+sfRenderStates_default PROTO
+
+; width:unsigned int, height:unsigned int, depthBuffer:sfBool
+sfRenderTexture_create PROTO
+
+; width:unsigned int, height:unsigned int, settings:sfContextSettings const *
+sfRenderTexture_createWithSettings PROTO
+
+; renderTexture:sfRenderTexture *
+sfRenderTexture_destroy PROTO
+
+; renderTexture:sfRenderTexture const *
+sfRenderTexture_getSize PROTO
+
+; renderTexture:sfRenderTexture const *
+sfRenderTexture_isSrgb PROTO
+
+; renderTexture:sfRenderTexture *, active:sfBool
+sfRenderTexture_setActive PROTO
+
+; renderTexture:sfRenderTexture *
+sfRenderTexture_display PROTO
+
+; renderTexture:sfRenderTexture *, color:sfColor
+sfRenderTexture_clear PROTO
+
+; renderTexture:sfRenderTexture *, view:sfView const *
+sfRenderTexture_setView PROTO
+
+; renderTexture:sfRenderTexture const *
+sfRenderTexture_getView PROTO
+
+; renderTexture:sfRenderTexture const *
+sfRenderTexture_getDefaultView PROTO
+
+; renderTexture:sfRenderTexture const *, view:sfView const *
+sfRenderTexture_getViewport PROTO
+
+; renderTexture:sfRenderTexture const *, point:sfVector2i, view:sfView const *
+sfRenderTexture_mapPixelToCoords PROTO
+
+; renderTexture:sfRenderTexture const *, point:sfVector2f, view:sfView const *
+sfRenderTexture_mapCoordsToPixel PROTO
+
+; renderTexture:sfRenderTexture *, object:sfSprite const *, states:sfRenderStates const *
+sfRenderTexture_drawSprite PROTO
+
+; renderTexture:sfRenderTexture *, object:sfText const *, states:sfRenderStates const *
+sfRenderTexture_drawText PROTO
+
+; renderTexture:sfRenderTexture *, object:sfShape const *, states:sfRenderStates const *
+sfRenderTexture_drawShape PROTO
+
+; renderTexture:sfRenderTexture *, object:sfCircleShape const *, states:sfRenderStates const *
+sfRenderTexture_drawCircleShape PROTO
+
+; renderTexture:sfRenderTexture *, object:sfConvexShape const *, states:sfRenderStates const *
+sfRenderTexture_drawConvexShape PROTO
+
+; renderTexture:sfRenderTexture *, object:sfRectangleShape const *, states:sfRenderStates const *
+sfRenderTexture_drawRectangleShape PROTO
+
+; renderTexture:sfRenderTexture *, object:sfVertexArray const *, states:sfRenderStates const *
+sfRenderTexture_drawVertexArray PROTO
+
+; renderTexture:sfRenderTexture *, object:sfVertexBuffer const *, states:sfRenderStates const *
+sfRenderTexture_drawVertexBuffer PROTO
+
+; renderTexture:sfRenderTexture *, object:sfVertexBuffer const *, firstVertex:size_t, vertexCount:size_t, states:sfRenderStates const *
+sfRenderTexture_drawVertexBufferRange PROTO
+
+; renderTexture:sfRenderTexture *, vertices:sfVertex const *, vertexCount:size_t, type:sfPrimitiveType, states:sfRenderStates const *
+sfRenderTexture_drawPrimitives PROTO
+
+; renderTexture:sfRenderTexture *
+sfRenderTexture_pushGLStates PROTO
+
+; renderTexture:sfRenderTexture *
+sfRenderTexture_popGLStates PROTO
+
+; renderTexture:sfRenderTexture *
+sfRenderTexture_resetGLStates PROTO
+
+; renderTexture:sfRenderTexture const *
+sfRenderTexture_getTexture PROTO
+
+; 
+sfRenderTexture_getMaximumAntialiasingLevel PROTO
+
+; renderTexture:sfRenderTexture *, smooth:sfBool
+sfRenderTexture_setSmooth PROTO
+
+; renderTexture:sfRenderTexture const *
+sfRenderTexture_isSmooth PROTO
+
+; renderTexture:sfRenderTexture *, repeated:sfBool
+sfRenderTexture_setRepeated PROTO
+
+; renderTexture:sfRenderTexture const *
+sfRenderTexture_isRepeated PROTO
+
+; renderTexture:sfRenderTexture *
+sfRenderTexture_generateMipmap PROTO
+
+; mode:sfVideoMode, title:char const *, style:sfUint32, settings:sfContextSettings const *
+sfRenderWindow_create PROTO
+
+; mode:sfVideoMode, title:sfUint32 const *, style:sfUint32, settings:sfContextSettings const *
+sfRenderWindow_createUnicode PROTO
+
+; handle:sfWindowHandle, settings:sfContextSettings const *
+sfRenderWindow_createFromHandle PROTO
+
+; renderWindow:sfRenderWindow *
+sfRenderWindow_destroy PROTO
+
+; renderWindow:sfRenderWindow *
+sfRenderWindow_close PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_isOpen PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_getSettings PROTO
+
+; renderWindow:sfRenderWindow *, event:sfEvent *
+sfRenderWindow_pollEvent PROTO
+
+; renderWindow:sfRenderWindow *, event:sfEvent *
+sfRenderWindow_waitEvent PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_getPosition PROTO
+
+; renderWindow:sfRenderWindow *, position:sfVector2i
+sfRenderWindow_setPosition PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_getSize PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_isSrgb PROTO
+
+; renderWindow:sfRenderWindow *, size:sfVector2u
+sfRenderWindow_setSize PROTO
+
+; renderWindow:sfRenderWindow *, title:char const *
+sfRenderWindow_setTitle PROTO
+
+; renderWindow:sfRenderWindow *, title:sfUint32 const *
+sfRenderWindow_setUnicodeTitle PROTO
+
+; renderWindow:sfRenderWindow *, width:unsigned int, height:unsigned int, pixels:sfUint8 const *
+sfRenderWindow_setIcon PROTO
+
+; renderWindow:sfRenderWindow *, visible:sfBool
+sfRenderWindow_setVisible PROTO
+
+; renderWindow:sfRenderWindow *, enabled:sfBool
+sfRenderWindow_setVerticalSyncEnabled PROTO
+
+; renderWindow:sfRenderWindow *, show:sfBool
+sfRenderWindow_setMouseCursorVisible PROTO
+
+; renderWindow:sfRenderWindow *, grabbed:sfBool
+sfRenderWindow_setMouseCursorGrabbed PROTO
+
+; window:sfRenderWindow *, cursor:sfCursor const *
+sfRenderWindow_setMouseCursor PROTO
+
+; renderWindow:sfRenderWindow *, enabled:sfBool
+sfRenderWindow_setKeyRepeatEnabled PROTO
+
+; renderWindow:sfRenderWindow *, limit:unsigned int
+sfRenderWindow_setFramerateLimit PROTO
+
+; renderWindow:sfRenderWindow *, threshold:float
+sfRenderWindow_setJoystickThreshold PROTO
+
+; renderWindow:sfRenderWindow *, active:sfBool
+sfRenderWindow_setActive PROTO
+
+; renderWindow:sfRenderWindow *
+sfRenderWindow_requestFocus PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_hasFocus PROTO
+
+; renderWindow:sfRenderWindow *
+sfRenderWindow_display PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_getSystemHandle PROTO
+
+; renderWindow:sfRenderWindow *, color:sfColor
+sfRenderWindow_clear PROTO
+
+; renderWindow:sfRenderWindow *, view:sfView const *
+sfRenderWindow_setView PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_getView PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_getDefaultView PROTO
+
+; renderWindow:sfRenderWindow const *, view:sfView const *
+sfRenderWindow_getViewport PROTO
+
+; renderWindow:sfRenderWindow const *, point:sfVector2i, view:sfView const *
+sfRenderWindow_mapPixelToCoords PROTO
+
+; renderWindow:sfRenderWindow const *, point:sfVector2f, view:sfView const *
+sfRenderWindow_mapCoordsToPixel PROTO
+
+; renderWindow:sfRenderWindow *, object:sfSprite const *, states:sfRenderStates const *
+sfRenderWindow_drawSprite PROTO
+
+; renderWindow:sfRenderWindow *, object:sfText const *, states:sfRenderStates const *
+sfRenderWindow_drawText PROTO
+
+; renderWindow:sfRenderWindow *, object:sfShape const *, states:sfRenderStates const *
+sfRenderWindow_drawShape PROTO
+
+; renderWindow:sfRenderWindow *, object:sfCircleShape const *, states:sfRenderStates const *
+sfRenderWindow_drawCircleShape PROTO
+
+; renderWindow:sfRenderWindow *, object:sfConvexShape const *, states:sfRenderStates const *
+sfRenderWindow_drawConvexShape PROTO
+
+; renderWindow:sfRenderWindow *, object:sfRectangleShape const *, states:sfRenderStates const *
+sfRenderWindow_drawRectangleShape PROTO
+
+; renderWindow:sfRenderWindow *, object:sfVertexArray const *, states:sfRenderStates const *
+sfRenderWindow_drawVertexArray PROTO
+
+; renderWindow:sfRenderWindow *, object:sfVertexBuffer const *, states:sfRenderStates const *
+sfRenderWindow_drawVertexBuffer PROTO
+
+; renderWindow:sfRenderWindow *, object:sfVertexBuffer const *, firstVertex:size_t, vertexCount:size_t, states:sfRenderStates const *
+sfRenderWindow_drawVertexBufferRange PROTO
+
+; renderWindow:sfRenderWindow *, vertices:sfVertex const *, vertexCount:size_t, type:sfPrimitiveType, states:sfRenderStates const *
+sfRenderWindow_drawPrimitives PROTO
+
+; renderWindow:sfRenderWindow *
+sfRenderWindow_pushGLStates PROTO
+
+; renderWindow:sfRenderWindow *
+sfRenderWindow_popGLStates PROTO
+
+; renderWindow:sfRenderWindow *
+sfRenderWindow_resetGLStates PROTO
+
+; renderWindow:sfRenderWindow const *
+sfRenderWindow_capture PROTO
+
+; relativeTo:sfRenderWindow const *
+sfMouse_getPositionRenderWindow PROTO
+
+; position:sfVector2i, relativeTo:sfRenderWindow const *
+sfMouse_setPositionRenderWindow PROTO
+
+; finger:unsigned int, relativeTo:sfRenderWindow const *
+sfTouch_getPositionRenderWindow PROTO
+
+; renderWindow:sfRenderWindow *, instance:VkInstance const *, surface:VkSurfaceKHR *, allocator:VkAllocationCallbacks const *
+sfRenderWindow_createVulkanSurface PROTO
+
+; vertexShaderFilename:char const *, geometryShaderFilename:char const *, fragmentShaderFilename:char const *
+sfShader_createFromFile PROTO
+
+; vertexShader:char const *, geometryShader:char const *, fragmentShader:char const *
+sfShader_createFromMemory PROTO
+
+; vertexShaderStream:sfInputStream *, geometryShaderStream:sfInputStream *, fragmentShaderStream:sfInputStream *
+sfShader_createFromStream PROTO
+
+; shader:sfShader *
+sfShader_destroy PROTO
+
+; shader:sfShader *, name:char const *, x:float
+sfShader_setFloatUniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslVec2
+sfShader_setVec2Uniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslVec3
+sfShader_setVec3Uniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslVec4
+sfShader_setVec4Uniform PROTO
+
+; shader:sfShader *, name:char const *, color:sfColor
+sfShader_setColorUniform PROTO
+
+; shader:sfShader *, name:char const *, x:int
+sfShader_setIntUniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslIvec2
+sfShader_setIvec2Uniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslIvec3
+sfShader_setIvec3Uniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslIvec4
+sfShader_setIvec4Uniform PROTO
+
+; shader:sfShader *, name:char const *, color:sfColor
+sfShader_setIntColorUniform PROTO
+
+; shader:sfShader *, name:char const *, x:sfBool
+sfShader_setBoolUniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslBvec2
+sfShader_setBvec2Uniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslBvec3
+sfShader_setBvec3Uniform PROTO
+
+; shader:sfShader *, name:char const *, vector:sfGlslBvec4
+sfShader_setBvec4Uniform PROTO
+
+; shader:sfShader *, name:char const *, matrix:sfGlslMat3 const *
+sfShader_setMat3Uniform PROTO
+
+; shader:sfShader *, name:char const *, matrix:sfGlslMat4 const *
+sfShader_setMat4Uniform PROTO
+
+; shader:sfShader *, name:char const *, texture:sfTexture const *
+sfShader_setTextureUniform PROTO
+
+; shader:sfShader *, name:char const *
+sfShader_setCurrentTextureUniform PROTO
+
+; shader:sfShader *, name:char const *, scalarArray:float const *, length:size_t
+sfShader_setFloatUniformArray PROTO
+
+; shader:sfShader *, name:char const *, vectorArray:sfGlslVec2 const *, length:size_t
+sfShader_setVec2UniformArray PROTO
+
+; shader:sfShader *, name:char const *, vectorArray:sfGlslVec3 const *, length:size_t
+sfShader_setVec3UniformArray PROTO
+
+; shader:sfShader *, name:char const *, vectorArray:sfGlslVec4 const *, length:size_t
+sfShader_setVec4UniformArray PROTO
+
+; shader:sfShader *, name:char const *, matrixArray:sfGlslMat3 const *, length:size_t
+sfShader_setMat3UniformArray PROTO
+
+; shader:sfShader *, name:char const *, matrixArray:sfGlslMat4 const *, length:size_t
+sfShader_setMat4UniformArray PROTO
+
+; shader:sfShader *, name:char const *, x:float
+sfShader_setFloatParameter PROTO
+
+; shader:sfShader *, name:char const *, x:float, y:float
+sfShader_setFloat2Parameter PROTO
+
+; shader:sfShader *, name:char const *, x:float, y:float, z:float
+sfShader_setFloat3Parameter PROTO
+
+; shader:sfShader *, name:char const *, x:float, y:float, z:float, w:float
+sfShader_setFloat4Parameter PROTO
+
+; shader:sfShader *, name:char const *, vector:sfVector2f
+sfShader_setVector2Parameter PROTO
+
+; shader:sfShader *, name:char const *, vector:sfVector3f
+sfShader_setVector3Parameter PROTO
+
+; shader:sfShader *, name:char const *, color:sfColor
+sfShader_setColorParameter PROTO
+
+; shader:sfShader *, name:char const *, transform:sfTransform
+sfShader_setTransformParameter PROTO
+
+; shader:sfShader *, name:char const *, texture:sfTexture const *
+sfShader_setTextureParameter PROTO
+
+; shader:sfShader *, name:char const *
+sfShader_setCurrentTextureParameter PROTO
+
+; shader:sfShader const *
+sfShader_getNativeHandle PROTO
+
+; shader:sfShader const *
+sfShader_bind PROTO
+
+; 
+sfShader_isAvailable PROTO
+
+; 
+sfShader_isGeometryAvailable PROTO
+
+; getPointCount:sfShapeGetPointCountCallback, getPoint:sfShapeGetPointCallback, userData:void *
+sfShape_create PROTO
+
+; shape:sfShape *
+sfShape_destroy PROTO
+
+; shape:sfShape *, position:sfVector2f
+sfShape_setPosition PROTO
+
+; shape:sfShape *, angle:float
+sfShape_setRotation PROTO
+
+; shape:sfShape *, scale:sfVector2f
+sfShape_setScale PROTO
+
+; shape:sfShape *, origin:sfVector2f
+sfShape_setOrigin PROTO
+
+; shape:sfShape const *
+sfShape_getPosition PROTO
+
+; shape:sfShape const *
+sfShape_getRotation PROTO
+
+; shape:sfShape const *
+sfShape_getScale PROTO
+
+; shape:sfShape const *
+sfShape_getOrigin PROTO
+
+; shape:sfShape *, offset:sfVector2f
+sfShape_move PROTO
+
+; shape:sfShape *, angle:float
+sfShape_rotate PROTO
+
+; shape:sfShape *, factors:sfVector2f
+sfShape_scale PROTO
+
+; shape:sfShape const *
+sfShape_getTransform PROTO
+
+; shape:sfShape const *
+sfShape_getInverseTransform PROTO
+
+; shape:sfShape *, texture:sfTexture const *, resetRect:sfBool
+sfShape_setTexture PROTO
+
+; shape:sfShape *, rect:sfIntRect
+sfShape_setTextureRect PROTO
+
+; shape:sfShape *, color:sfColor
+sfShape_setFillColor PROTO
+
+; shape:sfShape *, color:sfColor
+sfShape_setOutlineColor PROTO
+
+; shape:sfShape *, thickness:float
+sfShape_setOutlineThickness PROTO
+
+; shape:sfShape const *
+sfShape_getTexture PROTO
+
+; shape:sfShape const *
+sfShape_getTextureRect PROTO
+
+; shape:sfShape const *
+sfShape_getFillColor PROTO
+
+; shape:sfShape const *
+sfShape_getOutlineColor PROTO
+
+; shape:sfShape const *
+sfShape_getOutlineThickness PROTO
+
+; shape:sfShape const *
+sfShape_getPointCount PROTO
+
+; shape:sfShape const *, index:size_t
+sfShape_getPoint PROTO
+
+; shape:sfShape const *
+sfShape_getLocalBounds PROTO
+
+; shape:sfShape const *
+sfShape_getGlobalBounds PROTO
+
+; shape:sfShape *
+sfShape_update PROTO
+
+; 
+sfSprite_create PROTO
+
+; sprite:sfSprite const *
+sfSprite_copy PROTO
+
+; sprite:sfSprite *
+sfSprite_destroy PROTO
+
+; sprite:sfSprite *, position:sfVector2f
+sfSprite_setPosition PROTO
+
+; sprite:sfSprite *, angle:float
+sfSprite_setRotation PROTO
+
+; sprite:sfSprite *, scale:sfVector2f
+sfSprite_setScale PROTO
+
+; sprite:sfSprite *, origin:sfVector2f
+sfSprite_setOrigin PROTO
+
+; sprite:sfSprite const *
+sfSprite_getPosition PROTO
+
+; sprite:sfSprite const *
+sfSprite_getRotation PROTO
+
+; sprite:sfSprite const *
+sfSprite_getScale PROTO
+
+; sprite:sfSprite const *
+sfSprite_getOrigin PROTO
+
+; sprite:sfSprite *, offset:sfVector2f
+sfSprite_move PROTO
+
+; sprite:sfSprite *, angle:float
+sfSprite_rotate PROTO
+
+; sprite:sfSprite *, factors:sfVector2f
+sfSprite_scale PROTO
+
+; sprite:sfSprite const *
+sfSprite_getTransform PROTO
+
+; sprite:sfSprite const *
+sfSprite_getInverseTransform PROTO
+
+; sprite:sfSprite *, texture:sfTexture const *, resetRect:sfBool
+sfSprite_setTexture PROTO
+
+; sprite:sfSprite *, rectangle:sfIntRect
+sfSprite_setTextureRect PROTO
+
+; sprite:sfSprite *, color:sfColor
+sfSprite_setColor PROTO
+
+; sprite:sfSprite const *
+sfSprite_getTexture PROTO
+
+; sprite:sfSprite const *
+sfSprite_getTextureRect PROTO
+
+; sprite:sfSprite const *
+sfSprite_getColor PROTO
+
+; sprite:sfSprite const *
+sfSprite_getLocalBounds PROTO
+
+; sprite:sfSprite const *
+sfSprite_getGlobalBounds PROTO
+
+; 
+sfText_create PROTO
+
+; text:sfText const *
+sfText_copy PROTO
+
+; text:sfText *
+sfText_destroy PROTO
+
+; text:sfText *, position:sfVector2f
+sfText_setPosition PROTO
+
+; text:sfText *, angle:float
+sfText_setRotation PROTO
+
+; text:sfText *, scale:sfVector2f
+sfText_setScale PROTO
+
+; text:sfText *, origin:sfVector2f
+sfText_setOrigin PROTO
+
+; text:sfText const *
+sfText_getPosition PROTO
+
+; text:sfText const *
+sfText_getRotation PROTO
+
+; text:sfText const *
+sfText_getScale PROTO
+
+; text:sfText const *
+sfText_getOrigin PROTO
+
+; text:sfText *, offset:sfVector2f
+sfText_move PROTO
+
+; text:sfText *, angle:float
+sfText_rotate PROTO
+
+; text:sfText *, factors:sfVector2f
+sfText_scale PROTO
+
+; text:sfText const *
+sfText_getTransform PROTO
+
+; text:sfText const *
+sfText_getInverseTransform PROTO
+
+; text:sfText *, string:char const *
+sfText_setString PROTO
+
+; text:sfText *, string:sfUint32 const *
+sfText_setUnicodeString PROTO
+
+; text:sfText *, font:sfFont const *
+sfText_setFont PROTO
+
+; text:sfText *, size:unsigned int
+sfText_setCharacterSize PROTO
+
+; text:sfText *, spacingFactor:float
+sfText_setLineSpacing PROTO
+
+; text:sfText *, spacingFactor:float
+sfText_setLetterSpacing PROTO
+
+; text:sfText *, style:sfUint32
+sfText_setStyle PROTO
+
+; text:sfText *, color:sfColor
+sfText_setColor PROTO
+
+; text:sfText *, color:sfColor
+sfText_setFillColor PROTO
+
+; text:sfText *, color:sfColor
+sfText_setOutlineColor PROTO
+
+; text:sfText *, thickness:float
+sfText_setOutlineThickness PROTO
+
+; text:sfText const *
+sfText_getString PROTO
+
+; text:sfText const *
+sfText_getUnicodeString PROTO
+
+; text:sfText const *
+sfText_getFont PROTO
+
+; text:sfText const *
+sfText_getCharacterSize PROTO
+
+; text:sfText const *
+sfText_getLetterSpacing PROTO
+
+; text:sfText const *
+sfText_getLineSpacing PROTO
+
+; text:sfText const *
+sfText_getStyle PROTO
+
+; text:sfText const *
+sfText_getColor PROTO
+
+; text:sfText const *
+sfText_getFillColor PROTO
+
+; text:sfText const *
+sfText_getOutlineColor PROTO
+
+; text:sfText const *
+sfText_getOutlineThickness PROTO
+
+; text:sfText const *, index:size_t
+sfText_findCharacterPos PROTO
+
+; text:sfText const *
+sfText_getLocalBounds PROTO
+
+; text:sfText const *
+sfText_getGlobalBounds PROTO
+
+; width:unsigned int, height:unsigned int
+sfTexture_create PROTO
+
+; filename:char const *, area:sfIntRect const *
+sfTexture_createFromFile PROTO
+
+; filename:char const *, area:sfIntRect const *
+sfTexture_createSrgbFromFile PROTO
+
+; data:void const *, sizeInBytes:size_t, area:sfIntRect const *
+sfTexture_createFromMemory PROTO
+
+; data:void const *, sizeInBytes:size_t, area:sfIntRect const *
+sfTexture_createSrgbFromMemory PROTO
+
+; stream:sfInputStream *, area:sfIntRect const *
+sfTexture_createFromStream PROTO
+
+; stream:sfInputStream *, area:sfIntRect const *
+sfTexture_createSrgbFromStream PROTO
+
+; image:sfImage const *, area:sfIntRect const *
+sfTexture_createFromImage PROTO
+
+; image:sfImage const *, area:sfIntRect const *
+sfTexture_createSrgbFromImage PROTO
+
+; texture:sfTexture const *
+sfTexture_copy PROTO
+
+; texture:sfTexture *
+sfTexture_destroy PROTO
+
+; texture:sfTexture const *
+sfTexture_getSize PROTO
+
+; texture:sfTexture const *
+sfTexture_copyToImage PROTO
+
+; texture:sfTexture *, pixels:sfUint8 const *, width:unsigned int, height:unsigned int, x:unsigned int, y:unsigned int
+sfTexture_updateFromPixels PROTO
+
+; destination:sfTexture *, source:sfTexture const *, x:unsigned int, y:unsigned int
+sfTexture_updateFromTexture PROTO
+
+; texture:sfTexture *, image:sfImage const *, x:unsigned int, y:unsigned int
+sfTexture_updateFromImage PROTO
+
+; texture:sfTexture *, window:sfWindow const *, x:unsigned int, y:unsigned int
+sfTexture_updateFromWindow PROTO
+
+; texture:sfTexture *, renderWindow:sfRenderWindow const *, x:unsigned int, y:unsigned int
+sfTexture_updateFromRenderWindow PROTO
+
+; texture:sfTexture *, smooth:sfBool
+sfTexture_setSmooth PROTO
+
+; texture:sfTexture const *
+sfTexture_isSmooth PROTO
+
+; texture:sfTexture const *
+sfTexture_isSrgb PROTO
+
+; texture:sfTexture *, repeated:sfBool
+sfTexture_setRepeated PROTO
+
+; texture:sfTexture const *
+sfTexture_isRepeated PROTO
+
+; texture:sfTexture *
+sfTexture_generateMipmap PROTO
+
+; left:sfTexture *, right:sfTexture *
+sfTexture_swap PROTO
+
+; texture:sfTexture const *
+sfTexture_getNativeHandle PROTO
+
+; texture:sfTexture const *, type:sfTextureCoordinateType
+sfTexture_bind PROTO
+
+; 
+sfTexture_getMaximumSize PROTO
+
+; 
+sfTransformable_create PROTO
+
+; transformable:sfTransformable const *
+sfTransformable_copy PROTO
+
+; transformable:sfTransformable *
+sfTransformable_destroy PROTO
+
+; transformable:sfTransformable *, position:sfVector2f
+sfTransformable_setPosition PROTO
+
+; transformable:sfTransformable *, angle:float
+sfTransformable_setRotation PROTO
+
+; transformable:sfTransformable *, scale:sfVector2f
+sfTransformable_setScale PROTO
+
+; transformable:sfTransformable *, origin:sfVector2f
+sfTransformable_setOrigin PROTO
+
+; transformable:sfTransformable const *
+sfTransformable_getPosition PROTO
+
+; transformable:sfTransformable const *
+sfTransformable_getRotation PROTO
+
+; transformable:sfTransformable const *
+sfTransformable_getScale PROTO
+
+; transformable:sfTransformable const *
+sfTransformable_getOrigin PROTO
+
+; transformable:sfTransformable *, offset:sfVector2f
+sfTransformable_move PROTO
+
+; transformable:sfTransformable *, angle:float
+sfTransformable_rotate PROTO
+
+; transformable:sfTransformable *, factors:sfVector2f
+sfTransformable_scale PROTO
+
+; transformable:sfTransformable const *
+sfTransformable_getTransform PROTO
+
+; transformable:sfTransformable const *
+sfTransformable_getInverseTransform PROTO
+
+; 
+sfVertexArray_create PROTO
+
+; vertexArray:sfVertexArray const *
+sfVertexArray_copy PROTO
+
+; vertexArray:sfVertexArray *
+sfVertexArray_destroy PROTO
+
+; vertexArray:sfVertexArray const *
+sfVertexArray_getVertexCount PROTO
+
+; vertexArray:sfVertexArray *, index:size_t
+sfVertexArray_getVertex PROTO
+
+; vertexArray:sfVertexArray *
+sfVertexArray_clear PROTO
+
+; vertexArray:sfVertexArray *, vertexCount:size_t
+sfVertexArray_resize PROTO
+
+; vertexArray:sfVertexArray *, vertex:sfVertex
+sfVertexArray_append PROTO
+
+; vertexArray:sfVertexArray *, type:sfPrimitiveType
+sfVertexArray_setPrimitiveType PROTO
+
+; vertexArray:sfVertexArray *
+sfVertexArray_getPrimitiveType PROTO
+
+; vertexArray:sfVertexArray *
+sfVertexArray_getBounds PROTO
+
+; vertexCount:unsigned int, type:sfPrimitiveType, usage:sfVertexBufferUsage
+sfVertexBuffer_create PROTO
+
+; vertexBuffer:sfVertexBuffer const *
+sfVertexBuffer_copy PROTO
+
+; vertexBuffer:sfVertexBuffer *
+sfVertexBuffer_destroy PROTO
+
+; vertexBuffer:sfVertexBuffer const *
+sfVertexBuffer_getVertexCount PROTO
+
+; vertexBuffer:sfVertexBuffer *, vertices:sfVertex const *, vertexCount:unsigned int, offset:unsigned int
+sfVertexBuffer_update PROTO
+
+; vertexBuffer:sfVertexBuffer *, other:sfVertexBuffer const *
+sfVertexBuffer_updateFromVertexBuffer PROTO
+
+; left:sfVertexBuffer *, right:sfVertexBuffer *
+sfVertexBuffer_swap PROTO
+
+; vertexBuffer:sfVertexBuffer *
+sfVertexBuffer_getNativeHandle PROTO
+
+; vertexBuffer:sfVertexBuffer *, type:sfPrimitiveType
+sfVertexBuffer_setPrimitiveType PROTO
+
+; vertexBuffer:sfVertexBuffer const *
+sfVertexBuffer_getPrimitiveType PROTO
+
+; vertexBuffer:sfVertexBuffer *, usage:sfVertexBufferUsage
+sfVertexBuffer_setUsage PROTO
+
+; vertexBuffer:sfVertexBuffer const *
+sfVertexBuffer_getUsage PROTO
+
+; vertexBuffer:sfVertexBuffer const *
+sfVertexBuffer_bind PROTO
+
+; 
+sfVertexBuffer_isAvailable PROTO
+
+; 
+sfView_create PROTO
+
+; rectangle:sfFloatRect
+sfView_createFromRect PROTO
+
+; view:sfView const *
+sfView_copy PROTO
+
+; view:sfView *
+sfView_destroy PROTO
+
+; view:sfView *, center:sfVector2f
+sfView_setCenter PROTO
+
+; view:sfView *, size:sfVector2f
+sfView_setSize PROTO
+
+; view:sfView *, angle:float
+sfView_setRotation PROTO
+
+; view:sfView *, viewport:sfFloatRect
+sfView_setViewport PROTO
+
+; view:sfView *, rectangle:sfFloatRect
+sfView_reset PROTO
+
+; view:sfView const *
+sfView_getCenter PROTO
+
+; view:sfView const *
+sfView_getSize PROTO
+
+; view:sfView const *
+sfView_getRotation PROTO
+
+; view:sfView const *
+sfView_getViewport PROTO
+
+; view:sfView *, offset:sfVector2f
+sfView_move PROTO
+
+; view:sfView *, angle:float
+sfView_rotate PROTO
+
+; view:sfView *, factor:float
+sfView_zoom PROTO
+
+; address:char const *
+sfIpAddress_fromString PROTO
+
+; byte0:sfUint8, byte1:sfUint8, byte2:sfUint8, byte3:sfUint8
+sfIpAddress_fromBytes PROTO
+
+; address:sfUint32
+sfIpAddress_fromInteger PROTO
+
+; address:sfIpAddress, string:char *
+sfIpAddress_toString PROTO
+
+; address:sfIpAddress
+sfIpAddress_toInteger PROTO
+
+; 
+sfIpAddress_getLocalAddress PROTO
+
+; timeout:sfTime
+sfIpAddress_getPublicAddress PROTO
+
+; ftpListingResponse:sfFtpListingResponse *
+sfFtpListingResponse_destroy PROTO
+
+; ftpListingResponse:sfFtpListingResponse const *
+sfFtpListingResponse_isOk PROTO
+
+; ftpListingResponse:sfFtpListingResponse const *
+sfFtpListingResponse_getStatus PROTO
+
+; ftpListingResponse:sfFtpListingResponse const *
+sfFtpListingResponse_getMessage PROTO
+
+; ftpListingResponse:sfFtpListingResponse const *
+sfFtpListingResponse_getCount PROTO
+
+; ftpListingResponse:sfFtpListingResponse const *, index:size_t
+sfFtpListingResponse_getName PROTO
+
+; ftpDirectoryResponse:sfFtpDirectoryResponse *
+sfFtpDirectoryResponse_destroy PROTO
+
+; ftpDirectoryResponse:sfFtpDirectoryResponse const *
+sfFtpDirectoryResponse_isOk PROTO
+
+; ftpDirectoryResponse:sfFtpDirectoryResponse const *
+sfFtpDirectoryResponse_getStatus PROTO
+
+; ftpDirectoryResponse:sfFtpDirectoryResponse const *
+sfFtpDirectoryResponse_getMessage PROTO
+
+; ftpDirectoryResponse:sfFtpDirectoryResponse const *
+sfFtpDirectoryResponse_getDirectory PROTO
+
+; ftpResponse:sfFtpResponse *
+sfFtpResponse_destroy PROTO
+
+; ftpResponse:sfFtpResponse const *
+sfFtpResponse_isOk PROTO
+
+; ftpResponse:sfFtpResponse const *
+sfFtpResponse_getStatus PROTO
+
+; ftpResponse:sfFtpResponse const *
+sfFtpResponse_getMessage PROTO
+
+; 
+sfFtp_create PROTO
+
+; ftp:sfFtp *
+sfFtp_destroy PROTO
+
+; ftp:sfFtp *, server:sfIpAddress, port:unsigned short, timeout:sfTime
+sfFtp_connect PROTO
+
+; ftp:sfFtp *
+sfFtp_loginAnonymous PROTO
+
+; ftp:sfFtp *, name:char const *, password:char const *
+sfFtp_login PROTO
+
+; ftp:sfFtp *
+sfFtp_disconnect PROTO
+
+; ftp:sfFtp *
+sfFtp_keepAlive PROTO
+
+; ftp:sfFtp *
+sfFtp_getWorkingDirectory PROTO
+
+; ftp:sfFtp *, directory:char const *
+sfFtp_getDirectoryListing PROTO
+
+; ftp:sfFtp *, directory:char const *
+sfFtp_changeDirectory PROTO
+
+; ftp:sfFtp *
+sfFtp_parentDirectory PROTO
+
+; ftp:sfFtp *, name:char const *
+sfFtp_createDirectory PROTO
+
+; ftp:sfFtp *, name:char const *
+sfFtp_deleteDirectory PROTO
+
+; ftp:sfFtp *, file:char const *, newName:char const *
+sfFtp_renameFile PROTO
+
+; ftp:sfFtp *, name:char const *
+sfFtp_deleteFile PROTO
+
+; ftp:sfFtp *, remoteFile:char const *, localPath:char const *, mode:sfFtpTransferMode
+sfFtp_download PROTO
+
+; ftp:sfFtp *, localFile:char const *, remotePath:char const *, mode:sfFtpTransferMode, append:sfBool
+sfFtp_upload PROTO
+
+; ftp:sfFtp *, command:char const *, parameter:char const *
+sfFtp_sendCommand PROTO
+
+; 
+sfHttpRequest_create PROTO
+
+; httpRequest:sfHttpRequest *
+sfHttpRequest_destroy PROTO
+
+; httpRequest:sfHttpRequest *, field:char const *, value:char const *
+sfHttpRequest_setField PROTO
+
+; httpRequest:sfHttpRequest *, method:sfHttpMethod
+sfHttpRequest_setMethod PROTO
+
+; httpRequest:sfHttpRequest *, uri:char const *
+sfHttpRequest_setUri PROTO
+
+; httpRequest:sfHttpRequest *, major:unsigned int, minor:unsigned int
+sfHttpRequest_setHttpVersion PROTO
+
+; httpRequest:sfHttpRequest *, body:char const *
+sfHttpRequest_setBody PROTO
+
+; httpResponse:sfHttpResponse *
+sfHttpResponse_destroy PROTO
+
+; httpResponse:sfHttpResponse const *, field:char const *
+sfHttpResponse_getField PROTO
+
+; httpResponse:sfHttpResponse const *
+sfHttpResponse_getStatus PROTO
+
+; httpResponse:sfHttpResponse const *
+sfHttpResponse_getMajorVersion PROTO
+
+; httpResponse:sfHttpResponse const *
+sfHttpResponse_getMinorVersion PROTO
+
+; httpResponse:sfHttpResponse const *
+sfHttpResponse_getBody PROTO
+
+; 
+sfHttp_create PROTO
+
+; http:sfHttp *
+sfHttp_destroy PROTO
+
+; http:sfHttp *, host:char const *, port:unsigned short
+sfHttp_setHost PROTO
+
+; http:sfHttp *, request:sfHttpRequest const *, timeout:sfTime
+sfHttp_sendRequest PROTO
+
+; 
+sfPacket_create PROTO
+
+; packet:sfPacket const *
+sfPacket_copy PROTO
+
+; packet:sfPacket *
+sfPacket_destroy PROTO
+
+; packet:sfPacket *, data:void const *, sizeInBytes:size_t
+sfPacket_append PROTO
+
+; packet:sfPacket const *
+sfPacket_getReadPosition PROTO
+
+; packet:sfPacket *
+sfPacket_clear PROTO
+
+; packet:sfPacket const *
+sfPacket_getData PROTO
+
+; packet:sfPacket const *
+sfPacket_getDataSize PROTO
+
+; packet:sfPacket const *
+sfPacket_endOfPacket PROTO
+
+; packet:sfPacket const *
+sfPacket_canRead PROTO
+
+; packet:sfPacket *
+sfPacket_readBool PROTO
+
+; packet:sfPacket *
+sfPacket_readInt8 PROTO
+
+; packet:sfPacket *
+sfPacket_readUint8 PROTO
+
+; packet:sfPacket *
+sfPacket_readInt16 PROTO
+
+; packet:sfPacket *
+sfPacket_readUint16 PROTO
+
+; packet:sfPacket *
+sfPacket_readInt32 PROTO
+
+; packet:sfPacket *
+sfPacket_readUint32 PROTO
+
+; packet:sfPacket *
+sfPacket_readFloat PROTO
+
+; packet:sfPacket *
+sfPacket_readDouble PROTO
+
+; packet:sfPacket *, string:char *
+sfPacket_readString PROTO
+
+; packet:sfPacket *, string:wchar *
+sfPacket_readWideString PROTO
+
+; packet:sfPacket *, :sfBool
+sfPacket_writeBool PROTO
+
+; packet:sfPacket *, :sfInt8
+sfPacket_writeInt8 PROTO
+
+; packet:sfPacket *, :sfUint8
+sfPacket_writeUint8 PROTO
+
+; packet:sfPacket *, :sfInt16
+sfPacket_writeInt16 PROTO
+
+; packet:sfPacket *, :sfUint16
+sfPacket_writeUint16 PROTO
+
+; packet:sfPacket *, :sfInt32
+sfPacket_writeInt32 PROTO
+
+; packet:sfPacket *, :sfUint32
+sfPacket_writeUint32 PROTO
+
+; packet:sfPacket *, :float
+sfPacket_writeFloat PROTO
+
+; packet:sfPacket *, :double
+sfPacket_writeDouble PROTO
+
+; packet:sfPacket *, string:char const *
+sfPacket_writeString PROTO
+
+; packet:sfPacket *, string:wchar const *
+sfPacket_writeWideString PROTO
+
+; 
+sfSocketSelector_create PROTO
+
+; selector:sfSocketSelector const *
+sfSocketSelector_copy PROTO
+
+; selector:sfSocketSelector *
+sfSocketSelector_destroy PROTO
+
+; selector:sfSocketSelector *, socket:sfTcpListener *
+sfSocketSelector_addTcpListener PROTO
+
+; selector:sfSocketSelector *, socket:sfTcpSocket *
+sfSocketSelector_addTcpSocket PROTO
+
+; selector:sfSocketSelector *, socket:sfUdpSocket *
+sfSocketSelector_addUdpSocket PROTO
+
+; selector:sfSocketSelector *, socket:sfTcpListener *
+sfSocketSelector_removeTcpListener PROTO
+
+; selector:sfSocketSelector *, socket:sfTcpSocket *
+sfSocketSelector_removeTcpSocket PROTO
+
+; selector:sfSocketSelector *, socket:sfUdpSocket *
+sfSocketSelector_removeUdpSocket PROTO
+
+; selector:sfSocketSelector *
+sfSocketSelector_clear PROTO
+
+; selector:sfSocketSelector *, timeout:sfTime
+sfSocketSelector_wait PROTO
+
+; selector:sfSocketSelector const *, socket:sfTcpListener *
+sfSocketSelector_isTcpListenerReady PROTO
+
+; selector:sfSocketSelector const *, socket:sfTcpSocket *
+sfSocketSelector_isTcpSocketReady PROTO
+
+; selector:sfSocketSelector const *, socket:sfUdpSocket *
+sfSocketSelector_isUdpSocketReady PROTO
+
+; 
+sfTcpListener_create PROTO
+
+; listener:sfTcpListener *
+sfTcpListener_destroy PROTO
+
+; listener:sfTcpListener *, blocking:sfBool
+sfTcpListener_setBlocking PROTO
+
+; listener:sfTcpListener const *
+sfTcpListener_isBlocking PROTO
+
+; listener:sfTcpListener const *
+sfTcpListener_getLocalPort PROTO
+
+; listener:sfTcpListener *, port:unsigned short, address:sfIpAddress
+sfTcpListener_listen PROTO
+
+; listener:sfTcpListener *, connected:sfTcpSocket * *
+sfTcpListener_accept PROTO
+
+; 
+sfTcpSocket_create PROTO
+
+; socket:sfTcpSocket *
+sfTcpSocket_destroy PROTO
+
+; socket:sfTcpSocket *, blocking:sfBool
+sfTcpSocket_setBlocking PROTO
+
+; socket:sfTcpSocket const *
+sfTcpSocket_isBlocking PROTO
+
+; socket:sfTcpSocket const *
+sfTcpSocket_getLocalPort PROTO
+
+; socket:sfTcpSocket const *
+sfTcpSocket_getRemoteAddress PROTO
+
+; socket:sfTcpSocket const *
+sfTcpSocket_getRemotePort PROTO
+
+; socket:sfTcpSocket *, remoteAddress:sfIpAddress, remotePort:unsigned short, timeout:sfTime
+sfTcpSocket_connect PROTO
+
+; socket:sfTcpSocket *
+sfTcpSocket_disconnect PROTO
+
+; socket:sfTcpSocket *, data:void const *, size:size_t
+sfTcpSocket_send PROTO
+
+; socket:sfTcpSocket *, data:void const *, size:size_t, sent:size_t *
+sfTcpSocket_sendPartial PROTO
+
+; socket:sfTcpSocket *, data:void *, size:size_t, received:size_t *
+sfTcpSocket_receive PROTO
+
+; socket:sfTcpSocket *, packet:sfPacket *
+sfTcpSocket_sendPacket PROTO
+
+; socket:sfTcpSocket *, packet:sfPacket *
+sfTcpSocket_receivePacket PROTO
+
+; 
+sfUdpSocket_create PROTO
+
+; socket:sfUdpSocket *
+sfUdpSocket_destroy PROTO
+
+; socket:sfUdpSocket *, blocking:sfBool
+sfUdpSocket_setBlocking PROTO
+
+; socket:sfUdpSocket const *
+sfUdpSocket_isBlocking PROTO
+
+; socket:sfUdpSocket const *
+sfUdpSocket_getLocalPort PROTO
+
+; socket:sfUdpSocket *, port:unsigned short, address:sfIpAddress
+sfUdpSocket_bind PROTO
+
+; socket:sfUdpSocket *
+sfUdpSocket_unbind PROTO
+
+; socket:sfUdpSocket *, data:void const *, size:size_t, remoteAddress:sfIpAddress, remotePort:unsigned short
+sfUdpSocket_send PROTO
+
+; socket:sfUdpSocket *, data:void *, size:size_t, received:size_t *, remoteAddress:sfIpAddress *, remotePort:unsigned short *
+sfUdpSocket_receive PROTO
+
+; socket:sfUdpSocket *, packet:sfPacket *, remoteAddress:sfIpAddress, remotePort:unsigned short
+sfUdpSocket_sendPacket PROTO
+
+; socket:sfUdpSocket *, packet:sfPacket *, remoteAddress:sfIpAddress *, remotePort:unsigned short *
+sfUdpSocket_receivePacket PROTO
+
+; 
+sfUdpSocket_maxDatagramSize PROTO
+
+; ptr:void *
+sfFree PROTO
+
+; requireGraphics:sfBool
+sfVulkan_isAvailable PROTO
+
+; name:char const *
+sfVulkan_getFunction PROTO
+
+; count:size_t *
+sfVulkan_getGraphicsRequiredInstanceExtensions PROTO
+
+
+; Structs
+sfBuffer STRUCT 16
+sfBuffer ENDS
+
+sfClock STRUCT 16
+sfClock ENDS
+
+sfMutex STRUCT 16
+sfMutex ENDS
+
+sfThread STRUCT 16
+sfThread ENDS
+
+sfTime STRUCT 16
+	microseconds sfInt64 ?
+sfTime ENDS
+
+sfInputStream STRUCT 16
+	read sfInputStreamReadFunc ?
+	seek sfInputStreamSeekFunc ?
+	tell sfInputStreamTellFunc ?
+	getSize sfInputStreamGetSizeFunc ?
+	userData b2ptr ?	; void *
+sfInputStream ENDS
+
+sfVector2i STRUCT 16
+	x int32_t ?
+	y int32_t ?
+sfVector2i ENDS
+
+sfVector2u STRUCT 16
+	x uint32_t ?
+	y uint32_t ?
+sfVector2u ENDS
+
+sfVector2f STRUCT 16
+	x float ?
+	y float ?
+sfVector2f ENDS
+
+sfVector3f STRUCT 16
+	x float ?
+	y float ?
+	z float ?
+sfVector3f ENDS
+
+sfMusic STRUCT 16
+sfMusic ENDS
+
+sfSound STRUCT 16
+sfSound ENDS
+
+sfSoundBuffer STRUCT 16
+sfSoundBuffer ENDS
+
+sfSoundBufferRecorder STRUCT 16
+sfSoundBufferRecorder ENDS
+
+sfSoundRecorder STRUCT 16
+sfSoundRecorder ENDS
+
+sfSoundStream STRUCT 16
+sfSoundStream ENDS
+
+sfTimeSpan STRUCT 16
+	_offset sfTime <>
+	_length sfTime <>
+sfTimeSpan ENDS
+
+sfSoundStreamChunk STRUCT 16
+	samples b2ptr ?	; sfInt16 *
+	sampleCount uint32_t ?
+sfSoundStreamChunk ENDS
+
+sfContext STRUCT 16
+sfContext ENDS
+
+sfCursor STRUCT 16
+sfCursor ENDS
+
+sfWindow STRUCT 16
+sfWindow ENDS
+
+sfWindowBase STRUCT 16
+sfWindowBase ENDS
+
+sfJoystickIdentification STRUCT 16
+	name b2ptr ?	; char const *
+	vendorId uint32_t ?
+	productId uint32_t ?
+sfJoystickIdentification ENDS
+
+sfKeyEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	_code DWORD ?	; sfKeyCode
+	scancode DWORD ?	; sfScancode
+	alt sfBool ?
+	control sfBool ?
+	shift sfBool ?
+	system sfBool ?
+sfKeyEvent ENDS
+
+sfTextEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	unicode sfUint32 ?
+sfTextEvent ENDS
+
+sfMouseMoveEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	x int32_t ?
+	y int32_t ?
+sfMouseMoveEvent ENDS
+
+sfMouseButtonEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	button DWORD ?	; sfMouseButton
+	x int32_t ?
+	y int32_t ?
+sfMouseButtonEvent ENDS
+
+sfMouseWheelEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	delta int32_t ?
+	x int32_t ?
+	y int32_t ?
+sfMouseWheelEvent ENDS
+
+sfMouseWheelScrollEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	wheel DWORD ?	; sfMouseWheel
+	delta float ?
+	x int32_t ?
+	y int32_t ?
+sfMouseWheelScrollEvent ENDS
+
+sfJoystickMoveEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	joystickId uint32_t ?
+	axis DWORD ?	; sfJoystickAxis
+	position float ?
+sfJoystickMoveEvent ENDS
+
+sfJoystickButtonEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	joystickId uint32_t ?
+	button uint32_t ?
+sfJoystickButtonEvent ENDS
+
+sfJoystickConnectEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	joystickId uint32_t ?
+sfJoystickConnectEvent ENDS
+
+sfSizeEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	_width uint32_t ?
+	height uint32_t ?
+sfSizeEvent ENDS
+
+sfTouchEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	finger uint32_t ?
+	x int32_t ?
+	y int32_t ?
+sfTouchEvent ENDS
+
+sfSensorEvent STRUCT 16
+	_type DWORD ?	; sfEventType
+	sensorType DWORD ?	; sfSensorType
+	x float ?
+	y float ?
+	z float ?
+sfSensorEvent ENDS
+
+sfEvent UNION 16
+	_type DWORD ?	; sfEventType
+	_size sfSizeEvent <>
+	key sfKeyEvent <>
+	text sfTextEvent <>
+	mouseMove sfMouseMoveEvent <>
+	mouseButton sfMouseButtonEvent <>
+	mouseWheel sfMouseWheelEvent <>
+	mouseWheelScroll sfMouseWheelScrollEvent <>
+	joystickMove sfJoystickMoveEvent <>
+	joystickButton sfJoystickButtonEvent <>
+	joystickConnect sfJoystickConnectEvent <>
+	touch sfTouchEvent <>
+	sensor sfSensorEvent <>
+sfEvent ENDS
+
+sfVideoMode STRUCT 16
+	_width uint32_t ?
+	height uint32_t ?
+	bitsPerPixel uint32_t ?
+sfVideoMode ENDS
+
+HWND__ STRUCT 16
+	unused int32_t ?
+HWND__ ENDS
+
+VkInstance_T STRUCT 16
+VkInstance_T ENDS
+
+VkSurfaceKHR_T STRUCT 16
+VkSurfaceKHR_T ENDS
+
+VkAllocationCallbacks STRUCT 16
+VkAllocationCallbacks ENDS
+
+sfContextSettings STRUCT 16
+	depthBits uint32_t ?
+	stencilBits uint32_t ?
+	antialiasingLevel uint32_t ?
+	majorVersion uint32_t ?
+	minorVersion uint32_t ?
+	attributeFlags sfUint32 ?
+	sRgbCapable sfBool ?
+sfContextSettings ENDS
+
+sfBlendMode STRUCT 16
+	colorSrcFactor DWORD ?	; sfBlendFactor
+	colorDstFactor DWORD ?	; sfBlendFactor
+	colorEquation DWORD ?	; sfBlendEquation
+	alphaSrcFactor DWORD ?	; sfBlendFactor
+	alphaDstFactor DWORD ?	; sfBlendFactor
+	alphaEquation DWORD ?	; sfBlendEquation
+sfBlendMode ENDS
+
+sfColor STRUCT 16
+	r sfUint8 ?
+	g sfUint8 ?
+	b sfUint8 ?
+	a sfUint8 ?
+sfColor ENDS
+
+sfFloatRect STRUCT 16
+	left float ?
+	top float ?
+	_width float ?
+	height float ?
+sfFloatRect ENDS
+
+sfIntRect STRUCT 16
+	left int32_t ?
+	top int32_t ?
+	_width int32_t ?
+	height int32_t ?
+sfIntRect ENDS
+
+sfCircleShape STRUCT 16
+sfCircleShape ENDS
+
+sfConvexShape STRUCT 16
+sfConvexShape ENDS
+
+sfFont STRUCT 16
+sfFont ENDS
+
+sfImage STRUCT 16
+sfImage ENDS
+
+sfShader STRUCT 16
+sfShader ENDS
+
+sfRectangleShape STRUCT 16
+sfRectangleShape ENDS
+
+sfRenderTexture STRUCT 16
+sfRenderTexture ENDS
+
+sfRenderWindow STRUCT 16
+sfRenderWindow ENDS
+
+sfShape STRUCT 16
+sfShape ENDS
+
+sfSprite STRUCT 16
+sfSprite ENDS
+
+sfText STRUCT 16
+sfText ENDS
+
+sfTexture STRUCT 16
+sfTexture ENDS
+
+sfTransformable STRUCT 16
+sfTransformable ENDS
+
+sfVertexArray STRUCT 16
+sfVertexArray ENDS
+
+sfVertexBuffer STRUCT 16
+sfVertexBuffer ENDS
+
+sfView STRUCT 16
+sfView ENDS
+
+sfTransform STRUCT 16
+	matrix float 9 DUP(?)
+sfTransform ENDS
+
+sfFontInfo STRUCT 16
+	family b2ptr ?	; char const *
+sfFontInfo ENDS
+
+sfGlyph STRUCT 16
+	advance float ?
+	bounds sfFloatRect <>
+	textureRect sfIntRect <>
+sfGlyph ENDS
+
+sfRenderStates STRUCT 16
+	blendMode sfBlendMode <>
+	transform sfTransform <>
+	texture b2ptr ?	; sfTexture const *
+	shader b2ptr ?	; sfShader const *
+sfRenderStates ENDS
+
+sfVertex STRUCT 16
+	position sfVector2f <>
+	color sfColor <>
+	texCoords sfVector2f <>
+sfVertex ENDS
+
+sfGlslBvec2 STRUCT 16
+	x sfBool ?
+	y sfBool ?
+sfGlslBvec2 ENDS
+
+sfGlslIvec3 STRUCT 16
+	x int32_t ?
+	y int32_t ?
+	z int32_t ?
+sfGlslIvec3 ENDS
+
+sfGlslBvec3 STRUCT 16
+	x sfBool ?
+	y sfBool ?
+	z sfBool ?
+sfGlslBvec3 ENDS
+
+sfGlslVec4 STRUCT 16
+	x float ?
+	y float ?
+	z float ?
+	w float ?
+sfGlslVec4 ENDS
+
+sfGlslIvec4 STRUCT 16
+	x int32_t ?
+	y int32_t ?
+	z int32_t ?
+	w int32_t ?
+sfGlslIvec4 ENDS
+
+sfGlslBvec4 STRUCT 16
+	x sfBool ?
+	y sfBool ?
+	z sfBool ?
+	w sfBool ?
+sfGlslBvec4 ENDS
+
+sfGlslMat3 STRUCT 16
+	array float 9 DUP(?)
+sfGlslMat3 ENDS
+
+sfGlslMat4 STRUCT 16
+	array float 16 DUP(?)
+sfGlslMat4 ENDS
+
+sfIpAddress STRUCT 16
+	address char 16 DUP(?)
+sfIpAddress ENDS
+
+sfFtpDirectoryResponse STRUCT 16
+sfFtpDirectoryResponse ENDS
+
+sfFtpListingResponse STRUCT 16
+sfFtpListingResponse ENDS
+
+sfFtpResponse STRUCT 16
+sfFtpResponse ENDS
+
+sfFtp STRUCT 16
+sfFtp ENDS
+
+sfHttpRequest STRUCT 16
+sfHttpRequest ENDS
+
+sfHttpResponse STRUCT 16
+sfHttpResponse ENDS
+
+sfHttp STRUCT 16
+sfHttp ENDS
+
+sfPacket STRUCT 16
+sfPacket ENDS
+
+sfSocketSelector STRUCT 16
+sfSocketSelector ENDS
+
+sfTcpListener STRUCT 16
+sfTcpListener ENDS
+
+sfTcpSocket STRUCT 16
+sfTcpSocket ENDS
+
+sfUdpSocket STRUCT 16
+sfUdpSocket ENDS
+
+

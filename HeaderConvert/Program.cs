@@ -18,11 +18,11 @@ namespace HeaderConvert
 
             var dir = Path.GetFullPath("../box2d/include/box2d");
             var files = Directory.GetFiles(dir).ToList();
-            File.WriteAllText("../box2d.inc", conversion.Convert(files));
+            File.WriteAllText("../include/box2d.inc", conversion.Convert(files));
 
             options.IncludeFolders.Add(Path.GetFullPath("../include"));
             files = Directory.GetFiles(Path.GetFullPath("../include/SFML"), "*.h", SearchOption.AllDirectories).ToList();
-            File.WriteAllText("../csfml.inc", conversion.Convert(files));
+            File.WriteAllText("../include/csfml.inc", conversion.Convert(files));
         }
     }
 }

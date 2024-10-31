@@ -1,0 +1,2239 @@
+b2ptr EQU <QWORD>
+func EQU <QWORD>
+
+; Typedefs
+; void * (*)(unsigned int size, int alignment)
+b2AllocFcn EQU <func>
+
+; void (*)(void * mem)
+b2FreeFcn EQU <func>
+
+; int (*)(char const * condition, char const * fileName, int lineNumber)
+b2AssertFcn EQU <func>
+
+; bool (*)(int32_t proxyId, int32_t userData, void * context)
+b2TreeQueryCallbackFcn EQU <func>
+
+; float (*)(b2RayCastInput const * input, int32_t proxyId, int32_t userData, void * context)
+b2TreeRayCastCallbackFcn EQU <func>
+
+; float (*)(b2ShapeCastInput const * input, int32_t proxyId, int32_t userData, void * context)
+b2TreeShapeCastCallbackFcn EQU <func>
+
+; void (*)(int32_t startIndex, int32_t endIndex, uint32_t workerIndex, void * taskContext)
+b2TaskCallback EQU <func>
+
+; void * (*)(b2TaskCallback * task, int32_t itemCount, int32_t minRange, void * taskContext, void * userContext)
+b2EnqueueTaskCallback EQU <func>
+
+; void (*)(void * userTask, void * userContext)
+b2FinishTaskCallback EQU <func>
+
+; bool (*)(b2ShapeId shapeIdA, b2ShapeId shapeIdB, void * context)
+b2CustomFilterFcn EQU <func>
+
+; bool (*)(b2ShapeId shapeIdA, b2ShapeId shapeIdB, b2Manifold * manifold, void * context)
+b2PreSolveFcn EQU <func>
+
+; bool (*)(b2ShapeId shapeId, void * context)
+b2OverlapResultFcn EQU <func>
+
+; float (*)(b2ShapeId shapeId, b2Vec2 point, b2Vec2 normal, float fraction, void * context)
+b2CastResultFcn EQU <func>
+
+
+; Enums
+; b2TOIState ENUM 
+	b2_toiStateUnknown EQU 0
+	b2_toiStateFailed EQU 1
+	b2_toiStateOverlapped EQU 2
+	b2_toiStateHit EQU 3
+	b2_toiStateSeparated EQU 4
+; b2TOIState ENDE 
+
+; b2MixingRule ENUM 
+	b2_mixAverage EQU 0
+	b2_mixGeometricMean EQU 1
+	b2_mixMultiply EQU 2
+	b2_mixMinimum EQU 3
+	b2_mixMaximum EQU 4
+; b2MixingRule ENDE 
+
+; b2BodyType ENUM 
+	b2_staticBody EQU 0
+	b2_kinematicBody EQU 1
+	b2_dynamicBody EQU 2
+	b2_bodyTypeCount EQU 3
+; b2BodyType ENDE 
+
+; b2ShapeType ENUM 
+	b2_circleShape EQU 0
+	b2_capsuleShape EQU 1
+	b2_segmentShape EQU 2
+	b2_polygonShape EQU 3
+	b2_chainSegmentShape EQU 4
+	b2_shapeTypeCount EQU 5
+; b2ShapeType ENDE 
+
+; b2JointType ENUM 
+	b2_distanceJoint EQU 0
+	b2_motorJoint EQU 1
+	b2_mouseJoint EQU 2
+	b2_nullJoint EQU 3
+	b2_prismaticJoint EQU 4
+	b2_revoluteJoint EQU 5
+	b2_weldJoint EQU 6
+	b2_wheelJoint EQU 7
+; b2JointType ENDE 
+
+; b2HexColor ENUM 
+	b2_colorAliceBlue EQU 15792383
+	b2_colorAntiqueWhite EQU 16444375
+	b2_colorAquamarine EQU 8388564
+	b2_colorAzure EQU 15794175
+	b2_colorBeige EQU 16119260
+	b2_colorBisque EQU 16770244
+	b2_colorBlack EQU 0
+	b2_colorBlanchedAlmond EQU 16772045
+	b2_colorBlue EQU 255
+	b2_colorBlueViolet EQU 9055202
+	b2_colorBrown EQU 10824234
+	b2_colorBurlywood EQU 14596231
+	b2_colorCadetBlue EQU 6266528
+	b2_colorChartreuse EQU 8388352
+	b2_colorChocolate EQU 13789470
+	b2_colorCoral EQU 16744272
+	b2_colorCornflowerBlue EQU 6591981
+	b2_colorCornsilk EQU 16775388
+	b2_colorCrimson EQU 14423100
+	b2_colorCyan EQU 65535
+	b2_colorDarkBlue EQU 139
+	b2_colorDarkCyan EQU 35723
+	b2_colorDarkGoldenrod EQU 12092939
+	b2_colorDarkGray EQU 11119017
+	b2_colorDarkGreen EQU 25600
+	b2_colorDarkKhaki EQU 12433259
+	b2_colorDarkMagenta EQU 9109643
+	b2_colorDarkOliveGreen EQU 5597999
+	b2_colorDarkOrange EQU 16747520
+	b2_colorDarkOrchid EQU 10040012
+	b2_colorDarkRed EQU 9109504
+	b2_colorDarkSalmon EQU 15308410
+	b2_colorDarkSeaGreen EQU 9419919
+	b2_colorDarkSlateBlue EQU 4734347
+	b2_colorDarkSlateGray EQU 3100495
+	b2_colorDarkTurquoise EQU 52945
+	b2_colorDarkViolet EQU 9699539
+	b2_colorDeepPink EQU 16716947
+	b2_colorDeepSkyBlue EQU 49151
+	b2_colorDimGray EQU 6908265
+	b2_colorDodgerBlue EQU 2003199
+	b2_colorFirebrick EQU 11674146
+	b2_colorFloralWhite EQU 16775920
+	b2_colorForestGreen EQU 2263842
+	b2_colorGainsboro EQU 14474460
+	b2_colorGhostWhite EQU 16316671
+	b2_colorGold EQU 16766720
+	b2_colorGoldenrod EQU 14329120
+	b2_colorGray EQU 12500670
+	b2_colorGray1 EQU 1710618
+	b2_colorGray2 EQU 3355443
+	b2_colorGray3 EQU 5066061
+	b2_colorGray4 EQU 6710886
+	b2_colorGray5 EQU 8355711
+	b2_colorGray6 EQU 10066329
+	b2_colorGray7 EQU 11776947
+	b2_colorGray8 EQU 13421772
+	b2_colorGray9 EQU 15066597
+	b2_colorGreen EQU 65280
+	b2_colorGreenYellow EQU 11403055
+	b2_colorHoneydew EQU 15794160
+	b2_colorHotPink EQU 16738740
+	b2_colorIndianRed EQU 13458524
+	b2_colorIndigo EQU 4915330
+	b2_colorIvory EQU 16777200
+	b2_colorKhaki EQU 15787660
+	b2_colorLavender EQU 15132410
+	b2_colorLavenderBlush EQU 16773365
+	b2_colorLawnGreen EQU 8190976
+	b2_colorLemonChiffon EQU 16775885
+	b2_colorLightBlue EQU 11393254
+	b2_colorLightCoral EQU 15761536
+	b2_colorLightCyan EQU 14745599
+	b2_colorLightGoldenrod EQU 15654274
+	b2_colorLightGoldenrodYellow EQU 16448210
+	b2_colorLightGray EQU 13882323
+	b2_colorLightGreen EQU 9498256
+	b2_colorLightPink EQU 16758465
+	b2_colorLightSalmon EQU 16752762
+	b2_colorLightSeaGreen EQU 2142890
+	b2_colorLightSkyBlue EQU 8900346
+	b2_colorLightSlateBlue EQU 8679679
+	b2_colorLightSlateGray EQU 7833753
+	b2_colorLightSteelBlue EQU 11584734
+	b2_colorLightYellow EQU 16777184
+	b2_colorLimeGreen EQU 3329330
+	b2_colorLinen EQU 16445670
+	b2_colorMagenta EQU 16711935
+	b2_colorMaroon EQU 11546720
+	b2_colorMediumAquamarine EQU 6737322
+	b2_colorMediumBlue EQU 205
+	b2_colorMediumOrchid EQU 12211667
+	b2_colorMediumPurple EQU 9662683
+	b2_colorMediumSeaGreen EQU 3978097
+	b2_colorMediumSlateBlue EQU 8087790
+	b2_colorMediumSpringGreen EQU 64154
+	b2_colorMediumTurquoise EQU 4772300
+	b2_colorMediumVioletRed EQU 13047173
+	b2_colorMidnightBlue EQU 1644912
+	b2_colorMintCream EQU 16121850
+	b2_colorMistyRose EQU 16770273
+	b2_colorMoccasin EQU 16770229
+	b2_colorNavajoWhite EQU 16768685
+	b2_colorNavyBlue EQU 128
+	b2_colorOldLace EQU 16643558
+	b2_colorOlive EQU 8421376
+	b2_colorOliveDrab EQU 7048739
+	b2_colorOrange EQU 16753920
+	b2_colorOrangeRed EQU 16729344
+	b2_colorOrchid EQU 14315734
+	b2_colorPaleGoldenrod EQU 15657130
+	b2_colorPaleGreen EQU 10025880
+	b2_colorPaleTurquoise EQU 11529966
+	b2_colorPaleVioletRed EQU 14381203
+	b2_colorPapayaWhip EQU 16773077
+	b2_colorPeachPuff EQU 16767673
+	b2_colorPeru EQU 13468991
+	b2_colorPink EQU 16761035
+	b2_colorPlum EQU 14524637
+	b2_colorPowderBlue EQU 11591910
+	b2_colorPurple EQU 10494192
+	b2_colorRebeccaPurple EQU 6697881
+	b2_colorRed EQU 16711680
+	b2_colorRosyBrown EQU 12357519
+	b2_colorRoyalBlue EQU 4286945
+	b2_colorSaddleBrown EQU 9127187
+	b2_colorSalmon EQU 16416882
+	b2_colorSandyBrown EQU 16032864
+	b2_colorSeaGreen EQU 3050327
+	b2_colorSeashell EQU 16774638
+	b2_colorSienna EQU 10506797
+	b2_colorSilver EQU 12632256
+	b2_colorSkyBlue EQU 8900331
+	b2_colorSlateBlue EQU 6970061
+	b2_colorSlateGray EQU 7372944
+	b2_colorSnow EQU 16775930
+	b2_colorSpringGreen EQU 65407
+	b2_colorSteelBlue EQU 4620980
+	b2_colorTan EQU 13808780
+	b2_colorTeal EQU 32896
+	b2_colorThistle EQU 14204888
+	b2_colorTomato EQU 16737095
+	b2_colorTurquoise EQU 4251856
+	b2_colorViolet EQU 15631086
+	b2_colorVioletRed EQU 13639824
+	b2_colorWheat EQU 16113331
+	b2_colorWhite EQU 16777215
+	b2_colorWhiteSmoke EQU 16119285
+	b2_colorYellow EQU 16776960
+	b2_colorYellowGreen EQU 10145074
+	b2_colorBox2DRed EQU 14430514
+	b2_colorBox2DBlue EQU 3190463
+	b2_colorBox2DGreen EQU 9226532
+	b2_colorBox2DYellow EQU 16772748
+; b2HexColor ENDE 
+
+
+; Functions
+; allocFcn:b2AllocFcn *, freeFcn:b2FreeFcn *
+b2SetAllocator PROTO
+
+; 
+b2GetByteCount PROTO
+
+; assertFcn:b2AssertFcn *
+b2SetAssertFcn PROTO
+
+; 
+b2GetVersion PROTO
+
+; 
+b2CreateTimer PROTO
+
+; timer:b2Timer *
+b2GetTicks PROTO
+
+; timer:b2Timer const *
+b2GetMilliseconds PROTO
+
+; timer:b2Timer *
+b2GetMillisecondsAndReset PROTO
+
+; milliseconds:int
+b2SleepMilliseconds PROTO
+
+; 
+b2Yield PROTO
+
+; hash:uint32_t, data:uint8_t const *, count:int
+b2Hash PROTO
+
+; y:float, x:float
+b2Atan2 PROTO
+
+; a:float, b:float
+b2MinFloat PROTO
+
+; a:float, b:float
+b2MaxFloat PROTO
+
+; a:float
+b2AbsFloat PROTO
+
+; a:float, lower:float, upper:float
+b2ClampFloat PROTO
+
+; a:int, b:int
+b2MinInt PROTO
+
+; a:int, b:int
+b2MaxInt PROTO
+
+; a:int
+b2AbsInt PROTO
+
+; a:int, lower:int, upper:int
+b2ClampInt PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2Dot PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2Cross PROTO
+
+; v:b2Vec2, s:float
+b2CrossVS PROTO
+
+; s:float, v:b2Vec2
+b2CrossSV PROTO
+
+; v:b2Vec2
+b2LeftPerp PROTO
+
+; v:b2Vec2
+b2RightPerp PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2Add PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2Sub PROTO
+
+; a:b2Vec2
+b2Neg PROTO
+
+; a:b2Vec2, b:b2Vec2, t:float
+b2Lerp PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2Mul PROTO
+
+; s:float, v:b2Vec2
+b2MulSV PROTO
+
+; a:b2Vec2, s:float, b:b2Vec2
+b2MulAdd PROTO
+
+; a:b2Vec2, s:float, b:b2Vec2
+b2MulSub PROTO
+
+; a:b2Vec2
+b2Abs PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2Min PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2Max PROTO
+
+; v:b2Vec2, a:b2Vec2, b:b2Vec2
+b2Clamp PROTO
+
+; v:b2Vec2
+b2Length PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2Distance PROTO
+
+; v:b2Vec2
+b2Normalize PROTO
+
+; length:float *, v:b2Vec2
+b2GetLengthAndNormalize PROTO
+
+; q:b2Rot
+b2NormalizeRot PROTO
+
+; q1:b2Rot, deltaAngle:float
+b2IntegrateRotation PROTO
+
+; v:b2Vec2
+b2LengthSquared PROTO
+
+; a:b2Vec2, b:b2Vec2
+b2DistanceSquared PROTO
+
+; angle:float
+b2ComputeCosSin PROTO
+
+; angle:float
+b2MakeRot PROTO
+
+; q:b2Rot
+b2IsNormalized PROTO
+
+; q1:b2Rot, q2:b2Rot, t:float
+b2NLerp PROTO
+
+; q1:b2Rot, q2:b2Rot, inv_h:float
+b2ComputeAngularVelocity PROTO
+
+; q:b2Rot
+b2Rot_GetAngle PROTO
+
+; q:b2Rot
+b2Rot_GetXAxis PROTO
+
+; q:b2Rot
+b2Rot_GetYAxis PROTO
+
+; q:b2Rot, r:b2Rot
+b2MulRot PROTO
+
+; q:b2Rot, r:b2Rot
+b2InvMulRot PROTO
+
+; b:b2Rot, a:b2Rot
+b2RelativeAngle PROTO
+
+; angle:float
+b2UnwindAngle PROTO
+
+; angle:float
+b2UnwindLargeAngle PROTO
+
+; q:b2Rot, v:b2Vec2
+b2RotateVector PROTO
+
+; q:b2Rot, v:b2Vec2
+b2InvRotateVector PROTO
+
+; t:b2Transform, p:b2Vec2 const
+b2TransformPoint PROTO
+
+; t:b2Transform, p:b2Vec2 const
+b2InvTransformPoint PROTO
+
+; A:b2Transform, B:b2Transform
+b2MulTransforms PROTO
+
+; A:b2Transform, B:b2Transform
+b2InvMulTransforms PROTO
+
+; A:b2Mat22, v:b2Vec2
+b2MulMV PROTO
+
+; A:b2Mat22
+b2GetInverse22 PROTO
+
+; A:b2Mat22, b:b2Vec2
+b2Solve22 PROTO
+
+; a:b2AABB, b:b2AABB
+b2AABB_Contains PROTO
+
+; a:b2AABB
+b2AABB_Center PROTO
+
+; a:b2AABB
+b2AABB_Extents PROTO
+
+; a:b2AABB, b:b2AABB
+b2AABB_Union PROTO
+
+; a:float
+b2IsValid PROTO
+
+; v:b2Vec2
+b2Vec2_IsValid PROTO
+
+; q:b2Rot
+b2Rot_IsValid PROTO
+
+; aabb:b2AABB
+b2AABB_IsValid PROTO
+
+; lengthUnits:float
+b2SetLengthUnitsPerMeter PROTO
+
+; 
+b2GetLengthUnitsPerMeter PROTO
+
+; input:b2RayCastInput const *
+b2IsValidRay PROTO
+
+; hull:b2Hull const *, radius:float
+b2MakePolygon PROTO
+
+; hull:b2Hull const *, position:b2Vec2, rotation:b2Rot
+b2MakeOffsetPolygon PROTO
+
+; hull:b2Hull const *, position:b2Vec2, rotation:b2Rot, radius:float
+b2MakeOffsetRoundedPolygon PROTO
+
+; h:float
+b2MakeSquare PROTO
+
+; hx:float, hy:float
+b2MakeBox PROTO
+
+; hx:float, hy:float, radius:float
+b2MakeRoundedBox PROTO
+
+; hx:float, hy:float, center:b2Vec2, rotation:b2Rot
+b2MakeOffsetBox PROTO
+
+; hx:float, hy:float, center:b2Vec2, rotation:b2Rot, radius:float
+b2MakeOffsetRoundedBox PROTO
+
+; transform:b2Transform, polygon:b2Polygon const *
+b2TransformPolygon PROTO
+
+; shape:b2Circle const *, density:float
+b2ComputeCircleMass PROTO
+
+; shape:b2Capsule const *, density:float
+b2ComputeCapsuleMass PROTO
+
+; shape:b2Polygon const *, density:float
+b2ComputePolygonMass PROTO
+
+; shape:b2Circle const *, transform:b2Transform
+b2ComputeCircleAABB PROTO
+
+; shape:b2Capsule const *, transform:b2Transform
+b2ComputeCapsuleAABB PROTO
+
+; shape:b2Polygon const *, transform:b2Transform
+b2ComputePolygonAABB PROTO
+
+; shape:b2Segment const *, transform:b2Transform
+b2ComputeSegmentAABB PROTO
+
+; point:b2Vec2, shape:b2Circle const *
+b2PointInCircle PROTO
+
+; point:b2Vec2, shape:b2Capsule const *
+b2PointInCapsule PROTO
+
+; point:b2Vec2, shape:b2Polygon const *
+b2PointInPolygon PROTO
+
+; input:b2RayCastInput const *, shape:b2Circle const *
+b2RayCastCircle PROTO
+
+; input:b2RayCastInput const *, shape:b2Capsule const *
+b2RayCastCapsule PROTO
+
+; input:b2RayCastInput const *, shape:b2Segment const *, oneSided:bool
+b2RayCastSegment PROTO
+
+; input:b2RayCastInput const *, shape:b2Polygon const *
+b2RayCastPolygon PROTO
+
+; input:b2ShapeCastInput const *, shape:b2Circle const *
+b2ShapeCastCircle PROTO
+
+; input:b2ShapeCastInput const *, shape:b2Capsule const *
+b2ShapeCastCapsule PROTO
+
+; input:b2ShapeCastInput const *, shape:b2Segment const *
+b2ShapeCastSegment PROTO
+
+; input:b2ShapeCastInput const *, shape:b2Polygon const *
+b2ShapeCastPolygon PROTO
+
+; points:b2Vec2 const *, count:int32_t
+b2ComputeHull PROTO
+
+; hull:b2Hull const *
+b2ValidateHull PROTO
+
+; p1:b2Vec2, q1:b2Vec2, p2:b2Vec2, q2:b2Vec2
+b2SegmentDistance PROTO
+
+; cache:b2DistanceCache *, input:b2DistanceInput const *, simplexes:b2Simplex *, simplexCapacity:int
+b2ShapeDistance PROTO
+
+; input:b2ShapeCastPairInput const *
+b2ShapeCast PROTO
+
+; vertices:b2Vec2 const *, count:int32_t, radius:float
+b2MakeProxy PROTO
+
+; sweep:b2Sweep const *, time:float
+b2GetSweepTransform PROTO
+
+; input:b2TOIInput const *
+b2TimeOfImpact PROTO
+
+; circleA:b2Circle const *, xfA:b2Transform, circleB:b2Circle const *, xfB:b2Transform
+b2CollideCircles PROTO
+
+; capsuleA:b2Capsule const *, xfA:b2Transform, circleB:b2Circle const *, xfB:b2Transform
+b2CollideCapsuleAndCircle PROTO
+
+; segmentA:b2Segment const *, xfA:b2Transform, circleB:b2Circle const *, xfB:b2Transform
+b2CollideSegmentAndCircle PROTO
+
+; polygonA:b2Polygon const *, xfA:b2Transform, circleB:b2Circle const *, xfB:b2Transform
+b2CollidePolygonAndCircle PROTO
+
+; capsuleA:b2Capsule const *, xfA:b2Transform, capsuleB:b2Capsule const *, xfB:b2Transform
+b2CollideCapsules PROTO
+
+; segmentA:b2Segment const *, xfA:b2Transform, capsuleB:b2Capsule const *, xfB:b2Transform
+b2CollideSegmentAndCapsule PROTO
+
+; polygonA:b2Polygon const *, xfA:b2Transform, capsuleB:b2Capsule const *, xfB:b2Transform
+b2CollidePolygonAndCapsule PROTO
+
+; polygonA:b2Polygon const *, xfA:b2Transform, polygonB:b2Polygon const *, xfB:b2Transform
+b2CollidePolygons PROTO
+
+; segmentA:b2Segment const *, xfA:b2Transform, polygonB:b2Polygon const *, xfB:b2Transform
+b2CollideSegmentAndPolygon PROTO
+
+; segmentA:b2ChainSegment const *, xfA:b2Transform, circleB:b2Circle const *, xfB:b2Transform
+b2CollideChainSegmentAndCircle PROTO
+
+; segmentA:b2ChainSegment const *, xfA:b2Transform, capsuleB:b2Capsule const *, xfB:b2Transform, cache:b2DistanceCache *
+b2CollideChainSegmentAndCapsule PROTO
+
+; segmentA:b2ChainSegment const *, xfA:b2Transform, polygonB:b2Polygon const *, xfB:b2Transform, cache:b2DistanceCache *
+b2CollideChainSegmentAndPolygon PROTO
+
+; 
+b2DynamicTree_Create PROTO
+
+; tree:b2DynamicTree *
+b2DynamicTree_Destroy PROTO
+
+; tree:b2DynamicTree *, aabb:b2AABB, categoryBits:uint64_t, userData:int32_t
+b2DynamicTree_CreateProxy PROTO
+
+; tree:b2DynamicTree *, proxyId:int32_t
+b2DynamicTree_DestroyProxy PROTO
+
+; tree:b2DynamicTree *, proxyId:int32_t, aabb:b2AABB
+b2DynamicTree_MoveProxy PROTO
+
+; tree:b2DynamicTree *, proxyId:int32_t, aabb:b2AABB
+b2DynamicTree_EnlargeProxy PROTO
+
+; tree:b2DynamicTree const *, aabb:b2AABB, maskBits:uint64_t, callback:b2TreeQueryCallbackFcn *, context:void *
+b2DynamicTree_Query PROTO
+
+; tree:b2DynamicTree const *, input:b2RayCastInput const *, maskBits:uint64_t, callback:b2TreeRayCastCallbackFcn *, context:void *
+b2DynamicTree_RayCast PROTO
+
+; tree:b2DynamicTree const *, input:b2ShapeCastInput const *, maskBits:uint64_t, callback:b2TreeShapeCastCallbackFcn *, context:void *
+b2DynamicTree_ShapeCast PROTO
+
+; tree:b2DynamicTree const *
+b2DynamicTree_Validate PROTO
+
+; tree:b2DynamicTree const *
+b2DynamicTree_GetHeight PROTO
+
+; tree:b2DynamicTree const *
+b2DynamicTree_GetMaxBalance PROTO
+
+; tree:b2DynamicTree const *
+b2DynamicTree_GetAreaRatio PROTO
+
+; tree:b2DynamicTree *
+b2DynamicTree_RebuildBottomUp PROTO
+
+; tree:b2DynamicTree const *
+b2DynamicTree_GetProxyCount PROTO
+
+; tree:b2DynamicTree *, fullBuild:bool
+b2DynamicTree_Rebuild PROTO
+
+; tree:b2DynamicTree *, newOrigin:b2Vec2
+b2DynamicTree_ShiftOrigin PROTO
+
+; tree:b2DynamicTree const *
+b2DynamicTree_GetByteCount PROTO
+
+; tree:b2DynamicTree const *, proxyId:int32_t
+b2DynamicTree_GetUserData PROTO
+
+; tree:b2DynamicTree const *, proxyId:int32_t
+b2DynamicTree_GetAABB PROTO
+
+; id:b2BodyId
+b2StoreBodyId PROTO
+
+; x:uint64_t
+b2LoadBodyId PROTO
+
+; id:b2ShapeId
+b2StoreShapeId PROTO
+
+; x:uint64_t
+b2LoadShapeId PROTO
+
+; id:b2ChainId
+b2StoreChainId PROTO
+
+; x:uint64_t
+b2LoadChainId PROTO
+
+; id:b2JointId
+b2StoreJointId PROTO
+
+; x:uint64_t
+b2LoadJointId PROTO
+
+; 
+b2DefaultWorldDef PROTO
+
+; 
+b2DefaultBodyDef PROTO
+
+; 
+b2DefaultFilter PROTO
+
+; 
+b2DefaultQueryFilter PROTO
+
+; 
+b2DefaultShapeDef PROTO
+
+; 
+b2DefaultChainDef PROTO
+
+; 
+b2DefaultDistanceJointDef PROTO
+
+; 
+b2DefaultMotorJointDef PROTO
+
+; 
+b2DefaultMouseJointDef PROTO
+
+; 
+b2DefaultNullJointDef PROTO
+
+; 
+b2DefaultPrismaticJointDef PROTO
+
+; 
+b2DefaultRevoluteJointDef PROTO
+
+; 
+b2DefaultWeldJointDef PROTO
+
+; 
+b2DefaultWheelJointDef PROTO
+
+; 
+b2DefaultExplosionDef PROTO
+
+; 
+b2DefaultDebugDraw PROTO
+
+; def:b2WorldDef const *
+b2CreateWorld PROTO
+
+; worldId:b2WorldId
+b2DestroyWorld PROTO
+
+; id:b2WorldId
+b2World_IsValid PROTO
+
+; worldId:b2WorldId, timeStep:float, subStepCount:int
+b2World_Step PROTO
+
+; worldId:b2WorldId, draw:b2DebugDraw *
+b2World_Draw PROTO
+
+; worldId:b2WorldId
+b2World_GetBodyEvents PROTO
+
+; worldId:b2WorldId
+b2World_GetSensorEvents PROTO
+
+; worldId:b2WorldId
+b2World_GetContactEvents PROTO
+
+; worldId:b2WorldId, aabb:b2AABB, filter:b2QueryFilter, fcn:b2OverlapResultFcn *, context:void *
+b2World_OverlapAABB PROTO
+
+; worldId:b2WorldId, point:b2Vec2, transform:b2Transform, filter:b2QueryFilter, fcn:b2OverlapResultFcn *, context:void *
+b2World_OverlapPoint PROTO
+
+; worldId:b2WorldId, circle:b2Circle const *, transform:b2Transform, filter:b2QueryFilter, fcn:b2OverlapResultFcn *, context:void *
+b2World_OverlapCircle PROTO
+
+; worldId:b2WorldId, capsule:b2Capsule const *, transform:b2Transform, filter:b2QueryFilter, fcn:b2OverlapResultFcn *, context:void *
+b2World_OverlapCapsule PROTO
+
+; worldId:b2WorldId, polygon:b2Polygon const *, transform:b2Transform, filter:b2QueryFilter, fcn:b2OverlapResultFcn *, context:void *
+b2World_OverlapPolygon PROTO
+
+; worldId:b2WorldId, origin:b2Vec2, translation:b2Vec2, filter:b2QueryFilter, fcn:b2CastResultFcn *, context:void *
+b2World_CastRay PROTO
+
+; worldId:b2WorldId, origin:b2Vec2, translation:b2Vec2, filter:b2QueryFilter
+b2World_CastRayClosest PROTO
+
+; worldId:b2WorldId, circle:b2Circle const *, originTransform:b2Transform, translation:b2Vec2, filter:b2QueryFilter, fcn:b2CastResultFcn *, context:void *
+b2World_CastCircle PROTO
+
+; worldId:b2WorldId, capsule:b2Capsule const *, originTransform:b2Transform, translation:b2Vec2, filter:b2QueryFilter, fcn:b2CastResultFcn *, context:void *
+b2World_CastCapsule PROTO
+
+; worldId:b2WorldId, polygon:b2Polygon const *, originTransform:b2Transform, translation:b2Vec2, filter:b2QueryFilter, fcn:b2CastResultFcn *, context:void *
+b2World_CastPolygon PROTO
+
+; worldId:b2WorldId, flag:bool
+b2World_EnableSleeping PROTO
+
+; worldId:b2WorldId
+b2World_IsSleepingEnabled PROTO
+
+; worldId:b2WorldId, flag:bool
+b2World_EnableContinuous PROTO
+
+; worldId:b2WorldId
+b2World_IsContinuousEnabled PROTO
+
+; worldId:b2WorldId, value:float
+b2World_SetRestitutionThreshold PROTO
+
+; worldId:b2WorldId
+b2World_GetRestitutionThreshold PROTO
+
+; worldId:b2WorldId, value:float
+b2World_SetHitEventThreshold PROTO
+
+; worldId:b2WorldId
+b2World_GetHitEventThreshold PROTO
+
+; worldId:b2WorldId, fcn:b2CustomFilterFcn *, context:void *
+b2World_SetCustomFilterCallback PROTO
+
+; worldId:b2WorldId, fcn:b2PreSolveFcn *, context:void *
+b2World_SetPreSolveCallback PROTO
+
+; worldId:b2WorldId, gravity:b2Vec2
+b2World_SetGravity PROTO
+
+; worldId:b2WorldId
+b2World_GetGravity PROTO
+
+; worldId:b2WorldId, explosionDef:b2ExplosionDef const *
+b2World_Explode PROTO
+
+; worldId:b2WorldId, hertz:float, dampingRatio:float, pushVelocity:float
+b2World_SetContactTuning PROTO
+
+; worldId:b2WorldId, hertz:float, dampingRatio:float
+b2World_SetJointTuning PROTO
+
+; worldId:b2WorldId, maximumLinearVelocity:float
+b2World_SetMaximumLinearVelocity PROTO
+
+; worldId:b2WorldId
+b2World_GetMaximumLinearVelocity PROTO
+
+; worldId:b2WorldId, flag:bool
+b2World_EnableWarmStarting PROTO
+
+; worldId:b2WorldId
+b2World_IsWarmStartingEnabled PROTO
+
+; worldId:b2WorldId
+b2World_GetProfile PROTO
+
+; worldId:b2WorldId
+b2World_GetCounters PROTO
+
+; worldId:b2WorldId, userData:void *
+b2World_SetUserData PROTO
+
+; worldId:b2WorldId
+b2World_GetUserData PROTO
+
+; worldId:b2WorldId
+b2World_DumpMemoryStats PROTO
+
+; worldId:b2WorldId
+b2World_RebuildStaticTree PROTO
+
+; worldId:b2WorldId, def:b2BodyDef const *
+b2CreateBody PROTO
+
+; bodyId:b2BodyId
+b2DestroyBody PROTO
+
+; id:b2BodyId
+b2Body_IsValid PROTO
+
+; bodyId:b2BodyId
+b2Body_GetType PROTO
+
+; bodyId:b2BodyId, type:b2BodyType
+b2Body_SetType PROTO
+
+; bodyId:b2BodyId, userData:void *
+b2Body_SetUserData PROTO
+
+; bodyId:b2BodyId
+b2Body_GetUserData PROTO
+
+; bodyId:b2BodyId
+b2Body_GetPosition PROTO
+
+; bodyId:b2BodyId
+b2Body_GetRotation PROTO
+
+; bodyId:b2BodyId
+b2Body_GetTransform PROTO
+
+; bodyId:b2BodyId, position:b2Vec2, rotation:b2Rot
+b2Body_SetTransform PROTO
+
+; bodyId:b2BodyId, worldPoint:b2Vec2
+b2Body_GetLocalPoint PROTO
+
+; bodyId:b2BodyId, localPoint:b2Vec2
+b2Body_GetWorldPoint PROTO
+
+; bodyId:b2BodyId, worldVector:b2Vec2
+b2Body_GetLocalVector PROTO
+
+; bodyId:b2BodyId, localVector:b2Vec2
+b2Body_GetWorldVector PROTO
+
+; bodyId:b2BodyId
+b2Body_GetLinearVelocity PROTO
+
+; bodyId:b2BodyId
+b2Body_GetAngularVelocity PROTO
+
+; bodyId:b2BodyId, linearVelocity:b2Vec2
+b2Body_SetLinearVelocity PROTO
+
+; bodyId:b2BodyId, angularVelocity:float
+b2Body_SetAngularVelocity PROTO
+
+; bodyId:b2BodyId, force:b2Vec2, point:b2Vec2, wake:bool
+b2Body_ApplyForce PROTO
+
+; bodyId:b2BodyId, force:b2Vec2, wake:bool
+b2Body_ApplyForceToCenter PROTO
+
+; bodyId:b2BodyId, torque:float, wake:bool
+b2Body_ApplyTorque PROTO
+
+; bodyId:b2BodyId, impulse:b2Vec2, point:b2Vec2, wake:bool
+b2Body_ApplyLinearImpulse PROTO
+
+; bodyId:b2BodyId, impulse:b2Vec2, wake:bool
+b2Body_ApplyLinearImpulseToCenter PROTO
+
+; bodyId:b2BodyId, impulse:float, wake:bool
+b2Body_ApplyAngularImpulse PROTO
+
+; bodyId:b2BodyId
+b2Body_GetMass PROTO
+
+; bodyId:b2BodyId
+b2Body_GetRotationalInertia PROTO
+
+; bodyId:b2BodyId
+b2Body_GetLocalCenterOfMass PROTO
+
+; bodyId:b2BodyId
+b2Body_GetWorldCenterOfMass PROTO
+
+; bodyId:b2BodyId, massData:b2MassData
+b2Body_SetMassData PROTO
+
+; bodyId:b2BodyId
+b2Body_GetMassData PROTO
+
+; bodyId:b2BodyId
+b2Body_ApplyMassFromShapes PROTO
+
+; bodyId:b2BodyId, linearDamping:float
+b2Body_SetLinearDamping PROTO
+
+; bodyId:b2BodyId
+b2Body_GetLinearDamping PROTO
+
+; bodyId:b2BodyId, angularDamping:float
+b2Body_SetAngularDamping PROTO
+
+; bodyId:b2BodyId
+b2Body_GetAngularDamping PROTO
+
+; bodyId:b2BodyId, gravityScale:float
+b2Body_SetGravityScale PROTO
+
+; bodyId:b2BodyId
+b2Body_GetGravityScale PROTO
+
+; bodyId:b2BodyId
+b2Body_IsAwake PROTO
+
+; bodyId:b2BodyId, awake:bool
+b2Body_SetAwake PROTO
+
+; bodyId:b2BodyId, enableSleep:bool
+b2Body_EnableSleep PROTO
+
+; bodyId:b2BodyId
+b2Body_IsSleepEnabled PROTO
+
+; bodyId:b2BodyId, sleepThreshold:float
+b2Body_SetSleepThreshold PROTO
+
+; bodyId:b2BodyId
+b2Body_GetSleepThreshold PROTO
+
+; bodyId:b2BodyId
+b2Body_IsEnabled PROTO
+
+; bodyId:b2BodyId
+b2Body_Disable PROTO
+
+; bodyId:b2BodyId
+b2Body_Enable PROTO
+
+; bodyId:b2BodyId, flag:bool
+b2Body_SetFixedRotation PROTO
+
+; bodyId:b2BodyId
+b2Body_IsFixedRotation PROTO
+
+; bodyId:b2BodyId, flag:bool
+b2Body_SetBullet PROTO
+
+; bodyId:b2BodyId
+b2Body_IsBullet PROTO
+
+; bodyId:b2BodyId, enableHitEvents:bool
+b2Body_EnableHitEvents PROTO
+
+; bodyId:b2BodyId
+b2Body_GetWorld PROTO
+
+; bodyId:b2BodyId
+b2Body_GetShapeCount PROTO
+
+; bodyId:b2BodyId, shapeArray:b2ShapeId *, capacity:int
+b2Body_GetShapes PROTO
+
+; bodyId:b2BodyId
+b2Body_GetJointCount PROTO
+
+; bodyId:b2BodyId, jointArray:b2JointId *, capacity:int
+b2Body_GetJoints PROTO
+
+; bodyId:b2BodyId
+b2Body_GetContactCapacity PROTO
+
+; bodyId:b2BodyId, contactData:b2ContactData *, capacity:int
+b2Body_GetContactData PROTO
+
+; bodyId:b2BodyId
+b2Body_ComputeAABB PROTO
+
+; bodyId:b2BodyId, def:b2ShapeDef const *, circle:b2Circle const *
+b2CreateCircleShape PROTO
+
+; bodyId:b2BodyId, def:b2ShapeDef const *, segment:b2Segment const *
+b2CreateSegmentShape PROTO
+
+; bodyId:b2BodyId, def:b2ShapeDef const *, capsule:b2Capsule const *
+b2CreateCapsuleShape PROTO
+
+; bodyId:b2BodyId, def:b2ShapeDef const *, polygon:b2Polygon const *
+b2CreatePolygonShape PROTO
+
+; shapeId:b2ShapeId, updateBodyMass:bool
+b2DestroyShape PROTO
+
+; id:b2ShapeId
+b2Shape_IsValid PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetType PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetBody PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetWorld PROTO
+
+; shapeId:b2ShapeId
+b2Shape_IsSensor PROTO
+
+; shapeId:b2ShapeId, userData:void *
+b2Shape_SetUserData PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetUserData PROTO
+
+; shapeId:b2ShapeId, density:float, updateBodyMass:bool
+b2Shape_SetDensity PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetDensity PROTO
+
+; shapeId:b2ShapeId, friction:float
+b2Shape_SetFriction PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetFriction PROTO
+
+; shapeId:b2ShapeId, restitution:float
+b2Shape_SetRestitution PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetRestitution PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetFilter PROTO
+
+; shapeId:b2ShapeId, filter:b2Filter
+b2Shape_SetFilter PROTO
+
+; shapeId:b2ShapeId, flag:bool
+b2Shape_EnableSensorEvents PROTO
+
+; shapeId:b2ShapeId
+b2Shape_AreSensorEventsEnabled PROTO
+
+; shapeId:b2ShapeId, flag:bool
+b2Shape_EnableContactEvents PROTO
+
+; shapeId:b2ShapeId
+b2Shape_AreContactEventsEnabled PROTO
+
+; shapeId:b2ShapeId, flag:bool
+b2Shape_EnablePreSolveEvents PROTO
+
+; shapeId:b2ShapeId
+b2Shape_ArePreSolveEventsEnabled PROTO
+
+; shapeId:b2ShapeId, flag:bool
+b2Shape_EnableHitEvents PROTO
+
+; shapeId:b2ShapeId
+b2Shape_AreHitEventsEnabled PROTO
+
+; shapeId:b2ShapeId, point:b2Vec2
+b2Shape_TestPoint PROTO
+
+; shapeId:b2ShapeId, input:b2RayCastInput const *
+b2Shape_RayCast PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetCircle PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetSegment PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetChainSegment PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetCapsule PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetPolygon PROTO
+
+; shapeId:b2ShapeId, circle:b2Circle const *
+b2Shape_SetCircle PROTO
+
+; shapeId:b2ShapeId, capsule:b2Capsule const *
+b2Shape_SetCapsule PROTO
+
+; shapeId:b2ShapeId, segment:b2Segment const *
+b2Shape_SetSegment PROTO
+
+; shapeId:b2ShapeId, polygon:b2Polygon const *
+b2Shape_SetPolygon PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetParentChain PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetContactCapacity PROTO
+
+; shapeId:b2ShapeId, contactData:b2ContactData *, capacity:int
+b2Shape_GetContactData PROTO
+
+; shapeId:b2ShapeId
+b2Shape_GetAABB PROTO
+
+; shapeId:b2ShapeId, target:b2Vec2
+b2Shape_GetClosestPoint PROTO
+
+; bodyId:b2BodyId, def:b2ChainDef const *
+b2CreateChain PROTO
+
+; chainId:b2ChainId
+b2DestroyChain PROTO
+
+; chainId:b2ChainId
+b2Chain_GetWorld PROTO
+
+; chainId:b2ChainId
+b2Chain_GetSegmentCount PROTO
+
+; chainId:b2ChainId, segmentArray:b2ShapeId *, capacity:int
+b2Chain_GetSegments PROTO
+
+; chainId:b2ChainId, friction:float
+b2Chain_SetFriction PROTO
+
+; chainId:b2ChainId, restitution:float
+b2Chain_SetRestitution PROTO
+
+; id:b2ChainId
+b2Chain_IsValid PROTO
+
+; jointId:b2JointId
+b2DestroyJoint PROTO
+
+; id:b2JointId
+b2Joint_IsValid PROTO
+
+; jointId:b2JointId
+b2Joint_GetType PROTO
+
+; jointId:b2JointId
+b2Joint_GetBodyA PROTO
+
+; jointId:b2JointId
+b2Joint_GetBodyB PROTO
+
+; jointId:b2JointId
+b2Joint_GetWorld PROTO
+
+; jointId:b2JointId
+b2Joint_GetLocalAnchorA PROTO
+
+; jointId:b2JointId
+b2Joint_GetLocalAnchorB PROTO
+
+; jointId:b2JointId, shouldCollide:bool
+b2Joint_SetCollideConnected PROTO
+
+; jointId:b2JointId
+b2Joint_GetCollideConnected PROTO
+
+; jointId:b2JointId, userData:void *
+b2Joint_SetUserData PROTO
+
+; jointId:b2JointId
+b2Joint_GetUserData PROTO
+
+; jointId:b2JointId
+b2Joint_WakeBodies PROTO
+
+; jointId:b2JointId
+b2Joint_GetConstraintForce PROTO
+
+; jointId:b2JointId
+b2Joint_GetConstraintTorque PROTO
+
+; worldId:b2WorldId, def:b2DistanceJointDef const *
+b2CreateDistanceJoint PROTO
+
+; jointId:b2JointId, length:float
+b2DistanceJoint_SetLength PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetLength PROTO
+
+; jointId:b2JointId, enableSpring:bool
+b2DistanceJoint_EnableSpring PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_IsSpringEnabled PROTO
+
+; jointId:b2JointId, hertz:float
+b2DistanceJoint_SetSpringHertz PROTO
+
+; jointId:b2JointId, dampingRatio:float
+b2DistanceJoint_SetSpringDampingRatio PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetSpringHertz PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetSpringDampingRatio PROTO
+
+; jointId:b2JointId, enableLimit:bool
+b2DistanceJoint_EnableLimit PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_IsLimitEnabled PROTO
+
+; jointId:b2JointId, minLength:float, maxLength:float
+b2DistanceJoint_SetLengthRange PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetMinLength PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetMaxLength PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetCurrentLength PROTO
+
+; jointId:b2JointId, enableMotor:bool
+b2DistanceJoint_EnableMotor PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_IsMotorEnabled PROTO
+
+; jointId:b2JointId, motorSpeed:float
+b2DistanceJoint_SetMotorSpeed PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetMotorSpeed PROTO
+
+; jointId:b2JointId, force:float
+b2DistanceJoint_SetMaxMotorForce PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetMaxMotorForce PROTO
+
+; jointId:b2JointId
+b2DistanceJoint_GetMotorForce PROTO
+
+; worldId:b2WorldId, def:b2MotorJointDef const *
+b2CreateMotorJoint PROTO
+
+; jointId:b2JointId, linearOffset:b2Vec2
+b2MotorJoint_SetLinearOffset PROTO
+
+; jointId:b2JointId
+b2MotorJoint_GetLinearOffset PROTO
+
+; jointId:b2JointId, angularOffset:float
+b2MotorJoint_SetAngularOffset PROTO
+
+; jointId:b2JointId
+b2MotorJoint_GetAngularOffset PROTO
+
+; jointId:b2JointId, maxForce:float
+b2MotorJoint_SetMaxForce PROTO
+
+; jointId:b2JointId
+b2MotorJoint_GetMaxForce PROTO
+
+; jointId:b2JointId, maxTorque:float
+b2MotorJoint_SetMaxTorque PROTO
+
+; jointId:b2JointId
+b2MotorJoint_GetMaxTorque PROTO
+
+; jointId:b2JointId, correctionFactor:float
+b2MotorJoint_SetCorrectionFactor PROTO
+
+; jointId:b2JointId
+b2MotorJoint_GetCorrectionFactor PROTO
+
+; worldId:b2WorldId, def:b2MouseJointDef const *
+b2CreateMouseJoint PROTO
+
+; jointId:b2JointId, target:b2Vec2
+b2MouseJoint_SetTarget PROTO
+
+; jointId:b2JointId
+b2MouseJoint_GetTarget PROTO
+
+; jointId:b2JointId, hertz:float
+b2MouseJoint_SetSpringHertz PROTO
+
+; jointId:b2JointId
+b2MouseJoint_GetSpringHertz PROTO
+
+; jointId:b2JointId, dampingRatio:float
+b2MouseJoint_SetSpringDampingRatio PROTO
+
+; jointId:b2JointId
+b2MouseJoint_GetSpringDampingRatio PROTO
+
+; jointId:b2JointId, maxForce:float
+b2MouseJoint_SetMaxForce PROTO
+
+; jointId:b2JointId
+b2MouseJoint_GetMaxForce PROTO
+
+; worldId:b2WorldId, def:b2NullJointDef const *
+b2CreateNullJoint PROTO
+
+; worldId:b2WorldId, def:b2PrismaticJointDef const *
+b2CreatePrismaticJoint PROTO
+
+; jointId:b2JointId, enableSpring:bool
+b2PrismaticJoint_EnableSpring PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_IsSpringEnabled PROTO
+
+; jointId:b2JointId, hertz:float
+b2PrismaticJoint_SetSpringHertz PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetSpringHertz PROTO
+
+; jointId:b2JointId, dampingRatio:float
+b2PrismaticJoint_SetSpringDampingRatio PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetSpringDampingRatio PROTO
+
+; jointId:b2JointId, enableLimit:bool
+b2PrismaticJoint_EnableLimit PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_IsLimitEnabled PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetLowerLimit PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetUpperLimit PROTO
+
+; jointId:b2JointId, lower:float, upper:float
+b2PrismaticJoint_SetLimits PROTO
+
+; jointId:b2JointId, enableMotor:bool
+b2PrismaticJoint_EnableMotor PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_IsMotorEnabled PROTO
+
+; jointId:b2JointId, motorSpeed:float
+b2PrismaticJoint_SetMotorSpeed PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetMotorSpeed PROTO
+
+; jointId:b2JointId, force:float
+b2PrismaticJoint_SetMaxMotorForce PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetMaxMotorForce PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetMotorForce PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetTranslation PROTO
+
+; jointId:b2JointId
+b2PrismaticJoint_GetSpeed PROTO
+
+; worldId:b2WorldId, def:b2RevoluteJointDef const *
+b2CreateRevoluteJoint PROTO
+
+; jointId:b2JointId, enableSpring:bool
+b2RevoluteJoint_EnableSpring PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_IsSpringEnabled PROTO
+
+; jointId:b2JointId, hertz:float
+b2RevoluteJoint_SetSpringHertz PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_GetSpringHertz PROTO
+
+; jointId:b2JointId, dampingRatio:float
+b2RevoluteJoint_SetSpringDampingRatio PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_GetSpringDampingRatio PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_GetAngle PROTO
+
+; jointId:b2JointId, enableLimit:bool
+b2RevoluteJoint_EnableLimit PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_IsLimitEnabled PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_GetLowerLimit PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_GetUpperLimit PROTO
+
+; jointId:b2JointId, lower:float, upper:float
+b2RevoluteJoint_SetLimits PROTO
+
+; jointId:b2JointId, enableMotor:bool
+b2RevoluteJoint_EnableMotor PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_IsMotorEnabled PROTO
+
+; jointId:b2JointId, motorSpeed:float
+b2RevoluteJoint_SetMotorSpeed PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_GetMotorSpeed PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_GetMotorTorque PROTO
+
+; jointId:b2JointId, torque:float
+b2RevoluteJoint_SetMaxMotorTorque PROTO
+
+; jointId:b2JointId
+b2RevoluteJoint_GetMaxMotorTorque PROTO
+
+; worldId:b2WorldId, def:b2WeldJointDef const *
+b2CreateWeldJoint PROTO
+
+; jointId:b2JointId
+b2WeldJoint_GetReferenceAngle PROTO
+
+; jointId:b2JointId, angleInRadians:float
+b2WeldJoint_SetReferenceAngle PROTO
+
+; jointId:b2JointId, hertz:float
+b2WeldJoint_SetLinearHertz PROTO
+
+; jointId:b2JointId
+b2WeldJoint_GetLinearHertz PROTO
+
+; jointId:b2JointId, dampingRatio:float
+b2WeldJoint_SetLinearDampingRatio PROTO
+
+; jointId:b2JointId
+b2WeldJoint_GetLinearDampingRatio PROTO
+
+; jointId:b2JointId, hertz:float
+b2WeldJoint_SetAngularHertz PROTO
+
+; jointId:b2JointId
+b2WeldJoint_GetAngularHertz PROTO
+
+; jointId:b2JointId, dampingRatio:float
+b2WeldJoint_SetAngularDampingRatio PROTO
+
+; jointId:b2JointId
+b2WeldJoint_GetAngularDampingRatio PROTO
+
+; worldId:b2WorldId, def:b2WheelJointDef const *
+b2CreateWheelJoint PROTO
+
+; jointId:b2JointId, enableSpring:bool
+b2WheelJoint_EnableSpring PROTO
+
+; jointId:b2JointId
+b2WheelJoint_IsSpringEnabled PROTO
+
+; jointId:b2JointId, hertz:float
+b2WheelJoint_SetSpringHertz PROTO
+
+; jointId:b2JointId
+b2WheelJoint_GetSpringHertz PROTO
+
+; jointId:b2JointId, dampingRatio:float
+b2WheelJoint_SetSpringDampingRatio PROTO
+
+; jointId:b2JointId
+b2WheelJoint_GetSpringDampingRatio PROTO
+
+; jointId:b2JointId, enableLimit:bool
+b2WheelJoint_EnableLimit PROTO
+
+; jointId:b2JointId
+b2WheelJoint_IsLimitEnabled PROTO
+
+; jointId:b2JointId
+b2WheelJoint_GetLowerLimit PROTO
+
+; jointId:b2JointId
+b2WheelJoint_GetUpperLimit PROTO
+
+; jointId:b2JointId, lower:float, upper:float
+b2WheelJoint_SetLimits PROTO
+
+; jointId:b2JointId, enableMotor:bool
+b2WheelJoint_EnableMotor PROTO
+
+; jointId:b2JointId
+b2WheelJoint_IsMotorEnabled PROTO
+
+; jointId:b2JointId, motorSpeed:float
+b2WheelJoint_SetMotorSpeed PROTO
+
+; jointId:b2JointId
+b2WheelJoint_GetMotorSpeed PROTO
+
+; jointId:b2JointId, torque:float
+b2WheelJoint_SetMaxMotorTorque PROTO
+
+; jointId:b2JointId
+b2WheelJoint_GetMaxMotorTorque PROTO
+
+; jointId:b2JointId
+b2WheelJoint_GetMotorTorque PROTO
+
+
+; Structs
+b2Version STRUCT 16
+	major int32_t ?
+	minor int32_t ?
+	revision int32_t ?
+b2Version ENDS
+
+b2Timer STRUCT 16
+	start int64_t ?
+b2Timer ENDS
+
+b2Vec2 STRUCT 16
+	x float ?
+	y float ?
+b2Vec2 ENDS
+
+b2CosSin STRUCT 16
+	cosine float ?
+	sine float ?
+b2CosSin ENDS
+
+b2Rot STRUCT 16
+	c float ?
+	s float ?
+b2Rot ENDS
+
+b2Transform STRUCT 16
+	p b2Vec2 <>
+	q b2Rot <>
+b2Transform ENDS
+
+b2Mat22 STRUCT 16
+	_cx b2Vec2 <>
+	cy b2Vec2 <>
+b2Mat22 ENDS
+
+b2AABB STRUCT 16
+	lowerBound b2Vec2 <>
+	upperBound b2Vec2 <>
+b2AABB ENDS
+
+b2Circle STRUCT 16
+	center b2Vec2 <>
+	radius float ?
+b2Circle ENDS
+
+b2Capsule STRUCT 16
+	center1 b2Vec2 <>
+	center2 b2Vec2 <>
+	radius float ?
+b2Capsule ENDS
+
+b2DistanceCache STRUCT 16
+	count uint16_t ?
+	indexA uint8_t 3 DUP(?)
+	indexB uint8_t 3 DUP(?)
+b2DistanceCache ENDS
+
+b2Polygon STRUCT 16
+	vertices b2Vec2 8 DUP(<>)
+	normals b2Vec2 8 DUP(<>)
+	centroid b2Vec2 <>
+	radius float ?
+	count int32_t ?
+b2Polygon ENDS
+
+b2Segment STRUCT 16
+	point1 b2Vec2 <>
+	point2 b2Vec2 <>
+b2Segment ENDS
+
+b2ChainSegment STRUCT 16
+	ghost1 b2Vec2 <>
+	_segment b2Segment <>
+	ghost2 b2Vec2 <>
+	chainId int32_t ?
+b2ChainSegment ENDS
+
+b2Hull STRUCT 16
+	points b2Vec2 8 DUP(<>)
+	count int32_t ?
+b2Hull ENDS
+
+b2RayCastInput STRUCT 16
+	origin b2Vec2 <>
+	translation b2Vec2 <>
+	maxFraction float ?
+b2RayCastInput ENDS
+
+b2ShapeCastInput STRUCT 16
+	points b2Vec2 8 DUP(<>)
+	count int32_t ?
+	radius float ?
+	translation b2Vec2 <>
+	maxFraction float ?
+b2ShapeCastInput ENDS
+
+b2CastOutput STRUCT 16
+	normal b2Vec2 <>
+	point b2Vec2 <>
+	fraction float ?
+	iterations int32_t ?
+	hit bool ?
+b2CastOutput ENDS
+
+b2MassData STRUCT 16
+	mass float ?
+	center b2Vec2 <>
+	rotationalInertia float ?
+b2MassData ENDS
+
+b2SegmentDistanceResult STRUCT 16
+	closest1 b2Vec2 <>
+	closest2 b2Vec2 <>
+	fraction1 float ?
+	fraction2 float ?
+	distanceSquared float ?
+b2SegmentDistanceResult ENDS
+
+b2DistanceProxy STRUCT 16
+	points b2Vec2 8 DUP(<>)
+	count int32_t ?
+	radius float ?
+b2DistanceProxy ENDS
+
+b2DistanceInput STRUCT 16
+	proxyA b2DistanceProxy <>
+	proxyB b2DistanceProxy <>
+	transformA b2Transform <>
+	transformB b2Transform <>
+	useRadii bool ?
+b2DistanceInput ENDS
+
+b2DistanceOutput STRUCT 16
+	pointA b2Vec2 <>
+	pointB b2Vec2 <>
+	distance float ?
+	iterations int32_t ?
+	simplexCount int32_t ?
+b2DistanceOutput ENDS
+
+b2SimplexVertex STRUCT 16
+	wA b2Vec2 <>
+	wB b2Vec2 <>
+	w b2Vec2 <>
+	a float ?
+	indexA int32_t ?
+	indexB int32_t ?
+b2SimplexVertex ENDS
+
+b2Simplex STRUCT 16
+	v1 b2SimplexVertex <>
+	v2 b2SimplexVertex <>
+	v3 b2SimplexVertex <>
+	count int32_t ?
+b2Simplex ENDS
+
+b2ShapeCastPairInput STRUCT 16
+	proxyA b2DistanceProxy <>
+	proxyB b2DistanceProxy <>
+	transformA b2Transform <>
+	transformB b2Transform <>
+	translationB b2Vec2 <>
+	maxFraction float ?
+b2ShapeCastPairInput ENDS
+
+b2Sweep STRUCT 16
+	localCenter b2Vec2 <>
+	c1 b2Vec2 <>
+	c2 b2Vec2 <>
+	q1 b2Rot <>
+	q2 b2Rot <>
+b2Sweep ENDS
+
+b2TOIInput STRUCT 16
+	proxyA b2DistanceProxy <>
+	proxyB b2DistanceProxy <>
+	sweepA b2Sweep <>
+	sweepB b2Sweep <>
+	tMax float ?
+b2TOIInput ENDS
+
+b2TOIOutput STRUCT 16
+	state DWORD ?	; b2TOIState
+	t float ?
+b2TOIOutput ENDS
+
+b2ManifoldPoint STRUCT 16
+	point b2Vec2 <>
+	anchorA b2Vec2 <>
+	anchorB b2Vec2 <>
+	separation float ?
+	normalImpulse float ?
+	tangentImpulse float ?
+	maxNormalImpulse float ?
+	normalVelocity float ?
+	id uint16_t ?
+	persisted bool ?
+b2ManifoldPoint ENDS
+
+b2Manifold STRUCT 16
+	points b2ManifoldPoint 2 DUP(<>)
+	normal b2Vec2 <>
+	pointCount int32_t ?
+b2Manifold ENDS
+
+b2TreeNode STRUCT 16
+	aabb b2AABB <>
+	categoryBits uint64_t ?
+	UNION union_0
+		parent int32_t ?
+		next int32_t ?
+	ENDS
+
+	child1 int32_t ?
+	UNION union_1
+		child2 int32_t ?
+		userData int32_t ?
+	ENDS
+
+	height uint16_t ?
+	flags uint16_t ?
+b2TreeNode ENDS
+
+b2DynamicTree STRUCT 16
+	nodes b2ptr ?	; b2TreeNode *
+	root int32_t ?
+	nodeCount int32_t ?
+	nodeCapacity int32_t ?
+	freeList int32_t ?
+	proxyCount int32_t ?
+	leafIndices b2ptr ?	; int32_t *
+	leafBoxes b2ptr ?	; b2AABB *
+	leafCenters b2ptr ?	; b2Vec2 *
+	binIndices b2ptr ?	; int32_t *
+	rebuildCapacity int32_t ?
+b2DynamicTree ENDS
+
+b2TreeStats STRUCT 16
+	nodeVisits int32_t ?
+	leafVisits int32_t ?
+b2TreeStats ENDS
+
+b2WorldId STRUCT 16
+	index1 uint16_t ?
+	revision uint16_t ?
+b2WorldId ENDS
+
+b2BodyId STRUCT 16
+	index1 int32_t ?
+	world0 uint16_t ?
+	revision uint16_t ?
+b2BodyId ENDS
+
+b2ShapeId STRUCT 16
+	index1 int32_t ?
+	world0 uint16_t ?
+	revision uint16_t ?
+b2ShapeId ENDS
+
+b2ChainId STRUCT 16
+	index1 int32_t ?
+	world0 uint16_t ?
+	revision uint16_t ?
+b2ChainId ENDS
+
+b2JointId STRUCT 16
+	index1 int32_t ?
+	world0 uint16_t ?
+	revision uint16_t ?
+b2JointId ENDS
+
+b2RayResult STRUCT 16
+	shapeId b2ShapeId <>
+	point b2Vec2 <>
+	normal b2Vec2 <>
+	fraction float ?
+	nodeVisits int32_t ?
+	leafVisits int32_t ?
+	hit bool ?
+b2RayResult ENDS
+
+b2WorldDef STRUCT 16
+	gravity b2Vec2 <>
+	restitutionThreshold float ?
+	contactPushoutVelocity float ?
+	hitEventThreshold float ?
+	contactHertz float ?
+	contactDampingRatio float ?
+	jointHertz float ?
+	jointDampingRatio float ?
+	maximumLinearVelocity float ?
+	frictionMixingRule DWORD ?	; b2MixingRule
+	restitutionMixingRule DWORD ?	; b2MixingRule
+	enableSleep bool ?
+	enableContinuous bool ?
+	workerCount int32_t ?
+	enqueueTask b2ptr ?	; b2EnqueueTaskCallback *
+	finishTask b2ptr ?	; b2FinishTaskCallback *
+	userTaskContext b2ptr ?	; void *
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2WorldDef ENDS
+
+b2BodyDef STRUCT 16
+	_type DWORD ?	; b2BodyType
+	position b2Vec2 <>
+	rotation b2Rot <>
+	linearVelocity b2Vec2 <>
+	angularVelocity float ?
+	linearDamping float ?
+	angularDamping float ?
+	gravityScale float ?
+	sleepThreshold float ?
+	userData b2ptr ?	; void *
+	enableSleep bool ?
+	isAwake bool ?
+	fixedRotation bool ?
+	isBullet bool ?
+	isEnabled bool ?
+	allowFastRotation bool ?
+	internalValue int32_t ?
+b2BodyDef ENDS
+
+b2Filter STRUCT 16
+	categoryBits uint64_t ?
+	maskBits uint64_t ?
+	groupIndex int32_t ?
+b2Filter ENDS
+
+b2QueryFilter STRUCT 16
+	categoryBits uint64_t ?
+	maskBits uint64_t ?
+b2QueryFilter ENDS
+
+b2ShapeDef STRUCT 16
+	userData b2ptr ?	; void *
+	friction float ?
+	restitution float ?
+	density float ?
+	filter b2Filter <>
+	customColor uint32_t ?
+	isSensor bool ?
+	enableSensorEvents bool ?
+	enableContactEvents bool ?
+	enableHitEvents bool ?
+	enablePreSolveEvents bool ?
+	invokeContactCreation bool ?
+	updateBodyMass bool ?
+	internalValue int32_t ?
+b2ShapeDef ENDS
+
+b2ChainDef STRUCT 16
+	userData b2ptr ?	; void *
+	points b2ptr ?	; b2Vec2 const *
+	count int32_t ?
+	friction float ?
+	restitution float ?
+	filter b2Filter <>
+	customColor uint32_t ?
+	isLoop bool ?
+	internalValue int32_t ?
+b2ChainDef ENDS
+
+b2Profile STRUCT 16
+	step float ?
+	pairs float ?
+	collide float ?
+	solve float ?
+	buildIslands float ?
+	solveConstraints float ?
+	prepareTasks float ?
+	solverTasks float ?
+	prepareConstraints float ?
+	integrateVelocities float ?
+	warmStart float ?
+	solveVelocities float ?
+	integratePositions float ?
+	relaxVelocities float ?
+	applyRestitution float ?
+	storeImpulses float ?
+	finalizeBodies float ?
+	splitIslands float ?
+	sleepIslands float ?
+	hitEvents float ?
+	broadphase float ?
+	continuous float ?
+b2Profile ENDS
+
+b2Counters STRUCT 16
+	bodyCount int32_t ?
+	shapeCount int32_t ?
+	contactCount int32_t ?
+	jointCount int32_t ?
+	islandCount int32_t ?
+	stackUsed int32_t ?
+	staticTreeHeight int32_t ?
+	treeHeight int32_t ?
+	byteCount int32_t ?
+	taskCount int32_t ?
+	colorCounts int32_t 12 DUP(?)
+b2Counters ENDS
+
+b2DistanceJointDef STRUCT 16
+	bodyIdA b2BodyId <>
+	bodyIdB b2BodyId <>
+	localAnchorA b2Vec2 <>
+	localAnchorB b2Vec2 <>
+	_length float ?
+	enableSpring bool ?
+	hertz float ?
+	dampingRatio float ?
+	enableLimit bool ?
+	minLength float ?
+	maxLength float ?
+	enableMotor bool ?
+	maxMotorForce float ?
+	motorSpeed float ?
+	collideConnected bool ?
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2DistanceJointDef ENDS
+
+b2MotorJointDef STRUCT 16
+	bodyIdA b2BodyId <>
+	bodyIdB b2BodyId <>
+	linearOffset b2Vec2 <>
+	angularOffset float ?
+	maxForce float ?
+	maxTorque float ?
+	correctionFactor float ?
+	collideConnected bool ?
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2MotorJointDef ENDS
+
+b2MouseJointDef STRUCT 16
+	bodyIdA b2BodyId <>
+	bodyIdB b2BodyId <>
+	target b2Vec2 <>
+	hertz float ?
+	dampingRatio float ?
+	maxForce float ?
+	collideConnected bool ?
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2MouseJointDef ENDS
+
+b2NullJointDef STRUCT 16
+	bodyIdA b2BodyId <>
+	bodyIdB b2BodyId <>
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2NullJointDef ENDS
+
+b2PrismaticJointDef STRUCT 16
+	bodyIdA b2BodyId <>
+	bodyIdB b2BodyId <>
+	localAnchorA b2Vec2 <>
+	localAnchorB b2Vec2 <>
+	localAxisA b2Vec2 <>
+	referenceAngle float ?
+	enableSpring bool ?
+	hertz float ?
+	dampingRatio float ?
+	enableLimit bool ?
+	lowerTranslation float ?
+	upperTranslation float ?
+	enableMotor bool ?
+	maxMotorForce float ?
+	motorSpeed float ?
+	collideConnected bool ?
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2PrismaticJointDef ENDS
+
+b2RevoluteJointDef STRUCT 16
+	bodyIdA b2BodyId <>
+	bodyIdB b2BodyId <>
+	localAnchorA b2Vec2 <>
+	localAnchorB b2Vec2 <>
+	referenceAngle float ?
+	enableSpring bool ?
+	hertz float ?
+	dampingRatio float ?
+	enableLimit bool ?
+	lowerAngle float ?
+	upperAngle float ?
+	enableMotor bool ?
+	maxMotorTorque float ?
+	motorSpeed float ?
+	drawSize float ?
+	collideConnected bool ?
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2RevoluteJointDef ENDS
+
+b2WeldJointDef STRUCT 16
+	bodyIdA b2BodyId <>
+	bodyIdB b2BodyId <>
+	localAnchorA b2Vec2 <>
+	localAnchorB b2Vec2 <>
+	referenceAngle float ?
+	linearHertz float ?
+	angularHertz float ?
+	linearDampingRatio float ?
+	angularDampingRatio float ?
+	collideConnected bool ?
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2WeldJointDef ENDS
+
+b2WheelJointDef STRUCT 16
+	bodyIdA b2BodyId <>
+	bodyIdB b2BodyId <>
+	localAnchorA b2Vec2 <>
+	localAnchorB b2Vec2 <>
+	localAxisA b2Vec2 <>
+	enableSpring bool ?
+	hertz float ?
+	dampingRatio float ?
+	enableLimit bool ?
+	lowerTranslation float ?
+	upperTranslation float ?
+	enableMotor bool ?
+	maxMotorTorque float ?
+	motorSpeed float ?
+	collideConnected bool ?
+	userData b2ptr ?	; void *
+	internalValue int32_t ?
+b2WheelJointDef ENDS
+
+b2ExplosionDef STRUCT 16
+	maskBits uint64_t ?
+	position b2Vec2 <>
+	radius float ?
+	falloff float ?
+	impulsePerLength float ?
+b2ExplosionDef ENDS
+
+b2SensorBeginTouchEvent STRUCT 16
+	sensorShapeId b2ShapeId <>
+	visitorShapeId b2ShapeId <>
+b2SensorBeginTouchEvent ENDS
+
+b2SensorEndTouchEvent STRUCT 16
+	sensorShapeId b2ShapeId <>
+	visitorShapeId b2ShapeId <>
+b2SensorEndTouchEvent ENDS
+
+b2SensorEvents STRUCT 16
+	beginEvents b2ptr ?	; b2SensorBeginTouchEvent *
+	endEvents b2ptr ?	; b2SensorEndTouchEvent *
+	beginCount int32_t ?
+	endCount int32_t ?
+b2SensorEvents ENDS
+
+b2ContactBeginTouchEvent STRUCT 16
+	shapeIdA b2ShapeId <>
+	shapeIdB b2ShapeId <>
+	manifold b2Manifold <>
+b2ContactBeginTouchEvent ENDS
+
+b2ContactEndTouchEvent STRUCT 16
+	shapeIdA b2ShapeId <>
+	shapeIdB b2ShapeId <>
+b2ContactEndTouchEvent ENDS
+
+b2ContactHitEvent STRUCT 16
+	shapeIdA b2ShapeId <>
+	shapeIdB b2ShapeId <>
+	point b2Vec2 <>
+	normal b2Vec2 <>
+	approachSpeed float ?
+b2ContactHitEvent ENDS
+
+b2ContactEvents STRUCT 16
+	beginEvents b2ptr ?	; b2ContactBeginTouchEvent *
+	endEvents b2ptr ?	; b2ContactEndTouchEvent *
+	hitEvents b2ptr ?	; b2ContactHitEvent *
+	beginCount int32_t ?
+	endCount int32_t ?
+	hitCount int32_t ?
+b2ContactEvents ENDS
+
+b2BodyMoveEvent STRUCT 16
+	transform b2Transform <>
+	bodyId b2BodyId <>
+	userData b2ptr ?	; void *
+	fellAsleep bool ?
+b2BodyMoveEvent ENDS
+
+b2BodyEvents STRUCT 16
+	moveEvents b2ptr ?	; b2BodyMoveEvent *
+	moveCount int32_t ?
+b2BodyEvents ENDS
+
+b2ContactData STRUCT 16
+	shapeIdA b2ShapeId <>
+	shapeIdB b2ShapeId <>
+	manifold b2Manifold <>
+b2ContactData ENDS
+
+b2DebugDraw STRUCT 16
+	DrawPolygon b2ptr ?	; void (*)(b2Vec2 const * vertices, int vertexCount, b2HexColor color, void * context) *
+	DrawSolidPolygon b2ptr ?	; void (*)(b2Transform transform, b2Vec2 const * vertices, int vertexCount, float radius, b2HexColor color, void * context) *
+	DrawCircle b2ptr ?	; void (*)(b2Vec2 center, float radius, b2HexColor color, void * context) *
+	DrawSolidCircle b2ptr ?	; void (*)(b2Transform transform, float radius, b2HexColor color, void * context) *
+	DrawSolidCapsule b2ptr ?	; void (*)(b2Vec2 p1, b2Vec2 p2, float radius, b2HexColor color, void * context) *
+	DrawSegment b2ptr ?	; void (*)(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void * context) *
+	DrawTransform b2ptr ?	; void (*)(b2Transform transform, void * context) *
+	DrawPoint b2ptr ?	; void (*)(b2Vec2 p, float size, b2HexColor color, void * context) *
+	DrawString b2ptr ?	; void (*)(b2Vec2 p, char const * s, void * context) *
+	drawingBounds b2AABB <>
+	useDrawingBounds bool ?
+	drawShapes bool ?
+	drawJoints bool ?
+	drawJointExtras bool ?
+	drawAABBs bool ?
+	drawMass bool ?
+	drawContacts bool ?
+	drawGraphColors bool ?
+	drawContactNormals bool ?
+	drawContactImpulses bool ?
+	drawFrictionImpulses bool ?
+	context b2ptr ?	; void *
+b2DebugDraw ENDS
+
+

@@ -1,0 +1,150 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0/win-x64",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {},
+    ".NETCoreApp,Version=v8.0/win-x64": {
+      "HeaderConvert/1.0.0": {
+        "dependencies": {
+          "CppAst": "0.21.0"
+        },
+        "runtime": {
+          "HeaderConvert.dll": {}
+        }
+      },
+      "ClangSharp/18.1.0.2": {
+        "dependencies": {
+          "ClangSharp.Interop": "18.1.0.2"
+        },
+        "runtime": {
+          "lib/net8.0/ClangSharp.dll": {
+            "assemblyVersion": "18.1.0.2",
+            "fileVersion": "18.1.0.2"
+          }
+        }
+      },
+      "ClangSharp.Interop/18.1.0.2": {
+        "dependencies": {
+          "libclang": "18.1.3.2",
+          "libClangSharp": "18.1.3.1"
+        },
+        "runtime": {
+          "lib/net8.0/ClangSharp.Interop.dll": {
+            "assemblyVersion": "18.1.0.2",
+            "fileVersion": "18.1.0.2"
+          }
+        }
+      },
+      "CppAst/0.21.0": {
+        "dependencies": {
+          "ClangSharp": "18.1.0.2",
+          "Irony": "1.5.3"
+        },
+        "runtime": {
+          "lib/net8.0/CppAst.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.21.0.0"
+          }
+        }
+      },
+      "Irony/1.5.3": {
+        "runtime": {
+          "lib/netstandard2.0/Irony.dll": {
+            "assemblyVersion": "1.5.3.0",
+            "fileVersion": "1.5.3.0"
+          }
+        }
+      },
+      "libclang/18.1.3.2": {
+        "dependencies": {
+          "libclang.runtime.win-x64": "18.1.3.2"
+        }
+      },
+      "libclang.runtime.win-x64/18.1.3.2": {
+        "native": {
+          "runtimes/win-x64/native/libclang.dll": {
+            "fileVersion": "18.1.3.0"
+          }
+        }
+      },
+      "libClangSharp/18.1.3.1": {
+        "dependencies": {
+          "libClangSharp.runtime.win-x64": "18.1.3.1"
+        }
+      },
+      "libClangSharp.runtime.win-x64/18.1.3.1": {
+        "native": {
+          "runtimes/win-x64/native/libClangSharp.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HeaderConvert/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ClangSharp/18.1.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-I7r0CW81z4gM63xISeIg9x9EhQOGyJKH+eShy7V8kms0Q1AyUO+Qvo8mu4QPkvSUALJkT7nyFSwzwTJOD1MxAw==",
+      "path": "clangsharp/18.1.0.2",
+      "hashPath": "clangsharp.18.1.0.2.nupkg.sha512"
+    },
+    "ClangSharp.Interop/18.1.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zMeDMEcxByVajw23ZiJsWyInkYBMvtzQvD1NLk1nW4TrvaOWko4U7ZGmypGLjYYrzM9GAX81D+GdpKhzIhmrCg==",
+      "path": "clangsharp.interop/18.1.0.2",
+      "hashPath": "clangsharp.interop.18.1.0.2.nupkg.sha512"
+    },
+    "CppAst/0.21.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QxBxJZMP6JtvvjsvvnFi9O+XkYe1ptqS56yjmgOFzjGp56eypgjQXAXtifOoizlbF9onpjXTsWC250exODgA8g==",
+      "path": "cppast/0.21.0",
+      "hashPath": "cppast.0.21.0.nupkg.sha512"
+    },
+    "Irony/1.5.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wy0LlNq9Bhqy2C9O5burGCJPB9CyWuWf/JHwcnaxnM5wapPEc7uW6MBBzkymrV/pS2UwETK/0nJXzhh5Y6wv4Q==",
+      "path": "irony/1.5.3",
+      "hashPath": "irony.1.5.3.nupkg.sha512"
+    },
+    "libclang/18.1.3.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ugV1RcbJ50D9QivPWoJ5qF14psjQQqiFmd9bTsUScfpcGUEJBE2qm8eIZzatEZOKUchW3wSHRXryBzTtapibwQ==",
+      "path": "libclang/18.1.3.2",
+      "hashPath": "libclang.18.1.3.2.nupkg.sha512"
+    },
+    "libclang.runtime.win-x64/18.1.3.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-L8bgxTUASasstvQdjpSdOQEjpLtXKpZFSmV4iRNtC3+hyCt87KvOR1v8F5V+sPasdihLkN3160KmtpcAdcUm1A==",
+      "path": "libclang.runtime.win-x64/18.1.3.2",
+      "hashPath": "libclang.runtime.win-x64.18.1.3.2.nupkg.sha512"
+    },
+    "libClangSharp/18.1.3.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HjHcNOxPFYvWk2vgqbLjmRW63b6ZQw2UgwlOAAb4XGWnLmOLDipoV2nWTA3T0orE4dleWw7lemGKhZwtvmFKQw==",
+      "path": "libclangsharp/18.1.3.1",
+      "hashPath": "libclangsharp.18.1.3.1.nupkg.sha512"
+    },
+    "libClangSharp.runtime.win-x64/18.1.3.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Uu9w/jthpuC7uDFKYmkdmU/LIVJAlht5a6QFLzkUxdET7Szo5h/sMezU2oRE7P2ufIyFnPl5KYyFV1z0jGAedQ==",
+      "path": "libclangsharp.runtime.win-x64/18.1.3.1",
+      "hashPath": "libclangsharp.runtime.win-x64.18.1.3.1.nupkg.sha512"
+    }
+  }
+}
