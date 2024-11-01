@@ -53,9 +53,6 @@ torque float 50.
 INCLUDE window.asm
 INCLUDE world.asm
 
-.data
-testEntity bwEntity <>
-
 .code
 main PROC
     sub     rsp, 4*8+8 ; allocate shadow space
@@ -83,14 +80,6 @@ main PROC
     mov rdx, groundPos
     mov r8d, b2_staticBody
     call bwCreateBox
-    
-    mov rcx, boxHalfSize
-    mov rdx, boxPos
-    mov r8d, b2_dynamicBody
-    call bwCreateBox
-    mov b2BodyId PTR testEntity, rax
-    mov rax,pSprite
-    mov testEntity.pSprite, sfPtr PTR rax
 
 ; Main window message loop
 window_loop:
@@ -112,9 +101,6 @@ window_loop:
     call bwDrawWorld
 
     call bwWorld_Draw
-
-    lea rcx, testEntity
-    call bwEntity_Draw
 
     ; Process messages, including inputs
     call bwProcessMessages

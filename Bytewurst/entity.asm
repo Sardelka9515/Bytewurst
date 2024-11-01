@@ -119,4 +119,38 @@ bwEntity_Draw PROC
 bwEntity_Draw ENDP
 _TEXT ENDS
 
+_TEXT SEGMENT
+
+pCurrentEntity$ = 32
+pCounter$ = 24
+bwEntity_DrawAll PROC
+	sub rsp,40
+
+	mov rdx,entities_count
+	mov pCounter$[rsp],rdx
+
+	; Check if there are entities to draw
+	test rdx,rdx
+	jz L2
+
+	mov rcx,OFFSET entities
+	mov pCurrentEntity$[rsp],rcx
+L1:
+	mov rcx, QWORD PTR pCurrentEntity$[rsp]
+	call bwEntity_Draw
+	add  QWORD PTR pCurrentEntity$[rsp],SIZEOF bwEntity
+	mov rdx,pCounter$[rsp]
+	dec rdx
+	mov pCounter$[rsp],rdx
+	test rdx,rdx
+	jnz L1
+
+L2:
+	add rsp,40
+	ret
+
+bwEntity_DrawAll ENDP
+_TEXT ENDS
+
+
 endif

@@ -151,6 +151,7 @@ bwCreateBall ENDP
 bwWorld_Draw PROC
     sub     rsp, 4*8+8 ; allocate shadow space
     
+    call bwEntity_DrawAll
 	
     add     rsp, 4*8+8 ; pop shadow space
 	ret

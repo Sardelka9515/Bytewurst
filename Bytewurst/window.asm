@@ -5,6 +5,7 @@ __WINDOW_INC__:
 INCLUDE csfml.inc
 INCLUDE box2d.inc
 INCLUDE draw.asm
+INCLUDE entity.asm
 
 .data
 window_event sfEvent <>
@@ -110,8 +111,12 @@ bwProcessKeyUp PROC
     mov r8d, b2_dynamicBody
     call bwCreateBox
 
-    ; Apply torque to box
     mov rcx, rax
+    mov rdx, pSprite
+    call bwEntity_Create
+
+    ; Apply torque to box
+    mov rcx, b2BodyId PTR [rax]
     movss xmm1, torque
     mov r8, 1
     call b2Body_ApplyTorque
@@ -144,6 +149,9 @@ bwProcessMouseUp PROC
     mov rdx, rax
     mov r8d, b2_dynamicBody
     call bwCreateBox
+    mov rcx, rax
+    mov rdx, pSprite
+    call bwEntity_Create
     jmp break
 
 not_left:

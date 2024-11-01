@@ -26,7 +26,7 @@ img_path BYTE "D:\\logo.png"
 pTexture QWORD 0
 pSprite QWORD 0
 
-spriteScale sfVector2f <0.002, 0.002>
+spriteScale sfVector2f <0.002, -0.002>
 spriteOrigin sfVector2f <1024., 1024.>
 
 .code
