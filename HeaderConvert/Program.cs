@@ -13,13 +13,12 @@ namespace HeaderConvert
                 TargetSystem = "windows"
             };
 
-            var conversion = new Conversion(options, "b2ptr", "func");
-
-
+            var conversion = new Conversion(options, "b2Ptr", "b2Func","__BOX2D_INC__");
             var dir = Path.GetFullPath("../box2d/include/box2d");
             var files = Directory.GetFiles(dir).ToList();
             File.WriteAllText("../include/box2d.inc", conversion.Convert(files));
 
+            conversion = new Conversion(options, "sfPtr", "sfFunc", "__CSFML_INC__");
             options.IncludeFolders.Add(Path.GetFullPath("../include"));
             files = Directory.GetFiles(Path.GetFullPath("../include/SFML"), "*.h", SearchOption.AllDirectories).ToList();
             File.WriteAllText("../include/csfml.inc", conversion.Convert(files));

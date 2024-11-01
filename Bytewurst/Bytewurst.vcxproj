@@ -151,6 +151,9 @@
     <None Include="draw.asm">
       <FileType>Document</FileType>
     </None>
+    <None Include="entity.asm">
+      <FileType>Document</FileType>
+    </None>
     <MASM Include="main.asm" />
     <None Include="window.asm">
       <FileType>Document</FileType>

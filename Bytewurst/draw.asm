@@ -1,8 +1,14 @@
+.code
+ifndef __DRAW_INC__
+__DRAW_INC__:
+
+INCLUDE csfml.inc
+
 .data
 degToRadian REAL4 57.2957795131 
 renderStates sfRenderStates <>
-view_center sfVector2f <0.,10.>
-view_size sfVector2f <40.,30.>
+view_center sfVector2f <0.,5.>
+view_size sfVector2f <32.,18.>
 color sfColor <0, 0, 255, 0>
 debug_draw b2DebugDraw <>
 timer b2Timer <0>
@@ -14,6 +20,14 @@ pPolygon QWORD 0
 pCircle QWORD 0
 pFont QWORD 0
 pFpsText QWORD 0
+
+; Textures
+img_path BYTE "D:\\logo.png"
+pTexture QWORD 0
+pSprite QWORD 0
+
+spriteScale sfVector2f <0.002, 0.002>
+spriteOrigin sfVector2f <1024., 1024.>
 
 .code
 
@@ -167,6 +181,33 @@ bwSetup PROC
 	lea rax, bwDrawSolidCircle
 	mov debug_draw.DrawSolidCircle, rax
 
+	; Load textures
+	lea rcx, img_path
+	xor rdx, rdx
+	call sfTexture_createFromFile
+	mov pTexture, rax
+
+	; Create sprite
+	call sfSprite_create
+	mov pSprite, rax
+
+	; Set texture
+	mov rcx, pSprite
+	mov rdx, pTexture
+	mov r8, true
+	call sfSprite_setTexture
+	
+	; Set sprite scale
+	mov rcx, pSprite
+	mov rdx, spriteScale
+	call sfSprite_setScale
+
+	; Set sprite origin
+	mov rcx, pSprite
+	mov rdx, spriteOrigin
+	call sfSprite_setOrigin
+
+
 	add rsp, 40 ; shadow space
 	ret
 bwSetup ENDP
@@ -258,7 +299,7 @@ set_points:
 	call sfRenderWindow_drawConvexShape
 	nop
 	add rsp, 40
-ret
+	ret
 bwDrawSolidPolygon ENDP
 _TEXT ENDS
 
@@ -331,3 +372,5 @@ bwDrawSolidCircle PROC
 	ret
 bwDrawSolidCircle ENDP
 _TEXT ENDS
+
+endif

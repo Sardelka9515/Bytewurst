@@ -1,3 +1,9 @@
+.code
+ifndef __WINDOW_INC__
+__WINDOW_INC__:
+
+INCLUDE csfml.inc
+INCLUDE box2d.inc
 INCLUDE draw.asm
 
 .data
@@ -153,3 +159,5 @@ break:
     add rsp, 40 ; shadow space
     ret
 bwProcessMouseUp ENDP
+
+endif

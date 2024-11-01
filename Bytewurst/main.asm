@@ -18,9 +18,12 @@ INCLUDELIB csfml-window.lib
 
 option casemap:none
 
-malloc PROTO
 ExitProcess PROTO
 OutputDebugStringA PROTO
+malloc PROTO
+memcpy PROTO
+memset PROTO
+memmove PROTO
 
 OutputDebugString TEXTEQU <OutputDebugStringA>
 
@@ -32,8 +35,8 @@ INCLUDE csfml.inc
 window_title BYTE 'AssemgryBird!', 0
 window QWORD ?
 window_background DWORD 0
-window_width EQU 800
-window_height EQU 600
+window_width EQU 1280
+window_height EQU 720
 
 timeStep float 0.016666666666666666
 worldId DWORD ?
@@ -47,15 +50,18 @@ boxPos b2Vec2 <0., 10.>
 
 torque float 50.
 
-INCLUDE world.asm
 INCLUDE window.asm
+INCLUDE world.asm
+
+.data
+testEntity bwEntity <>
 
 .code
 main PROC
     sub     rsp, 4*8+8 ; allocate shadow space
 
     call bwSetup
-
+    
     ; Create window
     mov rcx, window_width
     mov rdx, window_height
@@ -77,7 +83,14 @@ main PROC
     mov rdx, groundPos
     mov r8d, b2_staticBody
     call bwCreateBox
-
+    
+    mov rcx, boxHalfSize
+    mov rdx, boxPos
+    mov r8d, b2_dynamicBody
+    call bwCreateBox
+    mov b2BodyId PTR testEntity, rax
+    mov rax,pSprite
+    mov testEntity.pSprite, sfPtr PTR rax
 
 ; Main window message loop
 window_loop:
@@ -97,6 +110,11 @@ window_loop:
     mov rcx, window
     mov edx, worldId
     call bwDrawWorld
+
+    call bwWorld_Draw
+
+    lea rcx, testEntity
+    call bwEntity_Draw
 
     ; Process messages, including inputs
     call bwProcessMessages

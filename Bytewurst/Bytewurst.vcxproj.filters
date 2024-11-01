@@ -38,5 +38,8 @@
     <None Include="world.asm">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="entity.asm">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

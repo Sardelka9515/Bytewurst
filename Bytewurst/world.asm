@@ -1,3 +1,12 @@
+.code
+ifndef __WORLD_INC__
+__WORLD_INC__:
+
+INCLUDE box2d.inc
+INCLUDE draw.asm
+INCLUDE window.asm
+INCLUDE entity.asm
+
 .data
 
 defaultFriction float 0.3
@@ -20,6 +29,7 @@ newBall b2Circle <>
 ; RCX halfSize:b2Vec2
 ; RDX pos:b2Vec2
 ; R8 bodyType:b2int
+; Returns bodyId:b2BodyId
 ; Create a static or dynamic box
 bwCreateBox PROC
     sub rsp, 4*8+8 ; allocate shadow space
@@ -83,6 +93,7 @@ bwCreateBox ENDP
 ; XMM0 radius:float
 ; RDX pos:b2Vec2
 ; R8 bodyType:b2int
+; Returns bodyId:b2BodyId
 ; Create a static or dynamic ball
 bwCreateBall PROC
     sub rsp, 4*8+8 ; allocate shadow space
@@ -94,7 +105,7 @@ bwCreateBall PROC
     ; Set circle params
     mov b2Vec2 PTR newBall.center,0
     movss float PTR newBall.radius,XMM0
-
+    
     ; Create ground body def
     lea rcx, newBodyDef
     call b2DefaultBodyDef
@@ -136,3 +147,14 @@ bwCreateBall PROC
     add rsp, 40 ; pop shadow space
     ret
 bwCreateBall ENDP
+
+bwWorld_Draw PROC
+    sub     rsp, 4*8+8 ; allocate shadow space
+    
+	
+    add     rsp, 4*8+8 ; pop shadow space
+	ret
+bwWorld_Draw ENDP
+
+
+endif
