@@ -47,7 +47,7 @@ worldDef b2WorldDef <>
 groundHalfSize b2Vec2 <50., 10.>
 groundPos b2Vec2 <0.,-10.>
 
-boxHalfSize b2Vec2 <1., 1.>
+boxHalfSize b2Vec2 <2., 2.>
 boxPos b2Vec2 <0., 10.>
 
 torque float 50.

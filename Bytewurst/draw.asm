@@ -7,8 +7,8 @@ INCLUDE csfml.inc
 .data
 degToRadian REAL4 57.2957795131 
 renderStates sfRenderStates <>
-view_center sfVector2f <0.,5.>
-view_size sfVector2f <32.,18.>
+view_center sfVector2f <0.,15.>
+view_size sfVector2f <64.,36.>
 color sfColor <0, 0, 255, 0>
 debug_draw b2DebugDraw <>
 timer b2Timer <0>
