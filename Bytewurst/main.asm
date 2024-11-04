@@ -16,6 +16,8 @@ INCLUDELIB csfml-network.lib
 INCLUDELIB csfml-system.lib
 INCLUDELIB csfml-window.lib
 
+bwPtr EQU <QWORD>
+
 option casemap:none
 
 ExitProcess PROTO
@@ -50,8 +52,8 @@ boxPos b2Vec2 <0., 10.>
 
 torque float 50.
 
-INCLUDE window.asm
 INCLUDE world.asm
+INCLUDE window.asm
 
 .code
 main PROC

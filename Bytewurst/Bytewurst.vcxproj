@@ -148,6 +148,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="pool.asm">
+      <FileType>Document</FileType>
+    </None>
     <None Include="draw.asm">
       <FileType>Document</FileType>
     </None>

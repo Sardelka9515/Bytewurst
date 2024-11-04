@@ -41,5 +41,8 @@
     <None Include="entity.asm">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="pool.asm">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@ INCLUDE csfml.inc
 INCLUDE box2d.inc
 INCLUDE draw.asm
 INCLUDE entity.asm
+INCLUDE world.asm
 
 .data
 window_event sfEvent <>
@@ -113,6 +114,7 @@ bwProcessKeyUp PROC
 
     mov rcx, rax
     mov rdx, pSprite
+    lea r8, entities_pool
     call bwEntity_Create
 
     ; Apply torque to box
@@ -151,6 +153,7 @@ bwProcessMouseUp PROC
     call bwCreateBox
     mov rcx, rax
     mov rdx, pSprite
+    lea r8, entities_pool
     call bwEntity_Create
     jmp break
 
@@ -159,6 +162,10 @@ not_left:
     mov rdx, rax
     mov r8d, b2_dynamicBody
     call bwCreateBall
+    mov rcx, rax
+    mov rdx, pSprite
+    lea r8, entities_pool
+    call bwEntity_Create
     jmp break
     
 

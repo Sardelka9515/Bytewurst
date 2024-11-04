@@ -4,8 +4,8 @@ __WORLD_INC__:
 
 INCLUDE box2d.inc
 INCLUDE draw.asm
-INCLUDE window.asm
 INCLUDE entity.asm
+INCLUDE pool.asm
 
 .data
 
@@ -23,6 +23,8 @@ newRadius float 0.
 
 newBox b2Polygon <>
 newBall b2Circle <>
+
+entities_pool bwPool <0>
 
 .code
 
@@ -150,7 +152,19 @@ bwCreateBall ENDP
 
 bwWorld_Draw PROC
     sub     rsp, 4*8+8 ; allocate shadow space
-    
+
+    ; Check if entities pool is created
+    mov rax,bwPtr PTR entities_pool
+    test rax, rax
+    jnz pool_created
+
+    lea rcx, entities_pool
+    mov rdx,SIZEOF bwEntity
+    mov r8,1024
+    call bwPool_Create
+
+pool_created:
+    lea rcx, entities_pool
     call bwEntity_DrawAll
 	
     add     rsp, 4*8+8 ; pop shadow space

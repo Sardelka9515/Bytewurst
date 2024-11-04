@@ -13,28 +13,37 @@ bwEntity STRUCT 16
 bwEntity ENDS
 
 .data
-MAX_ENTITIES = 1024
-entities bwEntity MAX_ENTITIES dup(<>)
-entities_count QWORD 0
 
 .code
 
 ; RCX bodyId:b2BodyId
 ; RDX pSprite:sfPtr
+; R8 pool:bwPool*
 ; Return RAX:bwEntity*
 bwEntity_Create PROC
+	LOCAL bodyId:b2BodyId
+	LOCAL sprite:sfPtr
+	LOCAL pool:PTR bwEntity
+	mov bodyId,rcx
+	mov sprite,rdx
+	mov pool,r8
+
 	sub rsp, 40
+	
 	xor rax,rax
-	cmp entities_count,MAX_ENTITIES
+	mov rcx,[r8][bwPool.count]
+	cmp rcx,[r8][bwPool.max_count]
 	jae L1
-	lea rax,entities
-	imul r8,entities_count,SIZEOF bwEntity
-	add rax,r8
+	
+	mov rcx,r8
+	call bwPool_Add
+
+	mov rcx,bodyId
+	mov rdx,sprite
 	mov b2BodyId PTR [rax],rcx
 	mov sfPtr PTR [rax][bwEntity.pSprite],rdx
 	mov float PTR [rax][bwEntity.health],0bf800000h ; -1.
 	mov float PTR [rax][bwEntity.lifeSpan],0bf800000h ; -1.
-	inc entities_count
 L1:
 	add rsp, 40
 	ret
@@ -53,18 +62,18 @@ bwEntity_Kill PROC
 
 
 L1:
-	; Remove from entity pool
+	; TODO Remove from entity pool
 	; Overwrite this entity with entity at the end of the pool	
-	mov rsi,OFFSET entities
-	mov rax,entities_count
-	dec rax
-	mov entities_count,rax
-	imul rax,rax,SIZEOF bwEntity
-	add rsi,rax
-
-	mov rdi,rcx
-	mov rcx, SIZEOF bwEntity
-	rep movsb
+	; mov rsi,OFFSET entities
+	; mov rax,entities_count
+	; dec rax
+	; mov entities_count,rax
+	; imul rax,rax,SIZEOF bwEntity
+	; add rsi,rax
+	; 
+	; mov rdi,rcx
+	; mov rcx, SIZEOF bwEntity
+	; rep movsb
 	add rsp,40
 	ret
 
@@ -98,6 +107,7 @@ bwEntity_Draw PROC
 	mov rcx, b2BodyId PTR bodyId$[rsp]
 	call b2Body_GetRotation
 	
+	; Calculate rotation in degrees
 	movd xmm1, eax
 	shr rax, 32
 	movd xmm0, eax
@@ -123,17 +133,20 @@ _TEXT SEGMENT
 
 pCurrentEntity$ = 32
 pCounter$ = 24
+numEntities$ = 16
+
+; RCX entities:bwPool*
 bwEntity_DrawAll PROC
 	sub rsp,40
 
-	mov rdx,entities_count
+	mov rdx,[rcx][bwPool.count]
 	mov pCounter$[rsp],rdx
 
 	; Check if there are entities to draw
 	test rdx,rdx
 	jz L2
 
-	mov rcx,OFFSET entities
+	mov rcx,bwPtr PTR [rcx]
 	mov pCurrentEntity$[rsp],rcx
 L1:
 	mov rcx, QWORD PTR pCurrentEntity$[rsp]
