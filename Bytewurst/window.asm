@@ -103,8 +103,8 @@ bwProcessMessages ENDP
 bwProcessKeyUp PROC
     sub rsp, 40 ; shadow space
 
-    cmp ecx, sfKeySpace
-    jnz break
+    cmp ecx, sfKeyEnter
+    jne not_enter
     ; Create box
     
     mov rcx, boxHalfSize
@@ -122,6 +122,31 @@ bwProcessKeyUp PROC
     movss xmm1, torque
     mov r8, 1
     call b2Body_ApplyTorque
+    jmp break
+not_enter:
+
+    cmp ecx, sfKeySpace
+    jne not_space
+
+    ; Create explosion
+
+    ; Find mouse position
+    mov rcx,window
+    call sfMouse_getPositionRenderWindow
+
+    mov rcx,window
+    mov rdx, rax
+    mov r8, pView
+    call sfRenderWindow_mapPixelToCoords
+
+    mov rcx, rax
+    mov rdx, 041200000h ;10.0
+    movd xmm1,rdx
+    call bwCreateExplosion
+
+    jmp break
+not_space:
+
 break:
 
     add rsp, 40 ; shadow space

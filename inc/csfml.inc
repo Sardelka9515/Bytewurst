@@ -3363,16 +3363,6 @@ sfVideoMode STRUCT 16
 	bitsPerPixel uint32_t ?
 sfVideoMode ENDS
 
-HWND__ STRUCT 16
-	unused int32_t ?
-HWND__ ENDS
-
-VkInstance_T STRUCT 16
-VkInstance_T ENDS
-
-VkSurfaceKHR_T STRUCT 16
-VkSurfaceKHR_T ENDS
-
 VkAllocationCallbacks STRUCT 16
 VkAllocationCallbacks ENDS
 

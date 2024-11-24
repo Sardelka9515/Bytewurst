@@ -1,10 +1,3 @@
-bwPool STRUCT 16
-	first bwPtr 0
-	size_element QWORD 0
-	count QWORD 0
-	max_count QWORD 1024
-bwPool ENDS
-
 .code
 
 ; Insert a new element in the pool
@@ -15,12 +8,12 @@ bwPool_Add PROC
 
 	xor rax,rax
 	mov rdx,[rcx][bwPool.count]
-	cmp rdx,[rcx][bwPool.max_count]
-	jae L1
+	cmp rdx,[rcx][bwPool.capacity]
+	jae L1	; Pool is full
 
 	; Calculate offset
 	mov rax,[rcx][bwPool.count]
-	mul [rcx][bwPool.size_element]
+	mul [rcx][bwPool.elementSize]
 
 	; Add offset to first to get new element address
 	add rax,bwPtr PTR [rcx]
@@ -36,8 +29,8 @@ bwPool_Add ENDP
 bwPool_Create PROC
 	sub rsp, 40
 
-	mov [rcx][bwPool.size_element],rdx
-	mov [rcx][bwPool.max_count],r8
+	mov [rcx][bwPool.elementSize],rdx
+	mov [rcx][bwPool.capacity],r8
 	mov [rcx][bwPool.count],0
 	
 	; Store pPool on stack
@@ -48,10 +41,22 @@ bwPool_Create PROC
 	mul r8
 	mov rcx,rax
 	call malloc
-
+	
 	; Restore pPool
 	mov rcx,[rsp+32]
 	mov [rcx][bwPool.first],rax
+
+	; Allocate memory for removed elements
+	mov rax,rdx
+	mov r9,SIZEOF QWORD
+	mul r9
+	mov rcx,rax
+	call malloc
+	; Restore pPool
+	mov rcx,[rsp+32]
+	mov [rcx][bwPool.recycledIndices],rax
+	mov [rcx][bwPool.recycledCount],0
+
 
 	add rsp, 40
 	ret

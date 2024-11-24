@@ -32,6 +32,7 @@ OutputDebugString TEXTEQU <OutputDebugStringA>
 INCLUDE stdtypes.inc
 INCLUDE box2d.inc
 INCLUDE csfml.inc
+INCLUDE helper.inc
 
 .data
 window_title BYTE 'AssemgryBird!', 0

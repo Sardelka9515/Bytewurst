@@ -8,9 +8,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bytewurst", "Bytewurst\Byte
 		{83915FF8-31D5-3688-917E-2E53E11D1ADE} = {83915FF8-31D5-3688-917E-2E53E11D1ADE}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeaderConvert", "HeaderConvert\HeaderConvert.csproj", "{C94D78A2-1CC0-49F7-BBBD-002275F28397}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeaderConvert", "HeaderConvert\HeaderConvert.csproj", "{C94D78A2-1CC0-49F7-BBBD-002275F28397}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "box2d", "box2d\build\src\box2d.vcxproj", "{83915FF8-31D5-3688-917E-2E53E11D1ADE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bytewurst.Helper", "Bytewurst.Helper\Bytewurst.Helper.vcxproj", "{799AD521-F9AF-4A73-8B59-693A9D80478F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +102,30 @@ Global
 		{83915FF8-31D5-3688-917E-2E53E11D1ADE}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
 		{83915FF8-31D5-3688-917E-2E53E11D1ADE}.RelWithDebInfo|x86.ActiveCfg = RelWithDebInfo|x64
 		{83915FF8-31D5-3688-917E-2E53E11D1ADE}.RelWithDebInfo|x86.Build.0 = RelWithDebInfo|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Debug|Any CPU.Build.0 = Debug|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Debug|x64.ActiveCfg = Debug|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Debug|x64.Build.0 = Debug|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Debug|x86.ActiveCfg = Debug|Win32
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Debug|x86.Build.0 = Debug|Win32
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.MinSizeRel|Any CPU.ActiveCfg = Debug|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.MinSizeRel|Any CPU.Build.0 = Debug|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.MinSizeRel|x64.ActiveCfg = Debug|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.MinSizeRel|x64.Build.0 = Debug|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.MinSizeRel|x86.ActiveCfg = Debug|Win32
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.MinSizeRel|x86.Build.0 = Debug|Win32
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Release|Any CPU.ActiveCfg = Release|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Release|Any CPU.Build.0 = Release|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Release|x64.ActiveCfg = Release|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Release|x64.Build.0 = Release|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Release|x86.ActiveCfg = Release|Win32
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.Release|x86.Build.0 = Release|Win32
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.RelWithDebInfo|Any CPU.ActiveCfg = Release|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.RelWithDebInfo|Any CPU.Build.0 = Release|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.RelWithDebInfo|x64.ActiveCfg = Release|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.RelWithDebInfo|x64.Build.0 = Release|x64
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
+		{799AD521-F9AF-4A73-8B59-693A9D80478F}.RelWithDebInfo|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

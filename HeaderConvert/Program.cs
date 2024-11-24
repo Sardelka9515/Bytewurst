@@ -2,7 +2,7 @@
 
 namespace HeaderConvert
 {
-    internal class Program
+    internal static class Program
     {
         static void Main(string[] args)
         {
@@ -13,15 +13,26 @@ namespace HeaderConvert
                 TargetSystem = "windows"
             };
 
-            var conversion = new Conversion(options, "b2Ptr", "b2Func","__BOX2D_INC__");
-            var dir = Path.GetFullPath("../box2d/include/box2d");
-            var files = Directory.GetFiles(dir).ToList();
-            File.WriteAllText("../include/box2d.inc", conversion.Convert(files));
+            options.IncludeFolders.Add("../box2d/include".ResolvePath());
+            var conversion = new Conversion(options, "b2Ptr", "b2Func", "__BOX2D_INC__");
+            var dir = "../box2d/include/box2d".ResolvePath();
+            var files = Directory.GetFiles(dir).Select(p => p.ResolvePath()).ToList();
+            File.WriteAllText("../inc/box2d.inc", conversion.Convert(files));
 
             conversion = new Conversion(options, "sfPtr", "sfFunc", "__CSFML_INC__");
-            options.IncludeFolders.Add(Path.GetFullPath("../include"));
-            files = Directory.GetFiles(Path.GetFullPath("../include/SFML"), "*.h", SearchOption.AllDirectories).ToList();
-            File.WriteAllText("../include/csfml.inc", conversion.Convert(files));
+            options.IncludeFolders.Add("../CSFML/include".ResolvePath());
+            files = Directory.GetFiles("../CSFML/include".ResolvePath(), "*.h", SearchOption.AllDirectories).Select(p => p.ResolvePath()).ToList();
+            File.WriteAllText("../inc/csfml.inc", conversion.Convert(files));
+
+            conversion = new Conversion(options, "bwPtr", "bwFunc", "__HELPER_INC__");
+            options.IncludeFolders.Add("../Bytewurst.Helper".ResolvePath());
+            files = Directory.GetFiles("../Bytewurst.Helper".ResolvePath(), "*.h", SearchOption.AllDirectories).Select(p => p.ResolvePath()).ToList();
+            files.ForEach(p => p.Replace('\\', '/'));
+            File.WriteAllText("../inc/helper.inc", conversion.Convert(files));
+        }
+        public static string ResolvePath(this string path)
+        {
+            return Path.GetFullPath(path).Replace('\\', '/');
         }
     }
 }

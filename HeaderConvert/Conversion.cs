@@ -28,6 +28,7 @@ namespace HeaderConvert
         };
         public string Convert(List<string> files)
         {
+            var filesSet = new HashSet<string?>(files);
             Console.WriteLine("Parsing files: " + string.Join(", ", files));
             var compilation = CppParser.ParseFiles(files, options);
 
@@ -66,6 +67,10 @@ namespace HeaderConvert
             resultSb.AppendLine("; Typedefs");
             foreach (var cppTypedef in compilation.Typedefs)
             {
+                if (!filesSet.Contains(cppTypedef.SourceFile?.ResolvePath()))
+                {
+                    continue;
+                }
                 string? comment = null;
                 var line = $"{cppTypedef.Name} EQU <{ResolveTypeName(cppTypedef.ElementType, ref comment)}>";
                 if (comment != null)
@@ -81,6 +86,10 @@ namespace HeaderConvert
             resultSb.AppendLine("; Enums");
             foreach (var e in compilation.Enums)
             {
+                if (!filesSet.Contains(e.SourceFile?.ResolvePath()))
+                {
+                    continue;
+                }
                 TypeMappings.Add(e.Name, "DWORD");
                 resultSb.AppendLine($"; {e.Name} ENUM ");
                 foreach (var b2enumItem in e.Items)
@@ -94,6 +103,10 @@ namespace HeaderConvert
             resultSb.AppendLine("; Functions");
             foreach (var function in compilation.Functions)
             {
+                if (!filesSet.Contains(function.SourceFile?.ResolvePath()))
+                {
+                    continue;
+                }
                 if (operatorRegexFunc().IsMatch(function.Name))
                 {
                     Console.WriteLine("Skipping operator function: " + function.Name);
@@ -111,6 +124,10 @@ namespace HeaderConvert
             // Print All classes, structs
             foreach (var cppClass in compilation.Classes)
             {
+                if (!filesSet.Contains(cppClass.SourceFile?.ResolvePath()))
+                {
+                    continue;
+                }
                 string kind;
                 if (cppClass.ClassKind == CppClassKind.Struct)
                 {

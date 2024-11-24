@@ -150,6 +150,27 @@ bwCreateBall PROC
     ret
 bwCreateBall ENDP
 
+; RCX pos:b2Vec2
+; XMM1 radius:float
+bwCreateExplosion PROC
+    LOCAL pos:b2Vec2
+    LOCAL def:b2ExplosionDef
+    sub rsp, 4*8+8 ; allocate shadow space
+
+    mov def.position, rcx
+    movd def.radius,xmm1
+    mov def.impulsePerLength, 42480000h ;50.0
+    mov def.falloff,40a00000h  ;5.0
+    mov def.maskBits,0ffffffffffffffffh
+
+    mov ecx,worldId
+    lea rdx, def
+    call b2World_Explode
+
+    add rsp, 40 ; pop shadow space
+    ret
+bwCreateExplosion ENDP
+
 bwWorld_Draw PROC
     sub     rsp, 4*8+8 ; allocate shadow space
 

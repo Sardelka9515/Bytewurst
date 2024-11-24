@@ -15,37 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="main.asm">
-      <Filter>Source Files</Filter>
-    </MASM>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="draw.asm">
+    <ClCompile Include="entity.c">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="window.asm">
+    </ClCompile>
+    <ClCompile Include="pool.c">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="world.asm">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="entity.asm">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="pool.asm">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\inc\box2d.inc">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="..\inc\csfml.inc">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="..\inc\helper.inc">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="..\inc\stdtypes.inc">
-      <Filter>Header Files</Filter>
-    </None>
+    </ClCompile>
   </ItemGroup>
 </Project>

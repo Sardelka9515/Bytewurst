@@ -4,14 +4,6 @@ __ENTITY_INC__:
 
 INCLUDE draw.asm
 
-
-bwEntity STRUCT 16
-	bodyId b2BodyId <>
-	pSprite sfPtr 0
-	health float -1.
-	lifeSpan float -1.
-bwEntity ENDS
-
 .data
 
 .code
@@ -32,7 +24,7 @@ bwEntity_Create PROC
 	
 	xor rax,rax
 	mov rcx,[r8][bwPool.count]
-	cmp rcx,[r8][bwPool.max_count]
+	cmp rcx,[r8][bwPool.capacity]
 	jae L1
 	
 	mov rcx,r8
@@ -43,7 +35,7 @@ bwEntity_Create PROC
 	mov b2BodyId PTR [rax],rcx
 	mov sfPtr PTR [rax][bwEntity.pSprite],rdx
 	mov float PTR [rax][bwEntity.health],0bf800000h ; -1.
-	mov float PTR [rax][bwEntity.lifeSpan],0bf800000h ; -1.
+	mov float PTR [rax][bwEntity.timeLeft],0bf800000h ; -1.
 L1:
 	add rsp, 40
 	ret
@@ -54,7 +46,7 @@ bwEntity_Create ENDP
 bwEntity_Kill PROC
 	sub rsp,40
 	mov float PTR [rcx][bwEntity.health],0
-	mov float PTR [rcx][bwEntity.lifeSpan],0
+	mov float PTR [rcx][bwEntity.timeLeft],0
 	test rdx,rdx
 	jz L1
 

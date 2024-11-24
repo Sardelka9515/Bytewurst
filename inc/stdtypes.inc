@@ -20,3 +20,4 @@ char8_t EQU <BYTE>
 char16_t EQU <WORD>
 wchar_t EQU <WORD>
 char32_t EQU <DWORD>
+size_t EQU <QWORD>
