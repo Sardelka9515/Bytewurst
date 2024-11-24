@@ -98,11 +98,7 @@ window_loop:
     mov r8, 4
     call b2World_Step
 
-    ; debug draw
-    mov rcx, window
-    mov edx, worldId
-    call bwDrawWorld
-
+    ; draw world
     call bwWorld_Draw
 
     ; Process messages, including inputs

@@ -27,7 +27,6 @@ namespace HeaderConvert
             conversion = new Conversion(options, "bwPtr", "bwFunc", "__HELPER_INC__");
             options.IncludeFolders.Add("../Bytewurst.Helper".ResolvePath());
             files = Directory.GetFiles("../Bytewurst.Helper".ResolvePath(), "*.h", SearchOption.AllDirectories).Select(p => p.ResolvePath()).ToList();
-            files.ForEach(p => p.Replace('\\', '/'));
             File.WriteAllText("../inc/helper.inc", conversion.Convert(files));
         }
         public static string ResolvePath(this string path)

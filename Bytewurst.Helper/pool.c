@@ -1,8 +1,9 @@
 #include "pool.h"
 #include <string.h>
 #include <stdint.h>
+#include <stdlib.h>
 
-void bwPool_Init(bwPool* pPool, size_t capacity, size_t elementSize) {
+void bwPool_Init(bwPool* pPool, size_t elementSize, size_t capacity) {
 	pPool->first = malloc(capacity * sizeof(void*));
 	pPool->elementSize = elementSize;
 	pPool->count = 0;
@@ -34,5 +35,5 @@ void bwPool_Remove(bwPool* pPool, size_t index) {
 		return;
 	}
 	pPool->recycledIndices[pPool->recycledCount++] = index;
-	memset((char*)pPool->first + pPool->elementSize * index, NULL, pPool->elementSize);
+	memset((char*)pPool->first + pPool->elementSize * index, 0, pPool->elementSize);
 }

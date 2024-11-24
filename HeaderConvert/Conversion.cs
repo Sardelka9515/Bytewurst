@@ -175,7 +175,6 @@ namespace HeaderConvert
             if (field.Type.TypeKind == CppTypeKind.Array)
             {
                 CppArrayType arrayType = (CppArrayType)field.Type;
-                typeName = arrayType.ElementType.GetDisplayName();
                 var size = arrayType.Size;
                 typeName = ResolveTypeName(arrayType.ElementType, ref comment);
                 var valueInitializer = structTypes.Contains(typeName) ? "<>" : "?";

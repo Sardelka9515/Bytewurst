@@ -11,7 +11,22 @@ bwFunc EQU <QWORD>
 ; Enums
 
 ; Functions
-; pPool:bwPool *, capacity:size_t, elementSize:size_t
+; world:b2WorldId, pos:b2Vec2, lifeSpan:float
+bwEntity_CreateParticle PROTO
+
+; entity:bwEntity *
+bwEntity_Destroy PROTO
+
+; entity:bwEntity *, damage:float
+bwEntity_ApplyDamage PROTO
+
+; entity:bwEntity *, dt:float, pWindow:sfRenderWindow *, pRenderState:sfRenderStates *
+bwEntity_Update PROTO
+
+; dir:char const *, count:int *
+bwMovie_Load PROTO
+
+; pPool:bwPool *, elementSize:size_t, capacity:size_t
 bwPool_Init PROTO
 
 ; pPool:bwPool *, index:size_t
@@ -30,7 +45,8 @@ bwEntity STRUCT 16
 	pSprite bwPtr ?	; sfSprite *
 	health float ?
 	timeLeft float ?
-	explodeOnDeath bool ?
+	explosionStrength float ?
+	explosionParts int32_t ?
 bwEntity ENDS
 
 bwPool STRUCT 16

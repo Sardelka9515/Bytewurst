@@ -85,36 +85,6 @@ bwUpdateView PROC
 	ret
 bwUpdateView ENDP
 
-; RCX window:sfRenderWindow*
-; RDX worldId:b2WorldId
-bwDrawWorld PROC
-
-	; store window in scratch space
-	mov [rsp+32],rcx
-	; store worldId in scratch space
-	mov [rsp+24],rdx
-
-	sub rsp, 40 ; shadow space
-	
-
-
-	; Set to current world view
-	mov rdx, pView
-	call sfRenderWindow_setView
-
-	; set window as draw context
-	mov rax,[rsp+40+32]
-	mov debug_draw.context, rax
-
-	; set worldId to rcx and draw debug
-	mov rcx,[rsp+40+24]
-	lea rdx, debug_draw
-	call b2World_Draw
-
-	add rsp, 40
-	ret
-bwDrawWorld ENDP
-
 bwSetup PROC
 	sub rsp, 40 ; shadow space
 

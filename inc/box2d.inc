@@ -394,6 +394,9 @@ b2ComputeCosSin PROTO
 ; angle:float
 b2MakeRot PROTO
 
+; v1:b2Vec2, v2:b2Vec2
+b2ComputeRotationBetweenUnitVectors PROTO
+
 ; q:b2Rot
 b2IsNormalized PROTO
 
@@ -467,7 +470,7 @@ b2AABB_Extents PROTO
 b2AABB_Union PROTO
 
 ; a:float
-b2IsValid PROTO
+b2Float_IsValid PROTO
 
 ; v:b2Vec2
 b2Vec2_IsValid PROTO
@@ -889,6 +892,9 @@ b2World_DumpMemoryStats PROTO
 ; worldId:b2WorldId
 b2World_RebuildStaticTree PROTO
 
+; worldId:b2WorldId, flag:bool
+b2World_EnableSpeculative PROTO
+
 ; worldId:b2WorldId, def:b2BodyDef const *
 b2CreateBody PROTO
 
@@ -1219,8 +1225,14 @@ b2Chain_GetSegments PROTO
 ; chainId:b2ChainId, friction:float
 b2Chain_SetFriction PROTO
 
+; chainId:b2ChainId
+b2Chain_GetFriction PROTO
+
 ; chainId:b2ChainId, restitution:float
 b2Chain_SetRestitution PROTO
+
+; chainId:b2ChainId
+b2Chain_GetRestitution PROTO
 
 ; id:b2ChainId
 b2Chain_IsValid PROTO

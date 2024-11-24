@@ -30,6 +30,10 @@ bwEntity_Create PROC
 	mov rcx,r8
 	call bwPool_Add
 
+	mov rcx,pool
+	mov rdx,rax
+	call bwPool_Get
+
 	mov rcx,bodyId
 	mov rdx,sprite
 	mov b2BodyId PTR [rax],rcx
@@ -123,34 +127,37 @@ _TEXT ENDS
 
 _TEXT SEGMENT
 
-pCurrentEntity$ = 32
-pCounter$ = 24
-numEntities$ = 16
-
 ; RCX entities:bwPool*
 bwEntity_DrawAll PROC
+	LOCAL pCurrentEntity:PTR bwEntity
+	LOCAL pCounter:QWORD
+	LOCAL numEntities:QWORD
 	sub rsp,40
 
 	mov rdx,[rcx][bwPool.count]
-	mov pCounter$[rsp],rdx
+	mov pCounter,rdx
 
 	; Check if there are entities to draw
 	test rdx,rdx
-	jz L2
+	jz no_entities
 
 	mov rcx,bwPtr PTR [rcx]
-	mov pCurrentEntity$[rsp],rcx
+	mov pCurrentEntity,rcx
 L1:
-	mov rcx, QWORD PTR pCurrentEntity$[rsp]
-	call bwEntity_Draw
-	add  QWORD PTR pCurrentEntity$[rsp],SIZEOF bwEntity
-	mov rdx,pCounter$[rsp]
+	mov rcx, QWORD PTR pCurrentEntity
+	movd xmm1,timeStep
+	mov r8,window
+	lea r9,renderStates
+	call bwEntity_Update
+
+	add  QWORD PTR pCurrentEntity,SIZEOF bwEntity
+	mov rdx,pCounter
 	dec rdx
-	mov pCounter$[rsp],rdx
+	mov pCounter,rdx
 	test rdx,rdx
 	jnz L1
 
-L2:
+no_entities:
 	add rsp,40
 	ret
 

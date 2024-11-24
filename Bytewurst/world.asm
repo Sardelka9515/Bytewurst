@@ -174,6 +174,22 @@ bwCreateExplosion ENDP
 bwWorld_Draw PROC
     sub     rsp, 4*8+8 ; allocate shadow space
 
+    
+	; Set to current world view
+    mov rcx,window
+	mov rdx, pView
+	call sfRenderWindow_setView
+
+	; set window as draw context
+	mov rax,window
+	mov debug_draw.context, rax
+
+	; set worldId to rcx and draw debug
+	mov ecx,worldId
+	lea rdx, debug_draw
+	call b2World_Draw
+
+
     ; Check if entities pool is created
     mov rax,bwPtr PTR entities_pool
     test rax, rax
@@ -182,7 +198,7 @@ bwWorld_Draw PROC
     lea rcx, entities_pool
     mov rdx,SIZEOF bwEntity
     mov r8,1024
-    call bwPool_Create
+    call bwPool_Init
 
 pool_created:
     lea rcx, entities_pool

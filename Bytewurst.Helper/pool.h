@@ -10,7 +10,7 @@ typedef struct bwPool {
 } bwPool;
 
 // Initializes a pool with a given capacity.
-void bwPool_Init(bwPool* pPool, size_t capacity, size_t elementSize);
+void bwPool_Init(bwPool* pPool, size_t elementSize, size_t capacity);
 
 // Gets an element from the pool.
 void* bwPool_Get(bwPool* pPool, size_t index);

@@ -1,5 +1,5 @@
 .code
-
+COMMENT @
 ; Insert a new element in the pool
 ; RCX pPool:Pool*
 ; Return: RAX pAddedElement:QWORD
@@ -61,3 +61,4 @@ bwPool_Create PROC
 	add rsp, 40
 	ret
 bwPool_Create ENDP
+ @
