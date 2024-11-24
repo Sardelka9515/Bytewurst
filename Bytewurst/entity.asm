@@ -39,7 +39,9 @@ bwEntity_Create PROC
 	mov b2BodyId PTR [rax],rcx
 	mov sfPtr PTR [rax][bwEntity.pSprite],rdx
 	mov float PTR [rax][bwEntity.health],0bf800000h ; -1.
-	mov float PTR [rax][bwEntity.timeLeft],0bf800000h ; -1.
+	mov float PTR [rax][bwEntity.timeLeft],040a00000h ; 5.
+	mov float PTR [rax][bwEntity.explosionStrength],040a00000h ; 5.
+	mov float PTR [rax][bwEntity.explosionParts],20
 L1:
 	add rsp, 40
 	ret
