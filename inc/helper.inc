@@ -11,7 +11,19 @@ bwFunc EQU <QWORD>
 ; Enums
 
 ; Functions
-; world:b2WorldId, pos:b2Vec2, lifeSpan:float
+; pPool:bwPool *, elementSize:size_t, capacity:size_t
+bwPool_Init PROTO
+
+; pPool:bwPool *, index:size_t
+bwPool_Get PROTO
+
+; pPool:bwPool *
+bwPool_Add PROTO
+
+; pPool:bwPool *, index:size_t
+bwPool_Remove PROTO
+
+; pPool:bwPool *, world:b2WorldId, pos:b2Vec2, lifeSpan:float
 bwEntity_CreateParticle PROTO
 
 ; entity:bwEntity *
@@ -26,29 +38,8 @@ bwEntity_Update PROTO
 ; dir:char const *, count:int *
 bwMovie_Load PROTO
 
-; pPool:bwPool *, elementSize:size_t, capacity:size_t
-bwPool_Init PROTO
-
-; pPool:bwPool *, index:size_t
-bwPool_Get PROTO
-
-; pPool:bwPool *, pElement:void *
-bwPool_Add PROTO
-
-; pPool:bwPool *, index:size_t
-bwPool_Remove PROTO
-
 
 ; Structs
-bwEntity STRUCT 16
-	body b2BodyId <>
-	pSprite bwPtr ?	; sfSprite *
-	health float ?
-	timeLeft float ?
-	explosionStrength float ?
-	explosionParts int32_t ?
-bwEntity ENDS
-
 bwPool STRUCT 16
 	first bwPtr ?	; void *
 	elementSize size_t ?
@@ -57,6 +48,17 @@ bwPool STRUCT 16
 	recycledIndices bwPtr ?	; size_t *
 	recycledCount size_t ?
 bwPool ENDS
+
+bwEntity STRUCT 16
+	body b2BodyId <>
+	pSprite bwPtr ?	; sfSprite *
+	health float ?
+	timeLeft float ?
+	explosionStrength float ?
+	explosionParts int32_t ?
+	index size_t ?
+	pPool bwPtr ?	; bwPool *
+bwEntity ENDS
 
 
 endif

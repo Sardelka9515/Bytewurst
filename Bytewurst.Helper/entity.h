@@ -1,6 +1,8 @@
 #pragma once
 #include "box2d/box2d.h"
 #include "SFML/Graphics.h"
+#include "pool.h"
+
 typedef struct bwEntity {
 	b2BodyId body;
 	sfSprite* pSprite;
@@ -8,9 +10,11 @@ typedef struct bwEntity {
 	float timeLeft;
 	float explosionStrength;
 	int explosionParts;
+	size_t index;
+	bwPool* pPool;
 } bwEntity;
 
-bwEntity bwEntity_CreateParticle(b2WorldId world, b2Vec2 pos, float lifeSpan);
+bwEntity* bwEntity_CreateParticle(bwPool* pPool,b2WorldId world, b2Vec2 pos, float lifeSpan);
 
 void bwEntity_Destroy(bwEntity* entity);
 

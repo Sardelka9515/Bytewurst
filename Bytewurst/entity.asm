@@ -16,6 +16,7 @@ bwEntity_Create PROC
 	LOCAL bodyId:b2BodyId
 	LOCAL sprite:sfPtr
 	LOCAL pool:PTR bwEntity
+	LOCAL index:size_t
 	mov bodyId,rcx
 	mov sprite,rdx
 	mov pool,r8
@@ -29,6 +30,7 @@ bwEntity_Create PROC
 	
 	mov rcx,r8
 	call bwPool_Add
+	mov index,rax
 
 	mov rcx,pool
 	mov rdx,rax
@@ -41,7 +43,11 @@ bwEntity_Create PROC
 	mov float PTR [rax][bwEntity.health],0bf800000h ; -1.
 	mov float PTR [rax][bwEntity.timeLeft],040a00000h ; 5.
 	mov float PTR [rax][bwEntity.explosionStrength],040a00000h ; 5.
-	mov float PTR [rax][bwEntity.explosionParts],20
+	mov size_t PTR [rax][bwEntity.explosionParts],20
+	mov rdx,index
+	mov size_t PTR [rax][bwEntity.index],rdx
+	mov rdx,pool
+	mov bwPtr PTR [rax][bwEntity.pPool],rdx
 L1:
 	add rsp, 40
 	ret

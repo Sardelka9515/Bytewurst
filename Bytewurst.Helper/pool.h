@@ -16,7 +16,7 @@ void bwPool_Init(bwPool* pPool, size_t elementSize, size_t capacity);
 void* bwPool_Get(bwPool* pPool, size_t index);
 
 // Adds an element to the pool. Returns the index of the added element.
-size_t bwPool_Add(bwPool* pPool, void* pElement);
+size_t bwPool_Add(bwPool* pPool);
 
 // Removes an element from the pool.
 void bwPool_Remove(bwPool* pPool, size_t index);

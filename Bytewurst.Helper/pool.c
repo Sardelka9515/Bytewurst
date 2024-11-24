@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 void bwPool_Init(bwPool* pPool, size_t elementSize, size_t capacity) {
-	pPool->first = malloc(capacity * sizeof(void*));
+	pPool->first = malloc(capacity * elementSize);
 	pPool->elementSize = elementSize;
 	pPool->count = 0;
 	pPool->capacity = capacity;
@@ -19,7 +19,7 @@ void* bwPool_Get(bwPool* pPool, size_t index) {
 	return (void*)((char*)pPool->first + index * pPool->elementSize);
 }
 
-size_t bwPool_Add(bwPool* pPool, void* pElement) {
+size_t bwPool_Add(bwPool* pPool) {
 	if (pPool->recycledCount > 0) {
 		size_t index = pPool->recycledIndices[--pPool->recycledCount];
 		return index;
@@ -34,6 +34,12 @@ void bwPool_Remove(bwPool* pPool, size_t index) {
 	if (index >= pPool->count) {
 		return;
 	}
-	pPool->recycledIndices[pPool->recycledCount++] = index;
-	memset((char*)pPool->first + pPool->elementSize * index, 0, pPool->elementSize);
+	if (index == pPool->count - 1) {
+		pPool->count--;
+		return;
+	}
+	else {
+		pPool->recycledIndices[pPool->recycledCount++] = index;
+	}
+	memset(bwPool_Get(pPool,index), 0, pPool->elementSize);
 }

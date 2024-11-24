@@ -10,22 +10,36 @@ float RandomFloat(float min, float max) {
 	return ((float)rand() / RAND_MAX) * (max - min) + min;
 }
 
-bwEntity bwEntity_CreateParticle(b2WorldId world, b2Vec2 pos, float lifeSpan) {
+bwEntity* bwEntity_CreateDefault(bwPool* pPool) {
+	size_t index = bwPool_Add(pPool);
+	bwEntity entity = { 0 };
+	entity.health = -1;
+	entity.timeLeft = -1;
+	entity.pSprite = NULL;
+	entity.explosionParts = 0;
+	entity.explosionStrength = 0;
+	entity.pPool = pPool;
+	entity.index = index;
+	bwEntity* pEntity = (bwEntity*)bwPool_Get(pPool, index);
+	*pEntity = entity;
+	return pEntity;
+}
+
+bwEntity* bwEntity_CreateParticle(bwPool* pPool, b2WorldId world, b2Vec2 pos, float lifeSpan) {
 	b2BodyDef def = b2DefaultBodyDef();
 	def.type = b2_dynamicBody;
 	def.position = pos;
 	b2BodyId body = b2CreateBody(world, &def);
-	b2Polygon box = b2MakeBox(RandomFloat(0.2,0.7), RandomFloat(0.2, 0.7));
+	b2Polygon box = b2MakeBox(RandomFloat(0.2, 0.7), RandomFloat(0.2, 0.7));
 	b2ShapeDef shapeDef = b2DefaultShapeDef();
 	shapeDef.friction = 0.5f;
 	shapeDef.density = 1.0f;
 	shapeDef.restitution = 0.3f;
 	b2CreatePolygonShape(body, &shapeDef, &box);
-	bwEntity entity = { 0 };
-	entity.body = body;
-	entity.timeLeft = lifeSpan;
-	entity.pSprite = NULL;
-	return entity;
+	bwEntity* pEntity = bwEntity_CreateDefault(pPool);
+	pEntity->body = body;
+	pEntity->timeLeft = lifeSpan;
+	return pEntity;
 }
 
 void bwEntity_Destroy(bwEntity* entity) {
@@ -41,16 +55,16 @@ void bwEntity_Destroy(bwEntity* entity) {
 			b2Vec2 pos;
 			pos.x = RandomFloat(region.lowerBound.x, region.upperBound.x);
 			pos.y = RandomFloat(region.lowerBound.y, region.upperBound.y);
-			bwEntity_CreateParticle(b2Body_GetWorld(entity->body), pos, 1);
+			bwEntity_CreateParticle(entity->pPool, b2Body_GetWorld(entity->body), pos, RandomFloat(3, 6));
 		}
 		b2WorldId world = b2Body_GetWorld(entity->body);
 		b2DestroyBody(entity->body);
-		memset(entity, 0, sizeof(bwEntity));
+		bwPool_Remove(entity->pPool, entity->index);
 		b2World_Explode(world, &def);
 	}
 	else {
 		b2DestroyBody(entity->body);
-		memset(entity, 0, sizeof(bwEntity));
+		bwPool_Remove(entity->pPool, entity->index);
 	}
 }
 
