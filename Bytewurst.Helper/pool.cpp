@@ -23,14 +23,19 @@ void* bwPool_Get(bwPool* pPool, size_t index) {
 
 size_t bwPool_Add(bwPool* pPool) {
 	if (pPool->recycledCount > 0) {
-		size_t index = pPool->recycledIndices[--pPool->recycledCount];
+		size_t index;
+		do {
+			index = pPool->recycledIndices[--pPool->recycledCount];
+		} while (index >= pPool->size); // Pool may be truncated
 		return index;
 	}
 	if (pPool->size >= pPool->capacity) {
 		assert(0);
 		return -1;
 	}
-	return pPool->size++;
+	size_t index = pPool->size++;
+	memset(bwPool_Get(pPool, index), 0, pPool->elementSize);
+	return index;
 }
 
 void bwPool_Remove(bwPool* pPool, size_t index) {
@@ -44,10 +49,7 @@ void bwPool_Remove(bwPool* pPool, size_t index) {
 	}
 	else {
 		pPool->recycledIndices[pPool->recycledCount++] = index;
-		char* pElement = (char*)bwPool_Get(pPool, index);
-		for (int i = 0; i < pPool->elementSize; i++) {
-			pElement[i] = 0;
-		}
+		memset(bwPool_Get(pPool, index), 0, pPool->elementSize);
 	}
 }
 
