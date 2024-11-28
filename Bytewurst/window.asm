@@ -112,10 +112,12 @@ bwProcessKeyUp PROC
     mov r8d, b2_dynamicBody
     call bwCreateBox
 
-    mov rcx, rax
-    mov rdx, pSprite
-    lea r8, entities_pool
-    call bwEntity_Create
+    lea rcx, entities_pool
+    mov rdx, rax
+    call bwEntity_CreateDefault
+
+    mov rcx, pSprite
+    mov sfPtr PTR [rax][bwEntity.pSprite],rcx
 
     ; Apply torque to box
     mov rcx, b2BodyId PTR [rax]
@@ -176,10 +178,17 @@ bwProcessMouseUp PROC
     mov rdx, rax
     mov r8d, b2_dynamicBody
     call bwCreateBox
-    mov rcx, rax
-    mov rdx, pSprite
-    lea r8, entities_pool
-    call bwEntity_Create
+
+    lea rcx, entities_pool
+    mov rdx, rax
+    call bwEntity_CreateDefault
+
+    mov rcx, pSprite
+    mov sfPtr PTR [rax][bwEntity.pSprite],rcx
+    
+	mov float PTR [rax][bwEntity.timeLeft],040a00000h ; 5.
+	mov float PTR [rax][bwEntity.explosionStrength],040a00000h ; 5.
+	mov uint32_t PTR [rax][bwEntity.explosionParts],20
     jmp break
 
 not_left:
@@ -187,10 +196,13 @@ not_left:
     mov rdx, rax
     mov r8d, b2_dynamicBody
     call bwCreateBall
-    mov rcx, rax
-    mov rdx, pSprite
-    lea r8, entities_pool
-    call bwEntity_Create
+        
+    lea rcx, entities_pool
+    mov rdx, rax
+    call bwEntity_CreateDefault
+
+    mov rcx, pSprite
+    mov sfPtr PTR [rax][bwEntity.pSprite],rcx
     jmp break
     
 

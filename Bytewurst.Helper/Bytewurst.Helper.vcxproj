@@ -116,6 +116,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -147,14 +148,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bw.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="helper.h" />
     <ClInclude Include="movie.h" />
     <ClInclude Include="pool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="helper.cpp" />
     <ClCompile Include="movie.cpp" />
-    <ClCompile Include="entity.c" />
-    <ClCompile Include="pool.c" />
+    <ClCompile Include="entity.cpp" />
+    <ClCompile Include="pool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\box2d\build\src\box2d.vcxproj">

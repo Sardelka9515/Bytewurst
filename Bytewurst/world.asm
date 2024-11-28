@@ -13,10 +13,6 @@ defaultFriction float 0.3
 defaultRestitution float 0.5
 defaultDensity float 1.
 
-newBodyDef b2BodyDef <>
-newBodyId b2BodyId <>
-newShapeDef b2ShapeDef <>
-newPos b2Vec2 <0., 0.>
 
 newHalfSize b2Vec2 <50., 10.>
 newRadius float 0.
@@ -34,6 +30,10 @@ entities_pool bwPool <0>
 ; Returns bodyId:b2BodyId
 ; Create a static or dynamic box
 bwCreateBox PROC
+
+    LOCAL newBodyDef:b2BodyDef
+    LOCAL newBodyId:b2BodyId
+    LOCAL newShapeDef:b2ShapeDef
     sub rsp, 4*8+8 ; allocate shadow space
 
     mov [rsp+32],rcx
@@ -71,6 +71,7 @@ bwCreateBox PROC
     ; Create box shape
     lea rcx, newShapeDef
     call b2DefaultShapeDef
+    mov newShapeDef.enableContactEvents, 1
 
     ; Set shape parameters
     mov eax, defaultFriction
@@ -98,6 +99,9 @@ bwCreateBox ENDP
 ; Returns bodyId:b2BodyId
 ; Create a static or dynamic ball
 bwCreateBall PROC
+    LOCAL newBodyDef:b2BodyDef
+    LOCAL newBodyId:b2BodyId
+    LOCAL newShapeDef:b2ShapeDef
     sub rsp, 4*8+8 ; allocate shadow space
 
     mov [rsp+24],rdx
@@ -130,6 +134,7 @@ bwCreateBall PROC
     ; Create shape
     lea rcx, newShapeDef
     call b2DefaultShapeDef
+    mov newShapeDef.enableContactEvents, 1
 
     ; Set shape parameters
     mov eax, defaultFriction
@@ -143,7 +148,7 @@ bwCreateBall PROC
     lea rdx, newShapeDef
     lea r8, newBall
     call b2CreateCircleShape
-
+    
     mov rax, newBodyId
 
     add rsp, 40 ; pop shadow space
@@ -201,8 +206,12 @@ bwWorld_Draw PROC
     call bwPool_Init
 
 pool_created:
+
     lea rcx, entities_pool
-    call bwEntity_DrawAll
+    movd xmm1,timeStep
+    mov r8,window
+    lea r9,renderStates
+    call bwEntity_UpdateAll
 	
     add     rsp, 4*8+8 ; pop shadow space
 	ret

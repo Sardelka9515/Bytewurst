@@ -2,18 +2,20 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <assert.h>
 
 void bwPool_Init(bwPool* pPool, size_t elementSize, size_t capacity) {
 	pPool->first = malloc(capacity * elementSize);
 	pPool->elementSize = elementSize;
-	pPool->count = 0;
+	pPool->size = 0;
 	pPool->capacity = capacity;
-	pPool->recycledIndices = malloc(capacity * sizeof(size_t));
+	pPool->recycledIndices = (size_t*)malloc(capacity * sizeof(size_t));
 	pPool->recycledCount = 0;
 }
 
 void* bwPool_Get(bwPool* pPool, size_t index) {
-	if (index > pPool->count) {
+	if (index > pPool->size) {
+		assert(0);
 		return NULL;
 	}
 	return (void*)((char*)pPool->first + index * pPool->elementSize);
@@ -24,22 +26,35 @@ size_t bwPool_Add(bwPool* pPool) {
 		size_t index = pPool->recycledIndices[--pPool->recycledCount];
 		return index;
 	}
-	if (pPool->count >= pPool->capacity) {
+	if (pPool->size >= pPool->capacity) {
+		assert(0);
 		return -1;
 	}
-	return pPool->count++;
+	return pPool->size++;
 }
 
 void bwPool_Remove(bwPool* pPool, size_t index) {
-	if (index >= pPool->count) {
+	if (index >= pPool->size) {
+		assert(0);
 		return;
 	}
-	if (index == pPool->count - 1) {
-		pPool->count--;
+	if (index == pPool->size - 1) {
+		pPool->size--;
 		return;
 	}
 	else {
 		pPool->recycledIndices[pPool->recycledCount++] = index;
+		char* pElement = (char*)bwPool_Get(pPool, index);
+		for (int i = 0; i < pPool->elementSize; i++) {
+			pElement[i] = 0;
+		}
 	}
-	memset(bwPool_Get(pPool,index), 0, pPool->elementSize);
+}
+
+void bwPool_Truncate(bwPool* pPool, size_t newSize) {
+	if (newSize > pPool->size) {
+		assert(0);
+		return;
+	}
+	pPool->size = newSize;
 }

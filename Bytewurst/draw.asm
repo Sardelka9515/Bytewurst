@@ -22,7 +22,7 @@ pFont QWORD 0
 pFpsText QWORD 0
 
 ; Textures
-img_path BYTE "D:\\logo.png"
+img_path BYTE "img\\sausage.png"
 pTexture QWORD 0
 pSprite QWORD 0
 
@@ -154,18 +154,8 @@ bwSetup PROC
 	; Load textures
 	lea rcx, img_path
 	xor rdx, rdx
-	call sfTexture_createFromFile
-	mov pTexture, rax
-
-	; Create sprite
-	call sfSprite_create
+	call bwLoadSprite
 	mov pSprite, rax
-
-	; Set texture
-	mov rcx, pSprite
-	mov rdx, pTexture
-	mov r8, true
-	call sfSprite_setTexture
 	
 	; Set sprite scale
 	mov rcx, pSprite

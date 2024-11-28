@@ -12,7 +12,7 @@ INCLUDE draw.asm
 ; RDX pSprite:sfPtr
 ; R8 pool:bwPool*
 ; Return RAX:bwEntity*
-bwEntity_Create PROC
+_bwEntity_Create PROC
 	LOCAL bodyId:b2BodyId
 	LOCAL sprite:sfPtr
 	LOCAL pool:PTR bwEntity
@@ -24,7 +24,7 @@ bwEntity_Create PROC
 	sub rsp, 40
 	
 	xor rax,rax
-	mov rcx,[r8][bwPool.count]
+	mov rcx,[r8][bwPool._size]
 	cmp rcx,[r8][bwPool.capacity]
 	jae L1
 	
@@ -43,7 +43,7 @@ bwEntity_Create PROC
 	mov float PTR [rax][bwEntity.health],0bf800000h ; -1.
 	mov float PTR [rax][bwEntity.timeLeft],040a00000h ; 5.
 	mov float PTR [rax][bwEntity.explosionStrength],040a00000h ; 5.
-	mov size_t PTR [rax][bwEntity.explosionParts],20
+	mov uint32_t PTR [rax][bwEntity.explosionParts],20
 	mov rdx,index
 	mov size_t PTR [rax][bwEntity.index],rdx
 	mov rdx,pool
@@ -51,37 +51,7 @@ bwEntity_Create PROC
 L1:
 	add rsp, 40
 	ret
-bwEntity_Create ENDP
-
-; RCX entity:bwEntity*
-; RDX explode:BOOL
-bwEntity_Kill PROC
-	sub rsp,40
-	mov float PTR [rcx][bwEntity.health],0
-	mov float PTR [rcx][bwEntity.timeLeft],0
-	test rdx,rdx
-	jz L1
-
-	; Explode entity
-
-
-L1:
-	; TODO Remove from entity pool
-	; Overwrite this entity with entity at the end of the pool	
-	; mov rsi,OFFSET entities
-	; mov rax,entities_count
-	; dec rax
-	; mov entities_count,rax
-	; imul rax,rax,SIZEOF bwEntity
-	; add rsi,rax
-	; 
-	; mov rdi,rcx
-	; mov rcx, SIZEOF bwEntity
-	; rep movsb
-	add rsp,40
-	ret
-
-bwEntity_Kill ENDP
+_bwEntity_Create ENDP
 
 _TEXT SEGMENT
 bodyId$ = 32
@@ -142,7 +112,7 @@ bwEntity_DrawAll PROC
 	LOCAL numEntities:QWORD
 	sub rsp,40
 
-	mov rdx,[rcx][bwPool.count]
+	mov rdx,[rcx][bwPool._size]
 	mov pCounter,rdx
 
 	; Check if there are entities to draw

@@ -22,7 +22,7 @@ namespace HeaderConvert
             conversion = new Conversion(options, "sfPtr", "sfFunc", "__CSFML_INC__");
             options.IncludeFolders.Add("../CSFML/include".ResolvePath());
             files = Directory.GetFiles("../CSFML/include".ResolvePath(), "*.h", SearchOption.AllDirectories).Select(p => p.ResolvePath()).ToList();
-            File.WriteAllText("../inc/csfml.inc", conversion.Convert(files));
+            // File.WriteAllText("../inc/csfml.inc", conversion.Convert(files));
 
             conversion = new Conversion(options, "bwPtr", "bwFunc", "__HELPER_INC__");
             options.IncludeFolders.Add("../Bytewurst.Helper".ResolvePath());

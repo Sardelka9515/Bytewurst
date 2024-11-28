@@ -23,6 +23,12 @@ bwPool_Add PROTO
 ; pPool:bwPool *, index:size_t
 bwPool_Remove PROTO
 
+; pPool:bwPool *, newSize:size_t
+bwPool_Truncate PROTO
+
+; pPool:bwPool *, body:b2BodyId
+bwEntity_CreateDefault PROTO
+
 ; pPool:bwPool *, world:b2WorldId, pos:b2Vec2, lifeSpan:float
 bwEntity_CreateParticle PROTO
 
@@ -35,15 +41,30 @@ bwEntity_ApplyDamage PROTO
 ; entity:bwEntity *, dt:float, pWindow:sfRenderWindow *, pRenderState:sfRenderStates *
 bwEntity_Update PROTO
 
-; dir:char const *, count:int *
-bwMovie_Load PROTO
+; pPool:bwPool *, dt:float, pWindow:sfRenderWindow *, pRenderStates:sfRenderStates *
+bwEntity_UpdateAll PROTO
+
+; body:b2BodyId
+bwEntity_GetFromBody PROTO
+
+; entity:bwEntity *
+bwEntity_Validate PROTO
+
+; entity:bwEntity *
+bwEntity_Kill PROTO
+
+; path:char const *
+bwLoadSprite PROTO
+
+; worldId:b2WorldId
+bwProcessEvents PROTO
 
 
 ; Structs
 bwPool STRUCT 16
 	first bwPtr ?	; void *
 	elementSize size_t ?
-	count size_t ?
+	_size size_t ?
 	capacity size_t ?
 	recycledIndices bwPtr ?	; size_t *
 	recycledCount size_t ?
@@ -55,7 +76,7 @@ bwEntity STRUCT 16
 	health float ?
 	timeLeft float ?
 	explosionStrength float ?
-	explosionParts int32_t ?
+	explosionParts uint32_t ?
 	index size_t ?
 	pPool bwPtr ?	; bwPool *
 bwEntity ENDS

@@ -98,6 +98,9 @@ window_loop:
     mov r8, 4
     call b2World_Step
 
+    mov ecx,worldId
+    call bwProcessEvents
+
     ; draw world
     call bwWorld_Draw
 
