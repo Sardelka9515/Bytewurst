@@ -42,7 +42,7 @@ window_width EQU 1280
 window_height EQU 720
 
 timeStep float 0.016666666666666666
-worldId DWORD ?
+worldId b2WorldId <>
 worldDef b2WorldDef <>
 
 groundHalfSize b2Vec2 <50., 10.>
@@ -92,20 +92,17 @@ window_loop:
     mov edx, window_background
     call sfRenderWindow_clear
 
+    ; Process messages, including inputs
+    call bwProcessMessages
+
     ; Simulate world
     mov ecx, worldId
     movd xmm1, timeStep
     mov r8, 4
     call b2World_Step
 
-    mov ecx,worldId
-    call bwProcessEvents
-
     ; draw world
     call bwWorld_Draw
-
-    ; Process messages, including inputs
-    call bwProcessMessages
 
     ; display window
     mov rcx, window

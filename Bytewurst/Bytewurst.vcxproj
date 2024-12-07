@@ -123,6 +123,13 @@
     <PostBuildEvent>
       <Message>copy dlls</Message>
     </PostBuildEvent>
+    <MASM>
+      <GeneratePreprocessedSourceListing>false</GeneratePreprocessedSourceListing>
+      <AddFirstPassListing>
+      </AddFirstPassListing>
+      <ListAllAvailableInformation>true</ListAllAvailableInformation>
+      <AssembledCodeListingFile>$(ProjectName).lst</AssembledCodeListingFile>
+    </MASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -146,6 +153,13 @@
     <PostBuildEvent>
       <Message>copy dlls</Message>
     </PostBuildEvent>
+    <MASM>
+      <GeneratePreprocessedSourceListing>false</GeneratePreprocessedSourceListing>
+      <AddFirstPassListing>
+      </AddFirstPassListing>
+      <ListAllAvailableInformation>true</ListAllAvailableInformation>
+      <AssembledCodeListingFile>$(ProjectName).lst</AssembledCodeListingFile>
+    </MASM>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\inc\box2d.inc" />

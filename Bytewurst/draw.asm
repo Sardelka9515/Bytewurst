@@ -64,9 +64,9 @@ HexToRGBA ENDP
 ; RCX center:sfVector2f
 ; RDX size:sfVector2f
 bwUpdateView PROC
-
-	; store center on scratch space
-	mov [rsp+32],rcx
+	LOCAL center:sfVector2f
+	; store center on stack
+	mov center,rcx
 	sub rsp, 40
 
 	; flip sign bit of size.y (upper 32 bits of rdx)
@@ -78,7 +78,7 @@ bwUpdateView PROC
 
 	; Restore center to rdx and set view center
 	mov rcx, pView
-	mov rdx,[rsp+40+32]
+	mov rdx,center
 	call sfView_setCenter
 
 	add rsp, 40

@@ -14,12 +14,6 @@ defaultRestitution float 0.5
 defaultDensity float 1.
 
 
-newHalfSize b2Vec2 <50., 10.>
-newRadius float 0.
-
-newBox b2Polygon <>
-newBall b2Circle <>
-
 entities_pool bwPool <0>
 
 .code
@@ -31,14 +25,19 @@ entities_pool bwPool <0>
 ; Create a static or dynamic box
 bwCreateBox PROC
 
-    LOCAL newBodyDef:b2BodyDef
-    LOCAL newBodyId:b2BodyId
-    LOCAL newShapeDef:b2ShapeDef
-    sub rsp, 4*8+8 ; allocate shadow space
+    ALIGNED_LOCAL newBodyDef,b2BodyDef
+    ALIGNED_LOCAL newBodyId,b2BodyId
+    ALIGNED_LOCAL newShapeDef,b2ShapeDef
+    ALIGNED_LOCAL halfSize,b2Vec2
+    ALIGNED_LOCAL pos,b2Vec2
+    ALIGNED_LOCAL bodyType,int32_t
+    ALIGNED_LOCAL newBox,b2Polygon
 
-    mov [rsp+32],rcx
-    mov [rsp+24],rdx
-    mov [rsp+16],r8
+    sub rsp, 4*8 ; allocate shadow space
+
+    mov halfSize,rcx
+    mov pos,rdx
+    mov bodyType,r8d
 
     ; Create ground body def
     lea rcx, newBodyDef
@@ -46,11 +45,11 @@ bwCreateBox PROC
 
     
     ; set body type
-    mov eax, [rsp+16]
+    mov eax, bodyType
     mov newBodyDef._type, eax
 
     ; set body position
-    mov rax, [rsp+24]
+    mov rax, pos
     mov newBodyDef.position, rax
 
     ; Create new body
@@ -61,8 +60,8 @@ bwCreateBox PROC
 
     ; Create new box
     lea rcx, newBox
-    movss xmm1, REAL4 PTR [rsp+32]
-    mov rax,[rsp+32]
+    movss xmm1, REAL4 PTR halfSize.x
+    mov rax,halfSize
     shr rax, 32
     movd xmm2, eax
 
@@ -88,7 +87,7 @@ bwCreateBox PROC
 
     mov rax, newBodyId
 
-    add rsp, 40 ; pop shadow space
+    add rsp, 32 ; pop shadow space
     ret
 bwCreateBox ENDP
 
@@ -99,13 +98,19 @@ bwCreateBox ENDP
 ; Returns bodyId:b2BodyId
 ; Create a static or dynamic ball
 bwCreateBall PROC
-    LOCAL newBodyDef:b2BodyDef
-    LOCAL newBodyId:b2BodyId
-    LOCAL newShapeDef:b2ShapeDef
-    sub rsp, 4*8+8 ; allocate shadow space
+    ALIGNED_LOCAL newBodyDef,b2BodyDef
+    ALIGNED_LOCAL newBodyId,b2BodyId
+    ALIGNED_LOCAL newShapeDef,b2ShapeDef
+    ALIGNED_LOCAL radius,float
+    ALIGNED_LOCAL pos,b2Vec2
+    ALIGNED_LOCAL bodyType,int32_t
+    ALIGNED_LOCAL newBall,b2Circle
 
-    mov [rsp+24],rdx
-    mov [rsp+16],r8
+    sub rsp, 4*8 ; allocate shadow space
+
+    movss radius,XMM0
+    mov pos,rdx
+    mov bodyType,r8d
 
     
     ; Set circle params
@@ -118,11 +123,11 @@ bwCreateBall PROC
 
     
     ; set body type
-    mov eax, [rsp+16]
+    mov eax, bodyType
     mov newBodyDef._type, eax
 
     ; set body position
-    mov rax, [rsp+24]
+    mov rax, pos
     mov newBodyDef.position, rax
 
     ; Create new body
@@ -151,16 +156,16 @@ bwCreateBall PROC
     
     mov rax, newBodyId
 
-    add rsp, 40 ; pop shadow space
+    add rsp, 32 ; pop shadow space
     ret
 bwCreateBall ENDP
 
 ; RCX pos:b2Vec2
 ; XMM1 radius:float
 bwCreateExplosion PROC
-    LOCAL pos:b2Vec2
-    LOCAL def:b2ExplosionDef
-    sub rsp, 4*8+8 ; allocate shadow space
+    ALIGNED_LOCAL pos,b2Vec2
+    ALIGNED_LOCAL def,b2ExplosionDef
+    sub rsp, 4*8 ; allocate shadow space
 
     mov def.position, rcx
     movd def.radius,xmm1
@@ -172,7 +177,7 @@ bwCreateExplosion PROC
     lea rdx, def
     call b2World_Explode
 
-    add rsp, 40 ; pop shadow space
+    add rsp, 32 ; pop shadow space
     ret
 bwCreateExplosion ENDP
 

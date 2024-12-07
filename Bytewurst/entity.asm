@@ -13,15 +13,15 @@ INCLUDE draw.asm
 ; R8 pool:bwPool*
 ; Return RAX:bwEntity*
 _bwEntity_Create PROC
-	LOCAL bodyId:b2BodyId
-	LOCAL sprite:sfPtr
-	LOCAL pool:PTR bwEntity
-	LOCAL index:size_t
+	ALIGNED_LOCAL bodyId,b2BodyId
+	ALIGNED_LOCAL sprite,sfPtr
+	ALIGNED_LOCAL pool,bwPtr
+	ALIGNED_LOCAL index,size_t
 	mov bodyId,rcx
 	mov sprite,rdx
 	mov pool,r8
 
-	sub rsp, 40
+	sub rsp, 32
 	
 	xor rax,rax
 	mov rcx,[r8][bwPool._size]
@@ -49,7 +49,7 @@ _bwEntity_Create PROC
 	mov rdx,pool
 	mov bwPtr PTR [rax][bwEntity.pPool],rdx
 L1:
-	add rsp, 40
+	add rsp, 32
 	ret
 _bwEntity_Create ENDP
 
@@ -107,10 +107,10 @@ _TEXT SEGMENT
 
 ; RCX entities:bwPool*
 bwEntity_DrawAll PROC
-	LOCAL pCurrentEntity:PTR bwEntity
-	LOCAL pCounter:QWORD
-	LOCAL numEntities:QWORD
-	sub rsp,40
+	ALIGNED_LOCAL pCurrentEntity,bwPtr
+	ALIGNED_LOCAL pCounter,QWORD
+	ALIGNED_LOCAL numEntities,QWORD
+	sub rsp,32
 
 	mov rdx,[rcx][bwPool._size]
 	mov pCounter,rdx
@@ -136,7 +136,7 @@ L1:
 	jnz L1
 
 no_entities:
-	add rsp,40
+	add rsp,32
 	ret
 
 bwEntity_DrawAll ENDP

@@ -36,7 +36,19 @@ sfSprite* bwLoadSprite(const char* path) {
 }
 
 
-void bwProcessEvents(b2WorldId worldId) {
+void bwProcessEvents(sfRenderWindow* pWindow, sfView* pView, sfEvent event, b2WorldId worldId) {
+
+	switch (event.type)
+	{
+	case sfEvtMouseButtonPressed:
+		event.mouseButton.x;
+		sfVector2f pos = sfRenderWindow_mapPixelToCoords(pWindow, { event.mouseButton.x, event.mouseButton.y }, pView);
+		// b2World_OverlapPoint(worldId, *(b2Vec2*)&pos, b2Transform_identity, b2DefaultQueryFilter(), , );
+		break;
+	default:
+		break;
+	}
+	// Contact events
 	b2ContactEvents events = b2World_GetContactEvents(worldId);
 	for (int i = 0; i < events.beginCount; i++) {
 		b2ContactBeginTouchEvent e = events.beginEvents[i];

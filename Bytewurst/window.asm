@@ -9,7 +9,6 @@ INCLUDE entity.asm
 INCLUDE world.asm
 
 .data
-window_event sfEvent <>
 window_contextSettings sfContextSettings <>
 window_videoMode sfVideoMode <>
 font QWORD 0
@@ -23,7 +22,8 @@ ball_radius float 2.
 ; r8, window_title
 
 bwCreateWindow PROC
-    sub rsp, 40 ; shadow space
+    ALIGNED_LOCAL window_ptr,sfPtr
+    sub rsp, 32 ; shadow space
     
     ; set up gl context with anti-aliasing
     mov window_contextSettings.depthBits, 0
@@ -46,47 +46,54 @@ bwCreateWindow PROC
     mov r8, 5 ; sfTitlebar | sfClose
     lea r9, window_contextSettings
     call sfRenderWindow_create
-    mov [rsp+40+40],rax    ; store window ptr on stack
+    mov window_ptr,rax    ; store window ptr on stack
 
     ; set frame limit
     mov rcx, rax
     mov rdx, 60
     call sfRenderWindow_setFramerateLimit
 
-    mov rax,[rsp+40+40] ; return window ptr in rax
+    mov rax,window_ptr ; return window ptr in rax
 
-    add rsp, 40 ; shadow space
+    add rsp, 32 ; shadow space
     ret
 bwCreateWindow ENDP
 
 ; Process window messages
 bwProcessMessages PROC
-    sub rsp, 40 ; shadow space
+    ALIGNED_LOCAL event,sfEvent
+    sub rsp, 32 ; shadow space
 poll:
     mov rcx, window
-    lea rdx, window_event
+    lea rdx, event
     call sfRenderWindow_pollEvent
-    cmp al, 0
+    test al, al
     jz break
 
-    cmp window_event._type, sfEvtClosed
+    cmp event._type, sfEvtClosed
     jnz not_closed
     mov rcx, window
     call sfRenderWindow_close
     jmp break
 not_closed:
 
-    cmp window_event._type, sfEvtKeyReleased
+    mov rcx,window
+    mov rdx,pView
+    lea r8,event
+    mov r9d,worldId
+    call bwProcessEvents
+
+    cmp event._type, sfEvtKeyReleased
     jnz not_keyup
-    mov ecx, window_event.key._code
+    mov ecx, event.key._code
     call bwProcessKeyUp
     jmp break
 not_keyup:
 
 
-    cmp window_event._type, sfEvtMouseButtonReleased
+    cmp event._type, sfEvtMouseButtonReleased
     jnz not_mouseup
-    lea rcx, window_event.mouseButton
+    lea rcx, event.mouseButton
     call bwProcessMouseUp
     jmp break
 not_mouseup:
@@ -94,7 +101,7 @@ not_mouseup:
     jmp poll
 
 break:
-    add rsp, 40 ; shadow space
+    add rsp, 32 ; shadow space
     ret
 bwProcessMessages ENDP
 
@@ -156,13 +163,12 @@ break:
 bwProcessKeyUp ENDP
 
 ; RCX:ptr sfMouseButtonEvent
-button$ = 40+32
 bwProcessMouseUp PROC
-
-    sub rsp, 40 ; shadow space
+    ALIGNED_LOCAL button,DWORD
+    sub rsp, 32 ; shadow space
     
     mov eax,DWORD PTR [rcx][sfMouseButtonEvent.button]
-    mov button$[rsp],eax
+    mov button,eax
     
     ; Map coord to world
     mov rdx, QWORD PTR [rcx][sfMouseButtonEvent.x]
@@ -171,7 +177,7 @@ bwProcessMouseUp PROC
     call sfRenderWindow_mapPixelToCoords
     ; Coord now stored in rax
     
-    mov ecx,button$[rsp]
+    mov ecx,button
     cmp ecx,sfMouseLeft
     jne not_left
     mov rcx, boxHalfSize
@@ -208,7 +214,7 @@ not_left:
 
 break:
 
-    add rsp, 40 ; shadow space
+    add rsp, 32 ; shadow space
     ret
 bwProcessMouseUp ENDP
 

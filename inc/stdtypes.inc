@@ -21,3 +21,10 @@ char16_t EQU <WORD>
 wchar_t EQU <WORD>
 char32_t EQU <DWORD>
 size_t EQU <QWORD>
+
+ALIGNED_LOCAL MACRO var,varType
+LOCAL num
+@CatStr(<LOCAL >,<var>,<:>,<varType>)
+padBytes = 16 - (SIZEOF varType) mod 16
+@CatStr(<LOCAL pad>,<num>,<[padBytes]:BYTE>)
+ENDM
