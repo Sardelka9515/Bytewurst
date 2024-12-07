@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /tools/HeaderConvert.exe
 /tools/HeaderConvert.dll
+/Bytewurst/Bytewurst.lst
