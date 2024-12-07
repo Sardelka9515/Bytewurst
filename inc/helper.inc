@@ -56,7 +56,7 @@ bwEntity_Kill PROTO
 ; path:char const *
 bwLoadSprite PROTO
 
-; worldId:b2WorldId
+; pWindow:sfRenderWindow *, pView:sfView *, event:sfEvent, worldId:b2WorldId
 bwProcessEvents PROTO
 
 
