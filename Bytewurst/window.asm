@@ -71,6 +71,7 @@ poll:
     call sfRenderWindow_pollEvent
     test al, al
     jz break
+    mov has_event,true
 
     cmp event._type, sfEvtClosed
     jnz not_closed
