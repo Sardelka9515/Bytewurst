@@ -91,9 +91,9 @@ window_loop:
     mov rcx, window
     mov edx, window_background
     call sfRenderWindow_clear
-
-    ; Process messages, including inputs
-    call bwProcessMessages
+    
+    ; draw world
+    call bwWorld_Draw
 
     ; Simulate world
     mov ecx, worldId
@@ -101,8 +101,8 @@ window_loop:
     mov r8, 4
     call b2World_Step
 
-    ; draw world
-    call bwWorld_Draw
+    ; Process messages, including inputs
+    call bwProcessMessages
 
     ; display window
     mov rcx, window

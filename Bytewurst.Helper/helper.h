@@ -5,4 +5,4 @@
 
 BW_EXPORT sfSprite* bwLoadSprite(const char* path);
 
-BW_EXPORT void bwProcessEvents(sfRenderWindow* pWindow, sfView* pView, sfEvent event, b2WorldId worldId);
+BW_EXPORT void bwProcessEvents(sfRenderWindow* pWindow, sfView* pView, sfEvent* pEvent, b2WorldId worldId);

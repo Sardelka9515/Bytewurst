@@ -62,7 +62,9 @@ bwCreateWindow ENDP
 ; Process window messages
 bwProcessMessages PROC
     ALIGNED_LOCAL event,sfEvent
+    ALIGNED_LOCAL has_event,bool
     sub rsp, 32 ; shadow space
+    mov has_event,false
 poll:
     mov rcx, window
     lea rdx, event
@@ -76,12 +78,6 @@ poll:
     call sfRenderWindow_close
     jmp break
 not_closed:
-
-    mov rcx,window
-    mov rdx,pView
-    lea r8,event
-    mov r9d,worldId
-    call bwProcessEvents
 
     cmp event._type, sfEvtKeyReleased
     jnz not_keyup
@@ -101,6 +97,19 @@ not_mouseup:
     jmp poll
 
 break:
+
+    
+    lea r8,event
+    mov al,has_event
+    test al,al
+    jnz process_events
+    mov r8,0
+process_events:
+    mov rcx,window
+    mov rdx,pView
+    mov r9d,worldId
+    call bwProcessEvents
+
     add rsp, 32 ; shadow space
     ret
 bwProcessMessages ENDP

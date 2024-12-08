@@ -36,29 +36,32 @@ sfSprite* bwLoadSprite(const char* path) {
 }
 
 
-void bwProcessEvents(sfRenderWindow* pWindow, sfView* pView, sfEvent event, b2WorldId worldId) {
+void bwProcessEvents(sfRenderWindow* pWindow, sfView* pView, sfEvent* pEvent, b2WorldId worldId) {
 
-	switch (event.type)
-	{
-	case sfEvtMouseButtonPressed:
-		event.mouseButton.x;
-		printf("Mouse button pressed at %d %d\n", event.mouseButton.x, event.mouseButton.y);
-		sfVector2f pos = sfRenderWindow_mapPixelToCoords(pWindow, { event.mouseButton.x, event.mouseButton.y }, pView);
-		// b2World_OverlapPoint(worldId, *(b2Vec2*)&pos, b2Transform_identity, b2DefaultQueryFilter(), , );
-		break;
-	case sfEvtMouseButtonReleased:
-		break;
-	case sfEvtMouseMoved:
-		break;
-	case sfEvtMouseWheelScrolled:
-		sfVector2f viewSize = sfView_getSize(pView);
-		viewSize.x *= 1 - 0.1 * event.mouseWheelScroll.delta;
-		viewSize.y *= 1 - 0.1 * event.mouseWheelScroll.delta;
-		sfView_setSize(pView, viewSize);
-		event.mouseWheelScroll.delta;
-		break;
-	default:
-		break;
+	if (pEvent) {
+		sfEvent event = *pEvent;
+		switch (event.type)
+		{
+		case sfEvtMouseButtonPressed:
+			event.mouseButton.x;
+			printf("Mouse button pressed at %d %d\n", event.mouseButton.x, event.mouseButton.y);
+			sfVector2f pos = sfRenderWindow_mapPixelToCoords(pWindow, { event.mouseButton.x, event.mouseButton.y }, pView);
+			// b2World_OverlapPoint(worldId, *(b2Vec2*)&pos, b2Transform_identity, b2DefaultQueryFilter(), , );
+			break;
+		case sfEvtMouseButtonReleased:
+			break;
+		case sfEvtMouseMoved:
+			break;
+		case sfEvtMouseWheelScrolled:
+			sfVector2f viewSize = sfView_getSize(pView);
+			viewSize.x *= 1 - 0.1 * event.mouseWheelScroll.delta;
+			viewSize.y *= 1 - 0.1 * event.mouseWheelScroll.delta;
+			sfView_setSize(pView, viewSize);
+			event.mouseWheelScroll.delta;
+			break;
+		default:
+			break;
+		}
 	}
 	// Contact events
 	b2ContactEvents events = b2World_GetContactEvents(worldId);

@@ -64,7 +64,7 @@ HexToRGBA ENDP
 ; RCX center:sfVector2f
 ; RDX size:sfVector2f
 bwUpdateView PROC
-	LOCAL center:sfVector2f
+	ALIGNED_LOCAL center,sfVector2f
 	; store center on stack
 	mov center,rcx
 	sub rsp, 40
