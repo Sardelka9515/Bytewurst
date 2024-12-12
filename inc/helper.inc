@@ -26,6 +26,12 @@ bwPool_Remove PROTO
 ; pPool:bwPool *, newSize:size_t
 bwPool_Truncate PROTO
 
+; path:char const *
+bwLoadSprite PROTO
+
+; data:bwWorldData *
+bwProcessEvents PROTO
+
 ; pPool:bwPool *, body:b2BodyId
 bwEntity_CreateDefault PROTO
 
@@ -41,7 +47,7 @@ bwEntity_ApplyDamage PROTO
 ; entity:bwEntity *, dt:float, pWindow:sfRenderWindow *, pRenderState:sfRenderStates *
 bwEntity_Update PROTO
 
-; pPool:bwPool *, dt:float, pWindow:sfRenderWindow *, pRenderStates:sfRenderStates *
+; data:bwWorldData *
 bwEntity_UpdateAll PROTO
 
 ; body:b2BodyId
@@ -52,12 +58,6 @@ bwEntity_Validate PROTO
 
 ; entity:bwEntity *
 bwEntity_Kill PROTO
-
-; path:char const *
-bwLoadSprite PROTO
-
-; pWindow:sfRenderWindow *, pView:sfView *, pEvent:sfEvent *, worldId:b2WorldId
-bwProcessEvents PROTO
 
 
 ; Structs
@@ -70,11 +70,22 @@ bwPool STRUCT 16
 	recycledCount size_t ?
 bwPool ENDS
 
+bwWorldData STRUCT 16
+	timeStep float ?
+	worldId b2WorldId <>
+	pWindow bwPtr ?	; sfRenderWindow *
+	pView bwPtr ?	; sfView *
+	pRenderStates bwPtr ?	; sfRenderStates *
+	pEntityPool bwPtr ?	; bwPool *
+	pParticlePool bwPtr ?	; bwPool *
+bwWorldData ENDS
+
 bwEntity STRUCT 16
 	body b2BodyId <>
 	pSprite bwPtr ?	; sfSprite *
 	health float ?
 	timeLeft float ?
+	hardness float ?
 	explosionStrength float ?
 	explosionParts uint32_t ?
 	index size_t ?

@@ -61,54 +61,62 @@ bwCreateWindow ENDP
 
 ; Process window messages
 bwProcessMessages PROC
-    ALIGNED_LOCAL event,sfEvent
-    ALIGNED_LOCAL has_event,bool
+    ALIGNED_LOCAL data,bwWorldData
     sub rsp, 32 ; shadow space
-    mov has_event,false
-poll:
+;     mov has_event,false
+; poll:
+;     mov rcx, window
+;     lea rdx, event
+;     call sfRenderWindow_pollEvent
+;     test al, al
+;     jz break
+;     mov has_event,true
+; 
+;     cmp event._type, sfEvtClosed
+;     jne not_closed
+;     mov rcx, window
+;     call sfRenderWindow_close
+;     jmp poll
+; not_closed:
+; 
+;     cmp event._type, sfEvtKeyReleased
+;     jne not_keyup
+;     mov ecx, event.key._code
+;     call bwProcessKeyUp
+;     jmp poll
+; not_keyup:
+; 
+;     cmp event._type, sfEvtMouseButtonReleased
+;     jne not_mouseup
+;     lea rcx, event.mouseButton
+;     call bwProcessMouseUp
+;     jmp poll
+; not_mouseup:
+; 
+;     jmp poll
+; break:
+; 
+;     lea r8,event
+;     mov al,has_event
+;     test al,al
+;     jnz process_events
+;     mov r8,0
+; process_events:
+    mov ecx,timeStep
+    mov data.timeStep,ecx
+    mov ecx,worldId
+    mov data.worldId,ecx
     mov rcx, window
-    lea rdx, event
-    call sfRenderWindow_pollEvent
-    test al, al
-    jz break
-    mov has_event,true
+    mov data.pWindow,rcx
+    mov rcx,pView
+    mov data.pView,rcx
+    lea rcx,renderStates
+    mov data.pRenderStates,rcx
+    lea rcx,entities_pool
+    mov data.pEntityPool,rcx
+    mov data.pParticlePool,0
 
-    cmp event._type, sfEvtClosed
-    jnz not_closed
-    mov rcx, window
-    call sfRenderWindow_close
-    jmp break
-not_closed:
-
-    cmp event._type, sfEvtKeyReleased
-    jnz not_keyup
-    mov ecx, event.key._code
-    call bwProcessKeyUp
-    jmp break
-not_keyup:
-
-
-    cmp event._type, sfEvtMouseButtonReleased
-    jnz not_mouseup
-    lea rcx, event.mouseButton
-    call bwProcessMouseUp
-    jmp break
-not_mouseup:
-    
-    jmp poll
-
-break:
-
-    
-    lea r8,event
-    mov al,has_event
-    test al,al
-    jnz process_events
-    mov r8,0
-process_events:
-    mov rcx,window
-    mov rdx,pView
-    mov r9d,worldId
+    lea rcx, data
     call bwProcessEvents
 
     add rsp, 32 ; shadow space

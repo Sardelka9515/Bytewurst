@@ -3,12 +3,15 @@
 #include "SFML/Graphics.h"
 #include "pool.h"
 #include "bw.h"
+#include "helper.h"
 
 typedef struct bwEntity {
 	b2BodyId body;
 	sfSprite* pSprite;
 	float health;
 	float timeLeft;
+	// How much impulse it can withstand before taking damage
+	float hardness;
 	float explosionStrength;
 	uint32_t explosionParts;
 	size_t index;
@@ -25,7 +28,7 @@ BW_EXPORT void bwEntity_ApplyDamage(bwEntity* entity, float damage);
 
 BW_EXPORT void bwEntity_Update(bwEntity* entity, float dt, sfRenderWindow* pWindow, sfRenderStates* pRenderState);
 
-BW_EXPORT void bwEntity_UpdateAll(bwPool* pPool, float dt, sfRenderWindow* pWindow, sfRenderStates* pRenderStates);
+BW_EXPORT void bwEntity_UpdateAll(bwWorldData* data);
 
 BW_EXPORT bwEntity* bwEntity_GetFromBody(b2BodyId body);
 

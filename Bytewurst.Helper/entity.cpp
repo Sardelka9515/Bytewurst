@@ -133,19 +133,19 @@ void bwEntity_Update(bwEntity* entity, float dt, sfRenderWindow* pWindow, sfRend
 	}
 }
 
-void bwEntity_UpdateAll(bwPool* pPool, float dt, sfRenderWindow* pWindow, sfRenderStates* pRenderStates) {
+void bwEntity_UpdateAll(bwWorldData* data) {
 	size_t newSize = 0;
-	for (size_t i = 0; i < pPool->size; i++) {
-		bwEntity* pEntity = (bwEntity*)bwPool_Get(pPool, i);
+	for (size_t i = 0; i < data->pEntityPool->size; i++) {
+		bwEntity* pEntity = (bwEntity*)bwPool_Get(data->pEntityPool, i);
 		if (*(uint64_t*)&pEntity->body == 0) {
 			continue;
 		}
 		newSize = i;
-		bwEntity_Update(pEntity, dt, pWindow, pRenderStates);
+		bwEntity_Update(pEntity, data->timeStep,data->pWindow, data->pRenderStates);
 	}
 	newSize += 1;
-	if (pPool->size>newSize) {
-		bwPool_Truncate(pPool, newSize);
+	if (data->pEntityPool->size>newSize) {
+		bwPool_Truncate(data->pEntityPool, newSize);
 	}
 }
 

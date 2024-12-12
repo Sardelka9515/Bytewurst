@@ -212,12 +212,6 @@ bwWorld_Draw PROC
 
 pool_created:
 
-    lea rcx, entities_pool
-    movd xmm1,timeStep
-    mov r8,window
-    lea r9,renderStates
-    call bwEntity_UpdateAll
-	
     add     rsp, 4*8+8 ; pop shadow space
 	ret
 bwWorld_Draw ENDP
