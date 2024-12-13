@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "helper.h"
+#include "stdio.h"
 
 typedef struct bwEntityInfo {
 	bwPool* pPool;
@@ -23,7 +25,7 @@ void bwEntity_Validate(bwEntity* e) {
 	assert(e == (bwEntity*)bwPool_Get(e->pPool, e->index));
 }
 
-bwEntity* bwEntity_CreateDefault(bwPool* pPool,b2BodyId body) {
+bwEntity* bwEntity_CreateDefault(bwPool* pPool, b2BodyId body) {
 	size_t index = bwPool_Add(pPool);
 	bwEntity entity = { 0 };
 	entity.body = body;
@@ -60,7 +62,7 @@ bwEntity* bwEntity_CreateParticle(bwPool* pPool, b2WorldId world, b2Vec2 pos, fl
 	shapeDef.density = 1.0f;
 	shapeDef.restitution = 0.3f;
 	b2CreatePolygonShape(body, &shapeDef, &box);
-	bwEntity* pEntity = bwEntity_CreateDefault(pPool,body);
+	bwEntity* pEntity = bwEntity_CreateDefault(pPool, body);
 	pEntity->timeLeft = lifeSpan;
 	return pEntity;
 }
@@ -107,14 +109,14 @@ void bwEntity_ApplyDamage(bwEntity* entity, float damage) {
 	}
 	entity->health -= damage;
 	if (entity->health <= 0) {
-		bwEntity_Destroy(entity);
+		bwEntity_Kill(entity);
 	}
 }
 
-void bwEntity_Update(bwEntity* entity, float dt, sfRenderWindow* pWindow, sfRenderStates* pRenderStates) {
+void bwEntity_Update(bwEntity* entity, bwWorldData* data) {
 	bwEntity_Validate(entity);
 	if (entity->timeLeft != -1) {
-		entity->timeLeft -= dt;
+		entity->timeLeft -= data->timeStep;
 		if (entity->timeLeft <= 0) {
 			bwEntity_Destroy(entity);
 			return;
@@ -124,12 +126,18 @@ void bwEntity_Update(bwEntity* entity, float dt, sfRenderWindow* pWindow, sfRend
 		bwEntity_Destroy(entity);
 		return;
 	}
+	b2Transform transform = b2Body_GetTransform(entity->body);
 	if (entity->pSprite) {
-		b2Transform transform = b2Body_GetTransform(entity->body);
 		float degress = b2Atan2(transform.q.s, transform.q.c) * 180 / b2_pi;
 		sfSprite_setPosition(entity->pSprite, *(sfVector2f*)&transform.p);
 		sfSprite_setRotation(entity->pSprite, degress);
-		sfRenderWindow_drawSprite(pWindow, entity->pSprite, pRenderStates);
+		sfRenderWindow_drawSprite(data->pWindow, entity->pSprite, data->pRenderStates);
+	}
+
+	if (entity->health != -1) {
+		char str[100];
+		snprintf(str, sizeof(str), "Health: %f", entity->health);
+		bwDrawText(data, transform.p, str);
 	}
 }
 
@@ -141,10 +149,10 @@ void bwEntity_UpdateAll(bwWorldData* data) {
 			continue;
 		}
 		newSize = i;
-		bwEntity_Update(pEntity, data->timeStep,data->pWindow, data->pRenderStates);
+		bwEntity_Update(pEntity, data);
 	}
 	newSize += 1;
-	if (data->pEntityPool->size>newSize) {
+	if (data->pEntityPool->size > newSize) {
 		bwPool_Truncate(data->pEntityPool, newSize);
 	}
 }
@@ -154,6 +162,6 @@ bwEntity* bwEntity_GetFromBody(b2BodyId body) {
 	if (!pInfo) {
 		return NULL;
 	}
-	bwEntity* result= (bwEntity*)bwPool_Get(pInfo->pPool, pInfo->index);
+	bwEntity* result = (bwEntity*)bwPool_Get(pInfo->pPool, pInfo->index);
 	return result;
 }

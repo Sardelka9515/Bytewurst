@@ -26,7 +26,7 @@ BW_EXPORT void bwEntity_Destroy(bwEntity* entity);
 
 BW_EXPORT void bwEntity_ApplyDamage(bwEntity* entity, float damage);
 
-BW_EXPORT void bwEntity_Update(bwEntity* entity, float dt, sfRenderWindow* pWindow, sfRenderStates* pRenderState);
+BW_EXPORT void bwEntity_Update(bwEntity* entity,bwWorldData* data);
 
 BW_EXPORT void bwEntity_UpdateAll(bwWorldData* data);
 

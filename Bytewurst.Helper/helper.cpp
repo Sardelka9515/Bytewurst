@@ -111,6 +111,7 @@ b2BodyId CreateBox(b2WorldId world, b2Vec2 pos, b2Vec2 halfSize, float density) 
 	shapeDef.density = density;
 	shapeDef.restitution = 0.3f;
 	shapeDef.enableContactEvents = true;
+	shapeDef.enableHitEvents = true;
 	b2CreatePolygonShape(body, &shapeDef, &box);
 	return body;
 }
@@ -125,6 +126,7 @@ b2BodyId CreateCapsule(b2WorldId world, b2Vec2 pos, float height, float radius, 
 	shapeDef.density = density;
 	shapeDef.restitution = 0.3f;
 	shapeDef.enableContactEvents = true;
+	shapeDef.enableHitEvents = true;
 	b2Capsule capule;
 	capule.center1 = { 0,height / -2 };
 	capule.center2 = { 0,height / 2 };
@@ -133,7 +135,7 @@ b2BodyId CreateCapsule(b2WorldId world, b2Vec2 pos, float height, float radius, 
 	return body;
 }
 
-void drawText(bwWorldData* data, b2Vec2 pos, const char* str) {
+void bwDrawText(bwWorldData* data, b2Vec2 pos, char* str) {
 	sfText_setPosition(text, { pos.x, pos.y });
 	sfText_setString(text, str);
 	float scale = abs(sfView_getSize(data->pView).y / 2000);
@@ -147,16 +149,18 @@ void Setup(bwWorldData* data) {
 	sfText_setCharacterSize(text, 50);
 	sfText_setFillColor(text, sfColor_fromRGB(255, 255, 255));
 	sfText_setPosition(text, { 0, 0 });
-	drawText(data, { 0,0 }, "Hello");
 	sfSprite_scale(kitchenSprite, { 0.1, -0.1 });
 	sfSprite_setPosition(kitchenSprite, { 0,35 });
+	sfSprite_setScale(sausageSprite, { -0.02, -0.02 });
 }
 
 bwEntity* CreateSausage(bwWorldData* data, b2Vec2 pos, b2Rot rot) {
 	b2BodyId body = CreateCapsule(data->worldId, pos, 2.2, 1.4, 1);
 	bwEntity* pEntity = bwEntity_CreateDefault(data->pEntityPool, body);
 	pEntity->pSprite = sausageSprite;
-	sfSprite_setScale(pEntity->pSprite, { -0.02, -0.02 });
+	pEntity->explosionStrength = 5;
+	pEntity->explosionParts = 20;
+	pEntity->health = 100;
 	b2Body_SetTransform(body, pos, rot);
 	return pEntity;
 }
@@ -185,19 +189,7 @@ void bwProcessEvents(bwWorldData* data) {
 	while (sfRenderWindow_pollEvent(data->pWindow, &event)) {
 		switch (event.type)
 		{
-		case sfEvtKeyPressed:/*
-			if (event.key.code == sfKeyRight) {
-				launchAngle -= 0.01;
-			}
-			else if (event.key.code == sfKeyLeft) {
-				launchAngle += 0.01;
-			}
-			else if (event.key.code == sfKeyUp) {
-				launchPower += 0.05;
-			}
-			else if (event.key.code == sfKeyDown) {
-				launchPower -= 0.05;
-			}*/
+		case sfEvtKeyPressed:
 			break;
 		case sfEvtKeyReleased:
 			if (event.key.code == sfKeySpace) {
@@ -207,7 +199,6 @@ void bwProcessEvents(bwWorldData* data) {
 				pEntity->explosionStrength = 5;
 				pEntity->explosionParts = 20;
 				pEntity->pSprite = sausageSprite;
-				sfSprite_setScale(pEntity->pSprite, { -0.02, -0.02 });
 			}
 			break;
 		case sfEvtMouseButtonPressed:
@@ -260,6 +251,7 @@ void bwProcessEvents(bwWorldData* data) {
 			break;
 		}
 	}
+
 	// Contact events
 	b2ContactEvents events = b2World_GetContactEvents(data->worldId);
 	for (int i = 0; i < events.beginCount; i++) {
@@ -271,14 +263,36 @@ void bwProcessEvents(bwWorldData* data) {
 		bwEntity* pB = bwEntity_GetFromBody(b);
 		if (pA) {
 			bwEntity_Validate(pA);
-			if (pA->explosionStrength > 0) {
-				bwEntity_Kill(pA);
+			if (pA->health != -1) {
+				// bwEntity_Kill(pA);
 			}
 		}
 		if (pB) {
 			bwEntity_Validate(pB);
-			if (pB->explosionStrength > 0) {
-				bwEntity_Kill(pB);
+			if (pB->health != -1) {
+				// bwEntity_Kill(pB);
+			}
+		}
+	}
+	b2ContactHitEvent* hitEvents = events.hitEvents;
+	for (int i = 0; i < events.hitCount; i++) {
+		b2ContactHitEvent e = hitEvents[i];
+		assert((b2Shape_IsValid(e.shapeIdA) && b2Shape_IsValid(e.shapeIdB)));
+		b2BodyId a = b2Shape_GetBody(e.shapeIdA);
+		b2BodyId b = b2Shape_GetBody(e.shapeIdB);
+		bwEntity* pA = bwEntity_GetFromBody(a);
+		bwEntity* pB = bwEntity_GetFromBody(b);
+		printf("Hit %f\n", e.approachSpeed);
+		if (pA) {
+			bwEntity_Validate(pA);
+			if (e.approachSpeed > pA->hardness) {
+				bwEntity_ApplyDamage(pA, e.approachSpeed - pA->hardness);
+			}
+		}
+		if (pB) {
+			bwEntity_Validate(pB);
+			if (e.approachSpeed > pB->hardness) {
+				bwEntity_ApplyDamage(pB, e.approachSpeed - pB->hardness);
 			}
 		}
 	}
@@ -291,5 +305,9 @@ void bwProcessEvents(bwWorldData* data) {
 
 	if (launching && sqrt(launchVelocity.x * launchVelocity.x + launchVelocity.y * launchVelocity.y) >= minLaunchPower) {
 		drawTargetAssist(data->pWindow, launchPos, launchVelocity, b2World_GetGravity(data->worldId));
+		// Draw sausage
+		sfSprite_setPosition(sausageSprite, *(sfVector2f*)&launchPos);
+		sfSprite_setRotation(sausageSprite, b2Atan2(launchVelocity.y, launchVelocity.x) * 180 / b2_pi);
+		sfRenderWindow_drawSprite(data->pWindow, sausageSprite, data->pRenderStates);
 	}
 }
