@@ -25,10 +25,14 @@ size_t bwPool_Add(bwPool* pPool) {
 	if (pPool->recycledCount > 0) {
 		size_t index;
 		do {
+			if (pPool->recycledCount == 0) {
+				goto add;
+			}
 			index = pPool->recycledIndices[--pPool->recycledCount];
 		} while (index >= pPool->size); // Pool may be truncated
 		return index;
 	}
+add:
 	if (pPool->size >= pPool->capacity) {
 		assert(0);
 		return -1;
