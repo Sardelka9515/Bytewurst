@@ -14,6 +14,13 @@ typedef struct bwWorldData {
 	bwPool* pParticlePool;
 } bwWorldData;
 
+typedef struct bwLevel
+{
+	int regularSasusages;
+	int explosiveSasusages;
+	void (*bwLevelUpdate)(bwWorldData* data);
+	void (*bwLevelInit)(bwWorldData* data);
+} bwLevel;
 
 BW_EXPORT sfSprite* bwLoadSprite(const char* path);
 BW_EXPORT void bwProcessEvents(bwWorldData* data);

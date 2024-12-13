@@ -1,6 +1,7 @@
 #include "helper.h"
 #include "entity.h"
 #include "SFML/Graphics.h"
+#include "SFML/Audio.h"
 #include <uchar.h>
 #include <fstream>
 #include <vector>
@@ -152,6 +153,11 @@ void Setup(bwWorldData* data) {
 	sfSprite_scale(kitchenSprite, { 0.1, -0.1 });
 	sfSprite_setPosition(kitchenSprite, { 0,35 });
 	sfSprite_setScale(sausageSprite, { -0.02, -0.02 });
+	auto bgm = sfSound_create();
+	auto sb = sfSoundBuffer_createFromFile("audio/bgm1.mp3");
+	sfSound_setBuffer(bgm, sb);
+	sfSound_setLoop(bgm, sfTrue);
+	sfSound_play(bgm);
 }
 
 bwEntity* CreateSausage(bwWorldData* data, b2Vec2 pos, b2Rot rot) {
