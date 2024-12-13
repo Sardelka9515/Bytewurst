@@ -32,6 +32,9 @@ bwLoadSprite PROTO
 ; data:bwWorldData *
 bwProcessEvents PROTO
 
+; p1:b2Vec2, p2:b2Vec2, radius:float, color:b2HexColor, context:void *
+bwDrawSolidCapsule PROTO
+
 ; pPool:bwPool *, body:b2BodyId
 bwEntity_CreateDefault PROTO
 

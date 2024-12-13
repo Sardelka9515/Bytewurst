@@ -21,14 +21,6 @@ pCircle QWORD 0
 pFont QWORD 0
 pFpsText QWORD 0
 
-; Textures
-img_path BYTE "img\\sausage.png"
-pTexture QWORD 0
-pSprite QWORD 0
-
-spriteScale sfVector2f <0.002, -0.002>
-spriteOrigin sfVector2f <1024., 1024.>
-
 .code
 
 ; Convert a b2HexColor to sfColor and store it in eax, r8d will be overwritten as temp storage
@@ -37,8 +29,8 @@ HexToRGBA PROC
 	
 	sub rsp, 40
 	
-	; Set alpha to 255
-	mov eax, 0ff000000h
+	; Set alpha to 127
+	mov eax, 080000000h
 
 	; R
 	mov r8d, ecx
@@ -150,23 +142,8 @@ bwSetup PROC
 	mov debug_draw.DrawSolidPolygon, rax
 	lea rax, bwDrawSolidCircle
 	mov debug_draw.DrawSolidCircle, rax
-
-	; Load textures
-	lea rcx, img_path
-	xor rdx, rdx
-	call bwLoadSprite
-	mov pSprite, rax
-	
-	; Set sprite scale
-	mov rcx, pSprite
-	mov rdx, spriteScale
-	call sfSprite_setScale
-
-	; Set sprite origin
-	mov rcx, pSprite
-	mov rdx, spriteOrigin
-	call sfSprite_setOrigin
-
+	lea rax, bwDrawSolidCapsule
+	mov debug_draw.DrawSolidCapsule,rax
 
 	add rsp, 40 ; shadow space
 	ret

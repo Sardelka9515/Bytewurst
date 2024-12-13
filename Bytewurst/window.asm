@@ -125,115 +125,115 @@ bwProcessMessages ENDP
 
 ; KeyUp handler
 ; RCX key:sfKey
-bwProcessKeyUp PROC
-    sub rsp, 40 ; shadow space
-
-    cmp ecx, sfKeyEnter
-    jne not_enter
-    ; Create box
-    
-    mov rcx, boxHalfSize
-    mov rdx, boxPos
-    mov r8d, b2_dynamicBody
-    call bwCreateBox
-
-    lea rcx, entities_pool
-    mov rdx, rax
-    call bwEntity_CreateDefault
-
-    mov rcx, pSprite
-    mov sfPtr PTR [rax][bwEntity.pSprite],rcx
-
-    ; Apply torque to box
-    mov rcx, b2BodyId PTR [rax]
-    movss xmm1, torque
-    mov r8, 1
-    call b2Body_ApplyTorque
-    jmp break
-not_enter:
-
-    cmp ecx, sfKeySpace
-    jne not_space
-
-    ; Create explosion
-
-    ; Find mouse position
-    mov rcx,window
-    call sfMouse_getPositionRenderWindow
-
-    mov rcx,window
-    mov rdx, rax
-    mov r8, pView
-    call sfRenderWindow_mapPixelToCoords
-
-    mov rcx, rax
-    mov rdx, 041200000h ;10.0
-    movd xmm1,rdx
-    call bwCreateExplosion
-
-    jmp break
-not_space:
-
-break:
-
-    add rsp, 40 ; shadow space
-    ret
-bwProcessKeyUp ENDP
-
-; RCX:ptr sfMouseButtonEvent
-bwProcessMouseUp PROC
-    ALIGNED_LOCAL button,DWORD
-    sub rsp, 32 ; shadow space
-    
-    mov eax,DWORD PTR [rcx][sfMouseButtonEvent.button]
-    mov button,eax
-    
-    ; Map coord to world
-    mov rdx, QWORD PTR [rcx][sfMouseButtonEvent.x]
-    mov rcx, window
-    mov r8, pView
-    call sfRenderWindow_mapPixelToCoords
-    ; Coord now stored in rax
-    
-    mov ecx,button
-    cmp ecx,sfMouseLeft
-    jne not_left
-    mov rcx, boxHalfSize
-    mov rdx, rax
-    mov r8d, b2_dynamicBody
-    call bwCreateBox
-
-    lea rcx, entities_pool
-    mov rdx, rax
-    call bwEntity_CreateDefault
-
-    mov rcx, pSprite
-    mov sfPtr PTR [rax][bwEntity.pSprite],rcx
-    
-	mov float PTR [rax][bwEntity.timeLeft],040a00000h ; 5.
-	mov float PTR [rax][bwEntity.explosionStrength],040a00000h ; 5.
-	mov uint32_t PTR [rax][bwEntity.explosionParts],20
-    jmp break
-
-not_left:
-    movss xmm0, ball_radius
-    mov rdx, rax
-    mov r8d, b2_dynamicBody
-    call bwCreateBall
-        
-    lea rcx, entities_pool
-    mov rdx, rax
-    call bwEntity_CreateDefault
-
-    mov rcx, pSprite
-    mov sfPtr PTR [rax][bwEntity.pSprite],rcx
-    jmp break
-    
-
-break:
-
-    add rsp, 32 ; shadow space
-    ret
-bwProcessMouseUp ENDP
+; bwProcessKeyUp PROC
+;     sub rsp, 40 ; shadow space
+; 
+;     cmp ecx, sfKeyEnter
+;     jne not_enter
+;     ; Create box
+;     
+;     mov rcx, boxHalfSize
+;     mov rdx, boxPos
+;     mov r8d, b2_dynamicBody
+;     call bwCreateBox
+; 
+;     lea rcx, entities_pool
+;     mov rdx, rax
+;     call bwEntity_CreateDefault
+; 
+;     mov rcx, pSprite
+;     mov sfPtr PTR [rax][bwEntity.pSprite],rcx
+; 
+;     ; Apply torque to box
+;     mov rcx, b2BodyId PTR [rax]
+;     movss xmm1, torque
+;     mov r8, 1
+;     call b2Body_ApplyTorque
+;     jmp break
+; not_enter:
+; 
+;     cmp ecx, sfKeySpace
+;     jne not_space
+; 
+;     ; Create explosion
+; 
+;     ; Find mouse position
+;     mov rcx,window
+;     call sfMouse_getPositionRenderWindow
+; 
+;     mov rcx,window
+;     mov rdx, rax
+;     mov r8, pView
+;     call sfRenderWindow_mapPixelToCoords
+; 
+;     mov rcx, rax
+;     mov rdx, 041200000h ;10.0
+;     movd xmm1,rdx
+;     call bwCreateExplosion
+; 
+;     jmp break
+; not_space:
+; 
+; break:
+; 
+;     add rsp, 40 ; shadow space
+;     ret
+; bwProcessKeyUp ENDP
+; 
+; ; RCX:ptr sfMouseButtonEvent
+; bwProcessMouseUp PROC
+;     ALIGNED_LOCAL button,DWORD
+;     sub rsp, 32 ; shadow space
+;     
+;     mov eax,DWORD PTR [rcx][sfMouseButtonEvent.button]
+;     mov button,eax
+;     
+;     ; Map coord to world
+;     mov rdx, QWORD PTR [rcx][sfMouseButtonEvent.x]
+;     mov rcx, window
+;     mov r8, pView
+;     call sfRenderWindow_mapPixelToCoords
+;     ; Coord now stored in rax
+;     
+;     mov ecx,button
+;     cmp ecx,sfMouseLeft
+;     jne not_left
+;     mov rcx, boxHalfSize
+;     mov rdx, rax
+;     mov r8d, b2_dynamicBody
+;     call bwCreateBox
+; 
+;     lea rcx, entities_pool
+;     mov rdx, rax
+;     call bwEntity_CreateDefault
+; 
+;     mov rcx, pSprite
+;     mov sfPtr PTR [rax][bwEntity.pSprite],rcx
+;     
+; 	mov float PTR [rax][bwEntity.timeLeft],040a00000h ; 5.
+; 	mov float PTR [rax][bwEntity.explosionStrength],040a00000h ; 5.
+; 	mov uint32_t PTR [rax][bwEntity.explosionParts],20
+;     jmp break
+; 
+; not_left:
+;     movss xmm0, ball_radius
+;     mov rdx, rax
+;     mov r8d, b2_dynamicBody
+;     call bwCreateBall
+;         
+;     lea rcx, entities_pool
+;     mov rdx, rax
+;     call bwEntity_CreateDefault
+; 
+;     mov rcx, pSprite
+;     mov sfPtr PTR [rax][bwEntity.pSprite],rcx
+;     jmp break
+;     
+; 
+; break:
+; 
+;     add rsp, 32 ; shadow space
+;     ret
+; bwProcessMouseUp ENDP
 
 endif

@@ -17,3 +17,4 @@ typedef struct bwWorldData {
 
 BW_EXPORT sfSprite* bwLoadSprite(const char* path);
 BW_EXPORT void bwProcessEvents(bwWorldData* data);
+BW_EXPORT void bwDrawSolidCapsule(b2Vec2 p1, b2Vec2 p2, float radius, b2HexColor color, void* context);

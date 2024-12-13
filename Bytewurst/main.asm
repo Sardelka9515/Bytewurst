@@ -45,7 +45,7 @@ timeStep float 0.016666666666666666
 worldId b2WorldId <>
 worldDef b2WorldDef <>
 
-groundHalfSize b2Vec2 <50., 10.>
+groundHalfSize b2Vec2 <500., 10.>
 groundPos b2Vec2 <0.,-10.>
 
 boxHalfSize b2Vec2 <2., 2.>
@@ -92,8 +92,6 @@ window_loop:
     mov edx, window_background
     call sfRenderWindow_clear
     
-    ; draw world
-    call bwWorld_Draw
 
     ; Simulate world
     mov ecx, worldId
@@ -103,6 +101,9 @@ window_loop:
 
     ; Process messages, including inputs
     call bwProcessMessages
+
+    ; draw world
+    call bwWorld_Draw
 
     ; display window
     mov rcx, window
